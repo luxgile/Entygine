@@ -2,27 +2,30 @@
 using Entygine.Ecs.Components;
 using Entygine.Ecs.Systems;
 using Entygine.Rendering;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
+using OpenToolkit.Mathematics;
+using OpenToolkit.Graphics.OpenGL4;
+using OpenToolkit.Windowing.Common;
+using OpenToolkit.Windowing.Desktop;
 using System;
 
 namespace Entygine
 {
     public class MainDevWindow : GameWindow
     {
-        public MainDevWindow(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
-
-        protected override void OnResize(EventArgs e)
+        public MainDevWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
-            base.OnResize(e);
-            GL.Viewport(0, 0, Width, Height);
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnResize(ResizeEventArgs e)
         {
-            base.OnLoad(e);
+            base.OnResize(e);
+
+            GL.Viewport(0, 0, Size.X, Size.Y);
+        }
+
+        protected override void OnLoad()
+        {
+            base.OnLoad();
 
             EntityWorld world = EntityWorld.CreateWorld();
             EntityWorld.SetActive(world);
@@ -65,9 +68,9 @@ namespace Entygine
 
             EntityWorld.Active.PerformLogic();
 
-            KeyboardState input = Keyboard.GetState();
-            if (input.IsKeyDown(Key.Escape))
-                Exit();
+            //KeyboardState input = Keyboard.GetState();
+            //if (input.IsKeyDown(Key.Escape))
+            //    Exit();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -78,7 +81,7 @@ namespace Entygine
 
             EntityWorld.Active.PerformRender();
 
-            Context.SwapBuffers();
+            SwapBuffers();
         }
     }
 }

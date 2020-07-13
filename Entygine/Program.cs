@@ -1,5 +1,5 @@
-﻿using System;
-using OpenTK;
+﻿using OpenToolkit.Windowing.Desktop;
+using System;
 
 namespace Entygine
 {
@@ -7,9 +7,14 @@ namespace Entygine
     {
         static void Main(string[] args)
         {
-            using (MainDevWindow mainWindow = new MainDevWindow(800, 600, "Main Window"))
+            GameWindowSettings settings = new GameWindowSettings();
+            NativeWindowSettings settings1 = new NativeWindowSettings();
+            settings.UpdateFrequency = 60.0d;
+            settings1.Title = "Main Window";
+            settings1.Size = new OpenToolkit.Mathematics.Vector2i(800, 600);
+            using (MainDevWindow mainWindow = new MainDevWindow(settings, settings1))
             {
-                mainWindow.Run(60.0d);
+                mainWindow.Run();
             }
         }
     }

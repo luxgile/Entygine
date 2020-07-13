@@ -1,8 +1,8 @@
 ﻿using Entygine.Ecs.Components;
 using Entygine.Rendering;
 using Entygine.Rendering.Pipeline;
-using OpenTK;
-using OpenTK.Graphics.ES30;
+using OpenToolkit.Mathematics;
+using OpenToolkit.Graphics.ES30;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;

@@ -1,5 +1,5 @@
 ﻿using Entygine.Rendering;
-using OpenTK.Graphics.OpenGL4;
+using OpenToolkit.Graphics.OpenGL4;
 using System;
 
 namespace Entygine.Ecs.Components

@@ -1,9 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls.Embedding.Offscreen;
-using Entygine.Ecs.Components;
-using OpenTK;
-using OpenTK.Input;
+﻿using Entygine.Ecs.Components;
+using OpenToolkit.Mathematics;
 using System.Collections.Generic;
+using OpenToolkit.Windowing.Common.Input;
 
 namespace Entygine.Ecs.Systems
 {
@@ -17,7 +15,9 @@ namespace Entygine.Ecs.Systems
 
             float speedDelta = 0;
             Vector3 posDelta = Vector3.Zero;
-            KeyboardState input = Keyboard.GetState();
+
+            //TODO: Create input system
+            KeyboardState input = default;
             if (input.IsKeyDown(Key.LShift))
                 speedDelta += 0.01f;
 
