@@ -8,34 +8,53 @@ namespace Entygine.Rendering.Pipeline
 {
     public static class RenderPipeline
     {
-        private static Dictionary<Material, List<Mesh>> meshesToDraw = new Dictionary<Material, List<Mesh>>();
-        private static Dictionary<Material, List<Matrix4>> meshesPosition = new Dictionary<Material, List<Matrix4>>();
+        private struct RenderMeshPair
+        {
+            public Material mat;
+            public Mesh mesh;
+
+            public override bool Equals(object obj)
+            {
+                return obj is RenderMeshPair pair &&
+                       EqualityComparer<Material>.Default.Equals(mat, pair.mat) &&
+                       EqualityComparer<Mesh>.Default.Equals(mesh, pair.mesh);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(mat, mesh);
+            }
+        }
+
+        private static Dictionary<RenderMeshPair, List<Matrix4>> meshesToDraw = new Dictionary<RenderMeshPair, List<Matrix4>>();
 
         public static void QueueMesh(Mesh mesh, Material mat, Matrix4 transform)
         {
-            if (meshesToDraw.TryGetValue(mat, out List<Mesh> meshes))
+            RenderMeshPair pair = new RenderMeshPair() { mat = mat, mesh = mesh };
+            if (meshesToDraw.TryGetValue(pair, out List<Matrix4> positions))
             {
-                meshes.Add(mesh);
-                meshesPosition[mat].Add(transform);
+                positions.Add(transform);
             }
             else
             {
-                meshesToDraw.Add(mat, new List<Mesh>() { mesh });
-                meshesPosition.Add(mat, new List<Matrix4>() { transform });
+                meshesToDraw.Add(pair, new List<Matrix4>() { transform });
             }
         }
 
         public static void Draw(CameraData camera, Matrix4 transform)
         {
             Matrix4 projection = camera.CalculatePerspective();
-            foreach (KeyValuePair<Material, List<Mesh>> item in meshesToDraw)
+            foreach (KeyValuePair<RenderMeshPair, List<Matrix4>> item in meshesToDraw)
             {
-                Material material = item.Key;
-                List<Mesh> meshes = item.Value;
-                List<Matrix4> positions = meshesPosition[material];
+                RenderMeshPair pair = item.Key;
+                List<Matrix4> positions = item.Value;
 
-                int vertexLocation = material.shader.GetAttributeLocation("aPosition");
-                int uvsLocation = material.shader.GetAttributeLocation("aTexCoord");
+                int vertexLocation = pair.mat.shader.GetAttributeLocation("aPosition");
+                int uvsLocation = pair.mat.shader.GetAttributeLocation("aTexCoord");
+
+                pair.mesh.UpdateMeshData();
+                GL.BindVertexArray(pair.mesh.GetVertexBuffer());
+                pair.mat.UseMaterial();
 
                 GL.EnableVertexAttribArray(vertexLocation);
                 GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
@@ -43,27 +62,17 @@ namespace Entygine.Rendering.Pipeline
                 GL.EnableVertexAttribArray(uvsLocation);
                 GL.VertexAttribPointer(uvsLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-                Debug.Assert(meshes.Count == positions.Count);
-
                 //Update camera pos for material
-                material.SetMatrix("view", transform);
-                material.SetMatrix("projection", projection);
+                pair.mat.SetMatrix("view", transform);
+                pair.mat.SetMatrix("projection", projection);
 
-                material.UseMaterial();
-
-                for (int i = 0; i < meshes.Count; i++)
+                for (int i = 0; i < positions.Count; i++)
                 {
-                    Mesh mesh = meshes[i];
-                    mesh.UpdateMeshData();
+                    pair.mat.SetMatrix("model", positions[i]);
 
-                    material.SetMatrix("model", positions[i]);
-
-                    GL.BindVertexArray(mesh.GetVertexBuffer());
-
-                    GL.DrawElements(PrimitiveType.Triangles, mesh.GetIndiceCount(), DrawElementsType.UnsignedInt, 0);
-
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
+                    GL.DrawElements(PrimitiveType.Triangles, pair.mesh.GetIndiceCount(), DrawElementsType.UnsignedInt, 0);
                 }
+
             }
 
             ErrorCode error = GL.GetError();
@@ -74,7 +83,6 @@ namespace Entygine.Rendering.Pipeline
         public static void ClearPipeline()
         {
             meshesToDraw.Clear();
-            meshesPosition.Clear();
         }
     }
 }

@@ -150,7 +150,7 @@ namespace Entygine.Ecs
                 if (sharedComp == null)
                     empty = true;
                 else if (sharedComp is T0 comp)
-                    return comp.GetHashCode() == component.GetHashCode();
+                    return comp.Equals(component);
             }
 
             return empty;

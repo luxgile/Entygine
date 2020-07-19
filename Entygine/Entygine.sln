@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entygine", "Entygine.csproj", "{E78F26CF-464A-4ECD-8EF7-BFD0269FF40D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntygineTests", "..\Entygine_Tests\EntygineTests.csproj", "{0E1CD035-86C8-4C2C-A239-A17BC3420759}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entygine.Tests", "..\Entygine_Tests\Entygine.Tests.csproj", "{0E1CD035-86C8-4C2C-A239-A17BC3420759}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entygine.Editor", "..\Entygine_Editor\Entygine.Editor\Entygine.Editor.csproj", "{DAE0F884-68C4-4A0A-BC54-5120330D69F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0E1CD035-86C8-4C2C-A239-A17BC3420759}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E1CD035-86C8-4C2C-A239-A17BC3420759}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E1CD035-86C8-4C2C-A239-A17BC3420759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAE0F884-68C4-4A0A-BC54-5120330D69F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAE0F884-68C4-4A0A-BC54-5120330D69F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAE0F884-68C4-4A0A-BC54-5120330D69F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAE0F884-68C4-4A0A-BC54-5120330D69F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,11 +8,11 @@ namespace Entygine.Rendering
     public class Material
     {
         public Shader shader;
-        public Texture mainTexture;
+        public Texture2D mainTexture;
 
         private Dictionary<string, int> uniforms = new Dictionary<string, int>();
 
-        public Material(Shader shader, Texture mainTexture)
+        public Material(Shader shader, Texture2D mainTexture)
         {
             this.shader = shader ?? throw new ArgumentNullException(nameof(shader));
             this.mainTexture = mainTexture;
@@ -47,7 +47,7 @@ namespace Entygine.Rendering
         {
             GL.UseProgram(shader.handle);
 
-            mainTexture.UseTexture();
+            mainTexture.UseTexture(TextureUnit.Texture0);
         }
 
         public void SetMatrix(string name, Matrix4 matrix)
