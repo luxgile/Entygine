@@ -37,7 +37,7 @@ namespace Entygine
             Shader shaderResource = new Shader
                 (@"D:\Development\VS 2019\Entygine\Entygine\Assets\Shaders\standard.vert",
                 @"D:\Development\VS 2019\Entygine\Entygine\Assets\Shaders\standard.frag");
-            Texture texture = new Texture
+            Texture2D texture = new Texture2D
                 (@"D:\Development\VS 2019\Entygine\Entygine\Assets\Textures\Box.png");
             Material materialResource = new Material(shaderResource, texture);
             SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
