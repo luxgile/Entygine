@@ -9,11 +9,14 @@ using OpenToolkit.Windowing.Desktop;
 using System;
 using OpenToolkit.Windowing.GraphicsLibraryFramework;
 using OpenToolkit.Windowing.Common.Input;
+using Entygine.Cycles;
 
 namespace Entygine
 {
     public class MainDevWindowGL : GameWindow
     {
+        private WorkerCycleCore coreWorker;
+
         public MainDevWindowGL(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
             Window = this;
@@ -29,6 +32,9 @@ namespace Entygine
         protected override void OnLoad()
         {
             base.OnLoad();
+
+            coreWorker = new WorkerCycleCore();
+            EcsExecution ecsExecution = new EcsExecution(coreWorker);
 
             EntityWorld world = EntityWorld.CreateWorld();
             EntityWorld.SetActive(world);
@@ -79,7 +85,12 @@ namespace Entygine
         {
             base.OnUpdateFrame(e);
 
+            coreWorker.PerformCycle();
+
             EntityWorld.Active.PerformLogic();
+
+            if (KeyboardState.IsKeyDown(Key.Space))
+                EntityWorld.Active.DEBUG_LOG_INFO();
 
             if (KeyboardState.IsKeyDown(Key.Escape))
                 Close();

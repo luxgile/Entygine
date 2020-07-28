@@ -135,5 +135,17 @@ namespace Entygine.Ecs
         {
             return HashCode.Combine(componentTypes);
         }
+
+        public override string ToString()
+        {
+            string s = "";
+            for (int i = 0; i < sharedComponentTypes.Length; i++)
+                s += sharedComponentTypes[i].Name + ", ";
+
+            for (int i = 0; i < componentTypes.Length; i++)
+                s += componentTypes[i].Name + (i < componentTypes.Length - 1 ? ", " : "");
+
+            return s;
+        }
     }
 }

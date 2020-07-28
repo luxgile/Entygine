@@ -143,6 +143,8 @@ namespace Entygine.Ecs
             return chunk;
         }
 
+        public List<EntityChunk> GetChunks() => chunks;
+
         public uint Version { get => version; internal set => version = value; }
     }
 }
