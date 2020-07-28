@@ -7,18 +7,20 @@ namespace Entygine.DevTools
     {
         private static List<string> logs = new List<string>();
 
-        public static event Action ConsoleUpdated;
+        public static event Action<string> LogAdded;
+        public static event Action LogCleared;
 
         public static void Log(object log)
         {
-            logs.Add(log.ToString());
-            ConsoleUpdated?.Invoke();
+            string msg = log.ToString();
+            logs.Add(msg);
+            LogAdded?.Invoke(msg);
         }
 
         public static void ClearAll()
         {
             logs.Clear();
-            ConsoleUpdated?.Invoke();
+            LogCleared?.Invoke();
         }
 
         public static string[] GetLogs() => logs.ToArray();
