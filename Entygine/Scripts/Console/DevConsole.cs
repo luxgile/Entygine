@@ -1,28 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Entygine.DevTools
 {
     public static class DevConsole
     {
-        private static List<string> logs = new List<string>();
+        private static List<IConsoleLogger> loggers = new List<IConsoleLogger>();
+        private static StringBuilder sb = new StringBuilder();
 
-        public static event Action<string> LogAdded;
-        public static event Action LogCleared;
+        public static void AddLogger(IConsoleLogger logger)
+        {
+            if (!loggers.Contains(logger))
+                loggers.Add(logger);
+        }
+
+        public static void RemoveLogger(IConsoleLogger logger)
+        {
+            loggers.Remove(logger);
+        }
 
         public static void Log(object log)
         {
-            string msg = log.ToString();
-            logs.Add(msg);
-            LogAdded?.Invoke(msg);
+            sb.Clear();
+            sb.Append($"[{System.DateTime.Now}] ");
+            sb.Append($"{log} \n");
+
+            for (int i = 0; i < loggers.Count; i++)
+            {
+                try
+                {
+                    loggers[i].Log(sb);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
 
-        public static void ClearAll()
+        public static void Clear()
         {
-            logs.Clear();
-            LogCleared?.Invoke();
+            for (int i = 0; i < loggers.Count; i++)
+            {
+                try
+                {
+                    loggers[i].Clear();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
-
-        public static string[] GetLogs() => logs.ToArray();
     }
 }

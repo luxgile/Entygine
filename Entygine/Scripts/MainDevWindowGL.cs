@@ -9,6 +9,7 @@ using OpenToolkit.Windowing.Desktop;
 using System;
 using OpenToolkit.Windowing.GraphicsLibraryFramework;
 using OpenToolkit.Windowing.Common.Input;
+using Entygine.DevTools;
 
 namespace Entygine
 {
@@ -29,6 +30,14 @@ namespace Entygine
         protected override void OnLoad()
         {
             base.OnLoad();
+
+            ConsoleLoggerFile logger = new ConsoleLoggerFile();
+            DevConsole.AddLogger(logger);
+
+            NativeConsoleLogger logger2 = new NativeConsoleLogger();
+            DevConsole.AddLogger(logger2);
+
+            DevConsole.Log("Creating Entity World...");
 
             EntityWorld world = EntityWorld.CreateWorld();
             EntityWorld.SetActive(world);
@@ -71,6 +80,8 @@ namespace Entygine
             world.CreateRenderSystem<S_RenderMesh>();
             world.CreateRenderSystem<S_DrawCameras>();
             world.CreateLogicSystem<S_GameCameraControl>();
+
+            DevConsole.Log("Entity world created.");
 
             GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         }
