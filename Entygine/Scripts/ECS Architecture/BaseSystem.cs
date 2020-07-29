@@ -16,7 +16,7 @@
             OnSystemDestroyed();
         }
 
-        public void PerformFrame()
+        public void PerformWork()
         {
             if(!started)
             {

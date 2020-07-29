@@ -7,7 +7,7 @@ namespace Entygine.Cycles
     {
         private string name;
         private IPhaseId id;
-        private List<WorkerPhase> subPhases;
+        private WorkerPhase[] subPhases;
 
         private Action phasePerformed;
 
@@ -15,7 +15,7 @@ namespace Entygine.Cycles
         {
             this.name = name;
             this.id = id;
-            subPhases = new List<WorkerPhase>();
+            subPhases = new WorkerPhase[0];
             phasePerformed = null;
         }
 
@@ -31,18 +31,31 @@ namespace Entygine.Cycles
 
             try 
             {
-                for (int i = 0; i < subPhases.Count; i++)
+                for (int i = 0; i < subPhases.Length; i++)
                     subPhases[i].PerformPhase();
             }
             catch (Exception e) { Console.WriteLine(e); }
         }
 
-        public bool IsPhase<T>() where T : IPhaseId
+        public bool IsPhase<T>() where T : IPhaseId => IsPhase(typeof(T));
+
+        internal void FindFirstLogicPhaseAndModify(Type phaseId, WorkerPhaseModifierDelegate callback)
         {
-            return id is T;
+            for (int i = 0; i < subPhases.Length; i++)
+            {
+                if (subPhases[i].IsPhase(phaseId))
+                    callback(ref subPhases[i]);
+                else
+                    subPhases[i].FindFirstLogicPhaseAndModify(phaseId, callback);
+            }
         }
 
-        public List<WorkerPhase> GetPhases() => subPhases;
-        public void SetPhases(List<WorkerPhase> phases) => subPhases = phases;
+        public bool IsPhase(Type type)
+        {
+            return id.GetType() == type;
+        }
+
+        public WorkerPhase[] GetPhases() => subPhases;
+        public void SetPhases(WorkerPhase[] phases) => subPhases = phases;
     }
 }

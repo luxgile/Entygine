@@ -34,9 +34,9 @@ namespace Entygine
             base.OnLoad();
 
             coreWorker = new WorkerCycleCore();
-            EcsExecution ecsExecution = new EcsExecution(coreWorker);
 
             EntityWorld world = EntityWorld.CreateWorld();
+            world.Runner.AssignToWorker(coreWorker).CreateSystemsAuto(world);
             EntityWorld.SetActive(world);
 
             Mesh meshResource = MeshPrimitives.CreateCube(1);
@@ -74,10 +74,6 @@ namespace Entygine
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.CreateTranslation(0, -5, -5) });
             world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.5f });
 
-            world.CreateRenderSystem<S_RenderMesh>();
-            world.CreateRenderSystem<S_DrawCameras>();
-            world.CreateLogicSystem<S_GameCameraControl>();
-
             GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         }
 
@@ -85,9 +81,7 @@ namespace Entygine
         {
             base.OnUpdateFrame(e);
 
-            coreWorker.PerformCycle();
-
-            EntityWorld.Active.PerformLogic();
+            coreWorker.PerformLogicCycle();
 
             if (KeyboardState.IsKeyDown(Key.Space))
                 EntityWorld.Active.DEBUG_LOG_INFO();
@@ -102,7 +96,7 @@ namespace Entygine
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            EntityWorld.Active.PerformRender();
+            coreWorker.PerformRenderCycle();
 
             SwapBuffers();
         }

@@ -1,58 +1,64 @@
-﻿using NUnit.Framework;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Entygine.Cycles
 {
+    public delegate void WorkerPhaseModifierDelegate(ref WorkerPhase phase);
+    public struct RootPhaseId : IPhaseId { public static RootPhaseId Default => new RootPhaseId(); }
     public class WorkerCycleCore
     {
-        private struct RootPhaseId : IPhaseId { public static RootPhaseId Default => new RootPhaseId(); }
 
-        private WorkerPhase root;
+        private WorkerPhase logicRoot;
+        private WorkerPhase renderRoot;
+        private WorkerPhase physicsRoot;
 
-        public WorkerCycleCore()
+        internal WorkerCycleCore()
         {
-            root = new WorkerPhase(RootPhaseId.Default, "Root Phase");
+            //Logic Phase
+            logicRoot = new WorkerPhase(RootPhaseId.Default, "Logic Root Phase");
             List<WorkerPhase> phases = new List<WorkerPhase>()
             {
                 new WorkerPhase(EarlyPhaseId.Default, "Early Phase"),
                 new WorkerPhase(DefaultPhaseId.Default, "Default Phase"),
                 new WorkerPhase(LatePhaseId.Default, "Late Phase"),
             };
-            root.SetPhases(phases);
+            logicRoot.SetPhases(phases.ToArray());
+
+            //Render Phase
+            renderRoot = new WorkerPhase(RootPhaseId.Default, "Render Root Phase");
+
+            //Physics Phase
+            physicsRoot = new WorkerPhase(RootPhaseId.Default, "Physics Root Phase");
         }
 
-        public bool TryFindFirst<T0>(out WorkerPhase phase) where T0 : IPhaseId
+        public void FindFirstLogicPhaseAndModify<T0>(WorkerPhaseModifierDelegate callback) where T0 : IPhaseId
+            => FindFirstPhaseAndModify(ref logicRoot, typeof(T0), callback);
+        public void FindFirstRenderPhaseAndModify<T0>(WorkerPhaseModifierDelegate callback) where T0 : IPhaseId
+            => FindFirstPhaseAndModify(ref renderRoot, typeof(T0), callback);
+
+        private void FindFirstPhaseAndModify(ref WorkerPhase workerPhase, Type phaseId, WorkerPhaseModifierDelegate callback)
         {
-            if(EvaluatePhase(ref root))
+            if (workerPhase.IsPhase(phaseId))
+                callback(ref workerPhase);
+            else
             {
-                phase = root;
-                return true;
-            }
-
-            phase = default;
-            return false;
-
-            bool EvaluatePhase(ref WorkerPhase phase)
-            {
-                if (phase.IsPhase<T0>())
-                    return true;
-
-                List<WorkerPhase> subPhases = phase.GetPhases();
-                for (int i = 0; i < subPhases.Count; i++)
-                {
-                    WorkerPhase currPhase = subPhases[i];
-                    if (EvaluatePhase(ref currPhase))
-                        return true;
-                }
-
-                return false;
+                workerPhase.FindFirstLogicPhaseAndModify(phaseId, callback);
             }
         }
 
-        public void PerformCycle()
+        internal void PerformLogicCycle()
         {
-            root.PerformPhase();
+            logicRoot.PerformPhase();
+        }
+
+        internal void PerformRenderCycle()
+        {
+            renderRoot.PerformPhase();
+        }
+
+        internal void PerformPhysicsCycle()
+        {
+            physicsRoot.PerformPhase();
         }
     }
 }

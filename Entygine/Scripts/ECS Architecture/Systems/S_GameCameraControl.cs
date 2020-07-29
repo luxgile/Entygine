@@ -6,7 +6,7 @@ using OpenToolkit.Windowing.Desktop;
 
 namespace Entygine.Ecs.Systems
 {
-    public class S_GameCameraControl : LogicSystem
+    public class S_GameCameraControl : BaseSystem
     {
         private readonly EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
 
