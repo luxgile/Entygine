@@ -65,7 +65,7 @@ namespace Entygine.Ecs
                     Entity currEntity = chunk.GetEntity(e);
                     if (currEntity.id == entity.id)
                     {
-                        if (chunk.HasSharedComponent(component))
+                        if (chunk.IsSharedComponentEmpty<T0>())
                             chunk.SetSharedComponent(component);
                         else
                         {
@@ -123,8 +123,11 @@ namespace Entygine.Ecs
 
         private EntityChunk CreateChunk(EntityArchetype archetype)
         {
-            EntityChunk chunk = new EntityChunk(archetype);
-            chunk.ChunkVersion = version;
+            EntityChunk chunk = new EntityChunk(archetype)
+            {
+                ChunkVersion = version
+            };
+
             bool added = false;
             for (int i = 0; i < chunks.Count; i++)
             {

@@ -135,25 +135,16 @@ namespace Entygine.Ecs
             return true;
         }
 
-        /// <summary>
-        /// Returns if the shared component is in the chunk or it's not initialized yet.
-        /// </summary>
-        public bool HasSharedComponent<T0>(T0 component) where T0 : ISharedComponent
+        public bool IsSharedComponentEmpty<T0>() where T0 : ISharedComponent
         {
-            if (!arch.HasSharedType(typeof(T0)))
-                throw new Exception("Shared component not found in chunk.");
-
-            bool empty = false;
             for (int i = 0; i < sharedComponents.Length; i++)
             {
                 ISharedComponent sharedComp = sharedComponents[i];
-                if (sharedComp == null)
-                    empty = true;
-                else if (sharedComp is T0 comp)
-                    return comp.Equals(component);
+                if (sharedComp != null && sharedComp is T0)
+                    return false;
             }
 
-            return empty;
+            return true;
         }
 
         public void SetSharedComponent<T0>(T0 component) where T0 : ISharedComponent

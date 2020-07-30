@@ -6,14 +6,9 @@ using OpenToolkit.Mathematics;
 using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Windowing.Common;
 using OpenToolkit.Windowing.Desktop;
-using System;
-using OpenToolkit.Windowing.GraphicsLibraryFramework;
 using OpenToolkit.Windowing.Common.Input;
-<<<<<<< HEAD
 using Entygine.DevTools;
-=======
 using Entygine.Cycles;
->>>>>>> Work_Cycle
 
 namespace Entygine
 {
@@ -37,28 +32,22 @@ namespace Entygine
         {
             base.OnLoad();
 
-<<<<<<< HEAD
-            ConsoleLoggerFile logger = new ConsoleLoggerFile();
-            DevConsole.AddLogger(logger);
-
-            NativeConsoleLogger logger2 = new NativeConsoleLogger();
-            DevConsole.AddLogger(logger2);
+            DevConsole.AddLogger(new ConsoleLoggerFile());
+            DevConsole.AddLogger(new NativeConsoleLogger());
 
             DevConsole.Log("Creating Entity World...");
-=======
+
             coreWorker = new WorkerCycleCore();
->>>>>>> Work_Cycle
 
             EntityWorld world = EntityWorld.CreateWorld();
             world.Runner.AssignToWorker(coreWorker).CreateSystemsAuto(world);
             EntityWorld.SetActive(world);
 
             Mesh meshResource = MeshPrimitives.CreateCube(1);
-            Shader shaderResource = new Shader
-                (@"D:\Development\VS 2019\Entygine\Entygine\Assets\Shaders\standard.vert",
-                @"D:\Development\VS 2019\Entygine\Entygine\Assets\Shaders\standard.frag");
-            Texture2D texture = new Texture2D
-                (@"D:\Development\VS 2019\Entygine\Entygine\Assets\Textures\Box.png");
+            Shader shaderResource = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
+                                                AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.frag"));
+
+            Texture2D texture = new Texture2D(AssetBrowser.Utilities.LocalToAbsolutePath(@"Textures\Box.png"));
             Material materialResource = new Material(shaderResource, texture);
             SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
 
@@ -88,15 +77,8 @@ namespace Entygine
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.CreateTranslation(0, -5, -5) });
             world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.5f });
 
-<<<<<<< HEAD
-            world.CreateRenderSystem<S_RenderMesh>();
-            world.CreateRenderSystem<S_DrawCameras>();
-            world.CreateLogicSystem<S_GameCameraControl>();
-
             DevConsole.Log("Entity world created.");
 
-=======
->>>>>>> Work_Cycle
             GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         }
 

@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Assets\Textures\" />
-    <Folder Include="Scripts\Math\" />
   </ItemGroup>
 
 </Project>
