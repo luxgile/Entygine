@@ -9,7 +9,7 @@ using System.Drawing.Drawing2D;
 
 namespace Entygine.Ecs.Systems
 {
-    public class S_RenderMesh : RenderSystem
+    public class S_RenderMesh : BaseSystem
     {
         private EntityArchetype meshArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform));
 

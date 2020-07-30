@@ -1,10 +1,12 @@
-﻿using Entygine.Ecs.Components;
+﻿using Entygine.Cycles;
+using Entygine.Ecs.Components;
 using Entygine.Rendering.Pipeline;
 using System.Collections.Generic;
 
 namespace Entygine.Ecs.Systems
 {
-    public class S_DrawCameras : RenderSystem
+    [SystemGroup(typeof(DefaultPhaseId), PhaseType.Render)]
+    public class S_DrawCameras : BaseSystem
     {
         private EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform));
         protected override void OnPerformFrame()

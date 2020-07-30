@@ -5,7 +5,7 @@ using OpenToolkit.Windowing.Common.Input;
 
 namespace Entygine.Ecs.Systems
 {
-    public class S_EditorCameraControl : LogicSystem
+    public class S_EditorCameraControl : BaseSystem
     {
         private readonly EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
 

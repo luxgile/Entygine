@@ -9,12 +9,18 @@ using OpenToolkit.Windowing.Desktop;
 using System;
 using OpenToolkit.Windowing.GraphicsLibraryFramework;
 using OpenToolkit.Windowing.Common.Input;
+<<<<<<< HEAD
 using Entygine.DevTools;
+=======
+using Entygine.Cycles;
+>>>>>>> Work_Cycle
 
 namespace Entygine
 {
     public class MainDevWindowGL : GameWindow
     {
+        private WorkerCycleCore coreWorker;
+
         public MainDevWindowGL(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
             Window = this;
@@ -31,6 +37,7 @@ namespace Entygine
         {
             base.OnLoad();
 
+<<<<<<< HEAD
             ConsoleLoggerFile logger = new ConsoleLoggerFile();
             DevConsole.AddLogger(logger);
 
@@ -38,8 +45,12 @@ namespace Entygine
             DevConsole.AddLogger(logger2);
 
             DevConsole.Log("Creating Entity World...");
+=======
+            coreWorker = new WorkerCycleCore();
+>>>>>>> Work_Cycle
 
             EntityWorld world = EntityWorld.CreateWorld();
+            world.Runner.AssignToWorker(coreWorker).CreateSystemsAuto(world);
             EntityWorld.SetActive(world);
 
             Mesh meshResource = MeshPrimitives.CreateCube(1);
@@ -77,12 +88,15 @@ namespace Entygine
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.CreateTranslation(0, -5, -5) });
             world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.5f });
 
+<<<<<<< HEAD
             world.CreateRenderSystem<S_RenderMesh>();
             world.CreateRenderSystem<S_DrawCameras>();
             world.CreateLogicSystem<S_GameCameraControl>();
 
             DevConsole.Log("Entity world created.");
 
+=======
+>>>>>>> Work_Cycle
             GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         }
 
@@ -90,7 +104,10 @@ namespace Entygine
         {
             base.OnUpdateFrame(e);
 
-            EntityWorld.Active.PerformLogic();
+            coreWorker.PerformLogicCycle();
+
+            if (KeyboardState.IsKeyDown(Key.Space))
+                EntityWorld.Active.DEBUG_LOG_INFO();
 
             if (KeyboardState.IsKeyDown(Key.Escape))
                 Close();
@@ -102,7 +119,7 @@ namespace Entygine
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            EntityWorld.Active.PerformRender();
+            coreWorker.PerformRenderCycle();
 
             SwapBuffers();
         }
