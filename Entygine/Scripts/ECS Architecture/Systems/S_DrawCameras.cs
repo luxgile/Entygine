@@ -13,10 +13,12 @@ namespace Entygine.Ecs.Systems
         {
             base.OnPerformFrame();
 
-            List<EntityChunk> chunks = World.EntityManager.GetChunksWith(cameraArchetype, true);
+            bool forceMeshUpdate = MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.ControlLeft);
+
+            List<int> chunks = World.EntityManager.GetChunksWith(cameraArchetype, true);
             for (int i = 0; i < chunks.Count; i++)
             {
-                EntityChunk chunk = chunks[i];
+                ref EntityChunk chunk = ref World.EntityManager.GetChunk(chunks[i]);
                 if (chunk.TryGetComponents<C_Transform>(out ComponentArray transforms) && chunk.TryGetComponents<C_Camera>(out ComponentArray cameras))
                 {
                     for (int c = 0; c < chunk.Count; c++)

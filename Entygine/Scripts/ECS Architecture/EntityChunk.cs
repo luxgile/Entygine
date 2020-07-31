@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace Entygine.Ecs
 {
-    public class EntityChunk
+    public struct EntityChunk
     {
         private const int CHUNK_SIZE = 16000;
 
-        private Entity[] entities;
+        private StructArray<Entity> entities;
         private ComponentArray[] componentCollections;
         private ISharedComponent[] sharedComponents;
         private EntityArchetype arch;
@@ -18,6 +18,7 @@ namespace Entygine.Ecs
         {
             unsafe
             {
+                chunkVersion = 0;
                 currentCount = 0;
                 this.arch = arch;
 
@@ -25,7 +26,7 @@ namespace Entygine.Ecs
                 Type[] sTypes = arch.GetSharedTypes();
                 int entityAmount = arch.GetChunkCapacity(CHUNK_SIZE);
 
-                entities = new Entity[entityAmount];
+                entities = new StructArray<Entity>(entityAmount, true);
                 for (int i = 0; i < entityAmount; i++)
                     entities[i].id = 0;
 
@@ -37,6 +38,11 @@ namespace Entygine.Ecs
             }
         }
 
+        public bool ArchetypeMatch(EntityChunk chunk)
+        {
+            return HasArchetype(Archetype) && HasSharedComponents(sharedComponents);
+        }
+
         public Entity CreateEntity(uint id)
         {
             if (IsFull)
@@ -44,18 +50,35 @@ namespace Entygine.Ecs
 
             int index = Count;
             entities[index].id = id;
+            entities[index].version++;
             currentCount++;
             return entities[index];
         }
 
+        public void AddEntity(Entity entity)
+        {
+            if (IsFull)
+                throw new Exception("Chunk is full. Create a new one.");
+
+            int index = Count;
+            entities[index] = entity;
+            currentCount++;
+        }
+
         public void DestroyEntity(Entity entity)
         {
-            for (int i = 0; i < entities.Length; i++)
+            for (int i = 0; i < entities.Count; i++)
             {
-                Entity currEntity = entities[i];
-                if(currEntity.id == entity.id)
+                if (entities[i].id == entity.id)
                 {
-                    entities[i].id = 0;
+                    entities.SwapForLast(entity);
+
+                    for (int c = 0; c < componentCollections.Length; c++)
+                    {
+                        ComponentArray collection = componentCollections[c];
+                        collection[i] = collection[currentCount - 1];
+                    }
+
                     currentCount--;
                     break;
                 }
@@ -79,7 +102,7 @@ namespace Entygine.Ecs
         {
             for (int i = 0; i < componentCollections.Length; i++)
             {
-                var currCollection = componentCollections[i];
+                ComponentArray currCollection = componentCollections[i];
                 if (currCollection.TypeMatch<T0>())
                 {
                     comp = currCollection;
@@ -89,6 +112,63 @@ namespace Entygine.Ecs
 
             comp = null;
             return false;
+        }
+
+        public bool TryGetComponents(Type componentType, out ComponentArray comp)
+        {
+            for (int i = 0; i < componentCollections.Length; i++)
+            {
+                ComponentArray currCollection = componentCollections[i];
+                if (currCollection.TypeMatch(componentType))
+                {
+                    comp = currCollection;
+                    return true;
+                }
+            }
+
+            comp = null;
+            return false;
+        }
+
+        public ISharedComponent[] GetSharedComponents() => sharedComponents;
+
+        private int GetEntityIndex(Entity entity)
+        {
+            for (int i = 0; i < entities.Count; i++)
+            {
+                if (entity.Equals(entities[i]))
+                    return i;
+            }
+
+            throw new Exception("Entity not found.");
+        }
+
+        public void GetComponentsFromEntity(Entity entity, out List<IComponent> components)
+        {
+            components = new List<IComponent>();
+
+            int entityIndex = GetEntityIndex(entity);
+            for (int c = 0; c < componentCollections.Length; c++)
+                components.Add(componentCollections[c][entityIndex]);
+        }
+
+        public void SetComponent<T0>(int index, T0 component) where T0 : IComponent
+        {
+            if (TryGetComponents<T0>(out ComponentArray comp))
+                comp[index] = component;
+            else
+                throw new Exception("Entity doesn't have the expected component.");
+        }
+
+        public void SetComponents(Entity entity, params IComponent[] components)
+        {
+            int index = GetEntityIndex(entity);
+            for (int i = 0; i < components.Length; i++)
+            {
+                IComponent currComponent = components[i];
+                if (TryGetComponents(currComponent.GetType(), out ComponentArray componentArray))
+                    componentArray[index] = currComponent;
+            }
         }
 
         public bool TryGetSharedComponents<T0>(out T0 comp) where T0 : ISharedComponent
@@ -112,16 +192,22 @@ namespace Entygine.Ecs
             return arch.TypeMatch(archetype);
         }
 
-        public bool MatchSharedComponent(params ISharedComponent[] components)
+        public bool HasSharedComponents(params ISharedComponent[] components)
         {
             for (int i = 0; i < components.Length; i++)
             {
                 bool found = false;
-                var comp = components[i];
+                ISharedComponent comp = components[i];
+                if (comp == null)
+                    continue;
+
                 for (int t = 0; t < sharedComponents.Length; t++)
                 {
                     var sharedComp = sharedComponents[t];
-                    if (sharedComp.GetHashCode() == comp.GetHashCode())
+                    if (sharedComp == null)
+                        continue;
+
+                    if (sharedComp.Equals(comp))
                     {
                         found = true;
                         break;
@@ -171,14 +257,45 @@ namespace Entygine.Ecs
                 throw new Exception("Shared component not found in chunk.");
         }
 
+        public void SetSharedComponents(params ISharedComponent[] shareds)
+        {
+            for (int i = 0; i < shareds.Length; i++)
+            {
+                ISharedComponent currShared = shareds[i];
+                if (currShared == null)
+                    continue;
+
+                if (!arch.HasSharedType(currShared.GetType()))
+                    throw new Exception("Shared component not found in chunk.");
+
+                int indexNull = -1;
+                for (int s = 0; s < sharedComponents.Length; s++)
+                {
+                    ISharedComponent sharedComp = sharedComponents[s];
+                    if (sharedComp == null && indexNull == -1)
+                        indexNull = s;
+                    else if (sharedComp.GetType() == currShared.GetType())
+                    {
+                        sharedComponents[s] = currShared;
+                        return;
+                    }
+                }
+
+                if (indexNull != -1)
+                    sharedComponents[indexNull] = currShared;
+                else
+                    throw new Exception("Shared component not found in chunk.");
+            }
+        }
+
         public bool IsFull => Count == Capacity;
         public int Count => currentCount;
-        public int Capacity => entities.Length;
+        public int Capacity => entities.Count;
         public EntityArchetype Archetype => arch;
-        public uint ChunkVersion 
-        { 
-            get => chunkVersion; 
-            internal set => chunkVersion = value; 
+        public uint ChunkVersion
+        {
+            get => chunkVersion;
+            internal set => chunkVersion = value;
         }
     }
 }

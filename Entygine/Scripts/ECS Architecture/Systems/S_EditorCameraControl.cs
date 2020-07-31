@@ -2,6 +2,7 @@
 using OpenToolkit.Mathematics;
 using System.Collections.Generic;
 using OpenToolkit.Windowing.Common.Input;
+using System.Drawing.Drawing2D;
 
 namespace Entygine.Ecs.Systems
 {
@@ -15,9 +16,10 @@ namespace Entygine.Ecs.Systems
 
             float speedDelta = 0;
             Vector3 posDelta = Vector3.Zero;
+            float yRotDelta = 0;
 
             //TODO: Create input system
-            KeyboardState input = default;
+            KeyboardState input = MainDevWindowGL.Window.KeyboardState;
             if (input.IsKeyDown(Key.LShift))
                 speedDelta += 0.01f;
 
@@ -36,13 +38,25 @@ namespace Entygine.Ecs.Systems
             if (input.IsKeyDown(Key.D))
                 posDelta -= Vector3.UnitX;
 
-            if (speedDelta == 0 && posDelta == Vector3.Zero)
+            if (input.IsKeyDown(Key.E))
+                posDelta -= Vector3.UnitY;
+
+            if (input.IsKeyDown(Key.Q))
+                posDelta += Vector3.UnitY;
+
+            if (input.IsKeyDown(Key.Z))
+                yRotDelta += 0.1f;
+
+            if (input.IsKeyDown(Key.X))
+                yRotDelta -= 0.1f;
+
+            if (speedDelta == 0 && posDelta == Vector3.Zero && yRotDelta == 0)
                 return;
 
-            List<EntityChunk> chunks = World.EntityManager.GetChunksWith(cameraArchetype, false);
-            for (int i = 0; i < chunks.Count; i++)
+            List<int> chunksIndexes = World.EntityManager.GetChunksWith(cameraArchetype, false);
+            for (int i = 0; i < chunksIndexes.Count; i++)
             {
-                EntityChunk chunk = chunks[i];
+                ref EntityChunk chunk = ref World.EntityManager.GetChunk(chunksIndexes[i]);
                 if (chunk.HasChanged(LastVersionWorked))
                 {
                     chunk.ChunkVersion = World.EntityManager.Version;
@@ -58,7 +72,16 @@ namespace Entygine.Ecs.Systems
 
                             Vector3 position = transform.value.ExtractTranslation();
                             position += posDelta * editorCamera.speed;
-                            transform.value.Row3 = new Vector4(position, 1);
+
+                            Quaternion rotation = transform.value.ExtractRotation();
+                            Quaternion rotationDelta = Quaternion.FromAxisAngle(Vector3.UnitY, yRotDelta);
+                            rotation *= rotationDelta;
+
+                            Vector3 scale = transform.value.ExtractScale();
+
+                            transform.value = Matrix4.CreateScale(scale)
+                                            * Matrix4.CreateFromQuaternion(rotation)
+                                            * Matrix4.CreateTranslation(position);
 
                             transforms[c] = transform;
                             cameras[c] = editorCamera;

@@ -63,6 +63,19 @@ namespace Entygine.Rendering
             }
         }
 
+        public void SetVector3(string name, Vector3 vector)
+        {
+            if (uniforms.TryGetValue(name, out int value))
+            {
+                GL.UseProgram(shader.handle);
+                GL.Uniform3(value, vector);
+            }
+            else
+            {
+                Console.WriteLine($"Key '{name}' not found in shader.");
+            }
+        }
+
         public bool IsValid => shader.IsValid && mainTexture.IsValid;
     }
 }

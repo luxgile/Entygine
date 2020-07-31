@@ -1,8 +1,4 @@
-﻿using Entygine.Mathematics;
-using OpenToolkit.Windowing.Desktop;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Entygine
 {
@@ -49,6 +45,27 @@ namespace Entygine
             }
 
             array[size] = value;
+            size++;
+        }
+
+        public void Insert(int index, T0 value)
+        {
+            if (index > size)
+                throw new IndexOutOfRangeException();
+
+            if (size >= capacity)
+            {
+                int newCapacity = capacity * 2;
+                if (newCapacity < MIN_CAPACITY)
+                    newCapacity = MIN_CAPACITY;
+
+                ResizeCapacity(newCapacity);
+            }
+
+            for (int i = size; i > index; i--)
+                array[i] = array[i - 1];
+
+            array[index] = value;
             size++;
         }
 

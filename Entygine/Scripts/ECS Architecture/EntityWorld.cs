@@ -35,15 +35,15 @@ namespace Entygine.Ecs
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Entity Manager: \n");
-            List<EntityChunk> chunks = entityManager.GetChunks();
+            StructArray<EntityChunk> chunks = entityManager.GetChunks();
             sb.Append("Chunks Count: " + chunks.Count + "\n");
+            sb.Append($"----------------------------------- \n");
             for (int i = 0; i < chunks.Count; i++)
             {
-                var chunk = chunks[i];
-                sb.Append($"Entities: {chunk.Count} / Version: {chunk.ChunkVersion} ");
-                sb.Append("\n");
-                sb.Append($"Archetype: {chunk.Archetype}");
-                sb.Append("\n");
+                EntityChunk chunk = chunks[i];
+                sb.Append($"Entities: {chunk.Count} / Version: {chunk.ChunkVersion} \n");
+                sb.Append($"Archetype: {chunk.Archetype} \n");
+                sb.Append($"----------------------------------- \n");
             }
             sb.Append("\n");
             Console.WriteLine(sb);

@@ -29,6 +29,19 @@ namespace Entygine.Tests
         }
 
         [Test]
+        public void Insert_1()
+        {
+            StructArray<Entity> entities = new StructArray<Entity>();
+            Entity entity = new Entity() { id = 2, version = 1 };
+            entities.Add(entity);
+
+            entity.id = 3;
+            entities.Insert(0, entity);
+
+            Assert.AreEqual(entities[0].id, 3);
+        }
+
+        [Test]
         public void Removing_1()
         {
             StructArray<Entity> entities = new StructArray<Entity>();

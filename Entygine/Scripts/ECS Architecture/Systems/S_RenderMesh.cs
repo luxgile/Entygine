@@ -17,10 +17,10 @@ namespace Entygine.Ecs.Systems
         {
             base.OnPerformFrame();
 
-            List<EntityChunk> chunks = World.EntityManager.GetChunksWith(meshArchetype, true);
+            List<int> chunks = World.EntityManager.GetChunksWith(meshArchetype, true);
             for (int i = 0; i < chunks.Count; i++)
             {
-                EntityChunk chunk = chunks[i];
+                ref EntityChunk chunk = ref World.EntityManager.GetChunk(chunks[i]);
                 if (chunk.TryGetSharedComponents(out SC_RenderMesh renderMesh))
                 {
                     if (chunk.HasChanged(LastVersionWorked))

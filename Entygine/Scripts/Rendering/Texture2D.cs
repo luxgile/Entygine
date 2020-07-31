@@ -80,8 +80,8 @@ namespace Entygine.Rendering
                 CalculatePackedData();
             }
 
-            GL.BindTexture(TextureTarget.Texture2D, handle);
             GL.ActiveTexture(unit);
+            GL.BindTexture(TextureTarget.Texture2D, handle);
         }
 
         public void SetPixels(Rgba32[] pixels)
