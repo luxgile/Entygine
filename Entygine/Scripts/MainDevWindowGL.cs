@@ -53,33 +53,35 @@ namespace Entygine
 
             EntityArchetype meshArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform));
 
+            Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
+            world.EntityManager.SetComponent(planeEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 0, 0)) });
+            Mesh planeMesh = MeshPrimitives.CreatePlane(50);
+            Material planeMaterial = new Material(shaderResource, Texture2D.CreateWhiteTexture(64, 64));
+            world.EntityManager.SetSharedComponent(planeEntity, new SC_RenderMesh(planeMesh, planeMaterial));
+
             Entity boxEntity = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(boxEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 5, 0)) });
+            world.EntityManager.SetComponent(boxEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 2, 0)) });
             world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
 
             Entity boxEntity2 = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(boxEntity2, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(2, 5, 0)) });
+            world.EntityManager.SetComponent(boxEntity2, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(2, 2, 0)) });
             world.EntityManager.SetSharedComponent(boxEntity2, renderMesh);
 
             Entity boxEntity3 = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(boxEntity3, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(-2, 5, 0)) });
-            world.EntityManager.SetSharedComponent(boxEntity3, new SC_RenderMesh(meshResource, new Material(shaderResource, Texture2D.CreateWhiteTexture(1, 1))));
-
-            //Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
-            //world.EntityManager.SetComponent(planeEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 0, 0)) });
-            //Mesh planeMesh = MeshPrimitives.CreatePlane(100);
-            //Material planeMaterial = new Material(shaderResource, Texture2D.CreateWhiteTexture(64, 64));
-            //world.EntityManager.SetSharedComponent(planeEntity, new SC_RenderMesh(planeMesh, planeMaterial));
+            world.EntityManager.SetComponent(boxEntity3, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(-2, 2, 0)) });
+            world.EntityManager.SetSharedComponent(boxEntity3, renderMesh);
 
             EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
             Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = new CameraData(45f, 800f / 600f, 0.1f, 100f) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.CreateTranslation(0, -5, -5) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.5f });
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.CreateTranslation(0, -2, -5) });
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f });
 
             DevConsole.Log("Entity world created.");
 
-            GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            GL.ClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -99,7 +101,7 @@ namespace Entygine
         {
             base.OnRenderFrame(e);
 
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             coreWorker.PerformRenderCycle();
 
