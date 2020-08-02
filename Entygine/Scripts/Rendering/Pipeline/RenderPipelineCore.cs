@@ -50,22 +50,24 @@ namespace Entygine.Rendering.Pipeline
                 RenderMeshPair pair = item.Key;
                 List<Matrix4> positions = item.Value;
 
-                int vertexLocation = pair.mat.shader.GetAttributeLocation("aPosition");
-                int uvsLocation = pair.mat.shader.GetAttributeLocation("aTexCoord");
-                int normalsLocation = pair.mat.shader.GetAttributeLocation("aNormal");
-
                 pair.mesh.ForceUpdateMeshData();
                 GL.BindVertexArray(pair.mesh.GetVertexArrayHandle());
                 pair.mat.UseMaterial();
 
-                GL.EnableVertexAttribArray(vertexLocation);
-                GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+                VertexBufferLayout[] layouts = pair.mesh.GetVertexLayout();
+                int layoutSize = pair.mesh.GetVertexLayoutSize();
+                int layoutOffset = 0;
+                for (int i = 0; i < layouts.Length; i++)
+                {
+                    VertexBufferLayout layout = layouts[i];
+                    int location = layout.Attribute.GetAttributeLocation(pair.mat);
 
-                GL.EnableVertexAttribArray(uvsLocation);
-                GL.VertexAttribPointer(uvsLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+                    int stride = layoutSize * layout.Format.ByteSize();
+                    GL.EnableVertexAttribArray(location);
+                    GL.VertexAttribPointer(location, layout.Size, layout.Format.ToOpenGlAttribType(), false, stride, layoutOffset);
 
-                GL.EnableVertexAttribArray(normalsLocation);
-                GL.VertexAttribPointer(normalsLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 5 * sizeof(float));
+                    layoutOffset += layout.Size * layout.Format.ByteSize();
+                }
 
                 //Update camera pos for material
                 pair.mat.SetMatrix("view", transform);
@@ -80,8 +82,6 @@ namespace Entygine.Rendering.Pipeline
 
                     GL.DrawElements(PrimitiveType.Triangles, pair.mesh.GetIndiceCount(), DrawElementsType.UnsignedInt, 0);
                 }
-
-                GL.BindVertexArray(0);
             }
 
             ErrorCode error = GL.GetError();

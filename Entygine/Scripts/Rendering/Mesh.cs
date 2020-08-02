@@ -75,10 +75,18 @@ namespace Entygine.Rendering
             return layouts;
         }
 
+        public int GetVertexLayoutSize()
+        {
+            int size = 0;
+            for (int i = 0; i < layouts.Length; i++)
+                size += layouts[i].Size;
+            return size;
+        }
+
         private void CalculatePackedData()
         {
-            //TODO: Have in mind the buffer layout to pack the data
-            packedData = new float[verts.Length * 8];
+            int layoutSize = GetVertexLayoutSize();
+            packedData = new float[verts.Length * layoutSize];
             for (int i = 0, v = -1; i < verts.Length; i++)
             {
                 for (int l = 0; l < layouts.Length; l++)

@@ -15,4 +15,24 @@
         Uv6,
         Uv7,
     }
+
+    public static class VertexAttributeExtensions
+    {
+        public static int GetAttributeLocation(this VertexAttribute attribute, Material mat)
+        {
+            switch (attribute)
+            {
+                case VertexAttribute.Position:
+                return mat.shader.GetAttributeLocation("aPosition");
+
+                case VertexAttribute.Normal:
+                return mat.shader.GetAttributeLocation("aNormal");
+
+                case VertexAttribute.Uv0:
+                return mat.shader.GetAttributeLocation("aTexCoord");
+            }
+
+            throw new System.NotImplementedException();
+        }
+    }
 }
