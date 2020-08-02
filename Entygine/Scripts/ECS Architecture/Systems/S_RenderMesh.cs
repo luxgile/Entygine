@@ -29,7 +29,7 @@ namespace Entygine.Ecs.Systems
                         if (chunk.TryGetComponents<C_Transform>(out ComponentArray transforms))
                         {
                             for (int c = 0; c < chunk.Count; c++)
-                                RenderPipeline.QueueMesh(renderMesh.mesh, renderMesh.material, ((C_Transform)transforms[c]).value);
+                                RenderPipelineCore.QueueMesh(renderMesh.mesh, renderMesh.material, ((C_Transform)transforms[c]).value);
                         }
                     }
                 }

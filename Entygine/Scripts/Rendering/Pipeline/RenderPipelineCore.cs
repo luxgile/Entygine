@@ -3,10 +3,11 @@ using OpenToolkit.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Entygine.DevTools;
 
 namespace Entygine.Rendering.Pipeline
 {
-    public static class RenderPipeline
+    public static class RenderPipelineCore
     {
         private struct RenderMeshPair
         {
@@ -85,7 +86,7 @@ namespace Entygine.Rendering.Pipeline
 
             ErrorCode error = GL.GetError();
             if (error != ErrorCode.NoError)
-                Console.WriteLine(error);
+                DevConsole.Log(error);
         }
 
         public static void ClearPipeline()

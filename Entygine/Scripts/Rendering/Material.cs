@@ -57,10 +57,6 @@ namespace Entygine.Rendering
                 GL.UseProgram(shader.handle);
                 GL.UniformMatrix4(value, true, ref matrix);
             }
-            else
-            {
-                Console.WriteLine($"Key '{name}' not found in shader.");
-            }
         }
 
         public void SetVector3(string name, Vector3 vector)

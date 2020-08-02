@@ -22,7 +22,7 @@ namespace Entygine.Ecs.Systems
                 if (chunk.TryGetComponents<C_Transform>(out ComponentArray transforms) && chunk.TryGetComponents<C_Camera>(out ComponentArray cameras))
                 {
                     for (int c = 0; c < chunk.Count; c++)
-                        RenderPipeline.Draw(((C_Camera)cameras[i]).cameraData, ((C_Transform)transforms[i]).value);
+                        RenderPipelineCore.Draw(((C_Camera)cameras[i]).cameraData, ((C_Transform)transforms[i]).value);
                 }
             }
         }

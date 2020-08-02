@@ -70,6 +70,11 @@ namespace Entygine.Rendering
             GL.BindVertexArray(0);
         }
 
+        public VertexBufferLayout[] GetVertexLayout()
+        {
+            return layouts;
+        }
+
         private void CalculatePackedData()
         {
             //TODO: Have in mind the buffer layout to pack the data
