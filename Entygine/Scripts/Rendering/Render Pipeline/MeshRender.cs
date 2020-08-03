@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Entygine.Rendering
 {
-    public struct MeshRender
+    public class MeshRender
     {
         public Material mat;
         public Mesh mesh;

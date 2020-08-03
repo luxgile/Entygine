@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 
 namespace Entygine.Ecs
 {
@@ -24,6 +25,11 @@ namespace Entygine.Ecs
             set => components[index] = value;
         }
 
+        public T0 Get<T0>(int index) where T0 : IComponent
+        {
+            return (T0)this[index];
+        }
+
         public void CopyTo(Array array, int index)
         {
             Array.Copy(components, array, index);
@@ -38,43 +44,9 @@ namespace Entygine.Ecs
             return type == this.componentType;
         }
 
-        public ComponentArray<TComp> CastTo<TComp>() where TComp : IComponent
+        public T0[] CastTo<T0>() where T0 : IComponent
         {
-            ComponentArray<TComp> comp = new ComponentArray<TComp>(Count);
-            for (int i = 0; i < Count; i++)
-                comp[i] = (TComp)this[i];
-            return comp;
-        }
-
-        public int Count => components.Length;
-    }
-
-    public class ComponentArray<TComp> where TComp : IComponent
-    {
-        private TComp[] components;
-
-        public ComponentArray(int count)
-        {
-            components = new TComp[count];
-
-            //TODO: This is awful but works for now
-            for (int i = 0; i < count; i++)
-                components[i] = Activator.CreateInstance<TComp>();
-        }
-
-        public TComp this[int index]
-        {
-            get => components[index];
-            set => components[index] = value;
-        }
-
-        public bool TypeMatch<T0>() where T0 : IComponent
-        {
-            return TypeMatch(typeof(T0));
-        }
-        public bool TypeMatch(Type type)
-        {
-            return type == typeof(TComp);
+            return components.Cast<T0>().ToArray();
         }
 
         public int Count => components.Length;

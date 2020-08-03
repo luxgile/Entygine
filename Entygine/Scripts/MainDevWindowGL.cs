@@ -9,6 +9,7 @@ using OpenToolkit.Windowing.Desktop;
 using OpenToolkit.Windowing.Common.Input;
 using Entygine.DevTools;
 using Entygine.Cycles;
+using Entygine.Rendering.Pipeline;
 
 namespace Entygine
 {
@@ -42,6 +43,8 @@ namespace Entygine
             EntityWorld world = EntityWorld.CreateWorld();
             world.Runner.AssignToWorker(coreWorker).CreateSystemsAuto(world);
             EntityWorld.SetActive(world);
+
+            RenderPipelineCore.SetPipeline(new DefaultRenderPipeline());
 
             Mesh meshResource = MeshPrimitives.CreateCube(1);
             Shader shaderResource = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
@@ -100,8 +103,6 @@ namespace Entygine
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             coreWorker.PerformRenderCycle();
 
