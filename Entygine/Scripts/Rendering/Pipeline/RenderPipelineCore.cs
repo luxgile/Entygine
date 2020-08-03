@@ -1,37 +1,17 @@
 ﻿using OpenToolkit.Mathematics;
 using OpenToolkit.Graphics.OpenGL4;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Entygine.DevTools;
 
 namespace Entygine.Rendering.Pipeline
 {
     public static class RenderPipelineCore
     {
-        private struct RenderMeshPair
-        {
-            public Material mat;
-            public Mesh mesh;
-
-            public override bool Equals(object obj)
-            {
-                return obj is RenderMeshPair pair &&
-                       EqualityComparer<Material>.Default.Equals(mat, pair.mat) &&
-                       EqualityComparer<Mesh>.Default.Equals(mesh, pair.mesh);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(mat, mesh);
-            }
-        }
-
-        private static Dictionary<RenderMeshPair, List<Matrix4>> meshesToDraw = new Dictionary<RenderMeshPair, List<Matrix4>>();
+        private static Dictionary<MeshRender, List<Matrix4>> meshesToDraw = new Dictionary<MeshRender, List<Matrix4>>();
 
         public static void QueueMesh(Mesh mesh, Material mat, Matrix4 transform)
         {
-            RenderMeshPair pair = new RenderMeshPair() { mat = mat, mesh = mesh };
+            MeshRender pair = new MeshRender() { mat = mat, mesh = mesh };
             if (meshesToDraw.TryGetValue(pair, out List<Matrix4> positions))
             {
                 positions.Add(transform);
@@ -45,9 +25,9 @@ namespace Entygine.Rendering.Pipeline
         public static void Draw(CameraData camera, Matrix4 transform)
         {
             Matrix4 projection = camera.CalculatePerspective();
-            foreach (KeyValuePair<RenderMeshPair, List<Matrix4>> item in meshesToDraw)
+            foreach (KeyValuePair<MeshRender, List<Matrix4>> item in meshesToDraw)
             {
-                RenderMeshPair pair = item.Key;
+                MeshRender pair = item.Key;
                 List<Matrix4> positions = item.Value;
 
                 pair.mesh.ForceUpdateMeshData();
@@ -70,6 +50,7 @@ namespace Entygine.Rendering.Pipeline
                 }
 
                 //Update camera pos for material
+                //TODO: Use 'Uniform buffer objects' to globally share this data
                 pair.mat.SetMatrix("view", transform);
                 pair.mat.SetMatrix("projection", projection);
                 pair.mat.SetVector3("ambientLight", new Vector3(0.1f, 0.1f, 0.1f));
