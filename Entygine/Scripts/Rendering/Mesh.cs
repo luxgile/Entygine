@@ -45,27 +45,41 @@ namespace Entygine.Rendering
             meshChanged = true;
         }
 
-        public void UpdateMeshData()
+        public void UpdateMeshData(Material mat)
         {
             if (meshChanged)
             {
                 meshChanged = false;
-                ForceUpdateMeshData();
+                ForceUpdateMeshData(mat);
             }
         }
 
-        public void ForceUpdateMeshData()
+        public void ForceUpdateMeshData(Material mat)
         {
             CalculatePackedData();
 
             GL.BindVertexArray(vertexArrayHandle);
 
-            //TODO: Dunno if i have to apply this always?
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
             GL.BufferData(BufferTarget.ArrayBuffer, packedData.Length * sizeof(float), packedData, BufferUsageHint.StaticDraw);
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, trisBuffer);
             GL.BufferData(BufferTarget.ElementArrayBuffer, tris.Length * sizeof(uint), tris, BufferUsageHint.StaticDraw);
+
+            VertexBufferLayout[] layouts = GetVertexLayout();
+            int layoutSize = GetVertexLayoutSize();
+            int layoutOffset = 0;
+            for (int l = 0; l < layouts.Length; l++)
+            {
+                VertexBufferLayout layout = layouts[l];
+                int location = layout.Attribute.GetAttributeLocation(mat);
+
+                int stride = layoutSize * layout.Format.ByteSize();
+                GL.EnableVertexAttribArray(location);
+                GL.VertexAttribPointer(location, layout.Size, layout.Format.ToOpenGlAttribType(), false, stride, layoutOffset);
+
+                layoutOffset += layout.Size * layout.Format.ByteSize();
+            }
 
             GL.BindVertexArray(0);
         }

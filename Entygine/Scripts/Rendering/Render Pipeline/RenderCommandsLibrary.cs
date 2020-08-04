@@ -30,24 +30,9 @@ namespace Entygine.Rendering.Pipeline
                     MeshRender pair = renderGroup.MeshRender;
                     List<Matrix4> positions = renderGroup.Transforms;
 
-                    pair.mesh.ForceUpdateMeshData();
                     GL.BindVertexArray(pair.mesh.GetVertexArrayHandle());
+                    pair.mesh.UpdateMeshData(pair.mat);
                     pair.mat.UseMaterial();
-
-                    VertexBufferLayout[] layouts = pair.mesh.GetVertexLayout();
-                    int layoutSize = pair.mesh.GetVertexLayoutSize();
-                    int layoutOffset = 0;
-                    for (int l = 0; l < layouts.Length; l++)
-                    {
-                        VertexBufferLayout layout = layouts[l];
-                        int location = layout.Attribute.GetAttributeLocation(pair.mat);
-
-                        int stride = layoutSize * layout.Format.ByteSize();
-                        GL.EnableVertexAttribArray(location);
-                        GL.VertexAttribPointer(location, layout.Size, layout.Format.ToOpenGlAttribType(), false, stride, layoutOffset);
-
-                        layoutOffset += layout.Size * layout.Format.ByteSize();
-                    }
 
                     //Update camera pos for material
                     //TODO: Use 'Uniform buffer objects' to globally share this data

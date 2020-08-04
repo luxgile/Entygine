@@ -8,6 +8,7 @@ namespace Entygine.Rendering
     public class Material
     {
         public Shader shader;
+        //TODO: Switch this to an array of textures
         public Texture2D mainTexture;
 
         private Dictionary<string, int> uniforms = new Dictionary<string, int>();

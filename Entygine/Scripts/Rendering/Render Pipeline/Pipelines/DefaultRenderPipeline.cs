@@ -4,11 +4,6 @@ namespace Entygine.Rendering.Pipeline
 {
     public class DefaultRenderPipeline : IRenderPipeline
     {
-        public DefaultRenderPipeline()
-        {
-
-        }
-
         public void Render(ref RenderContext context, CameraData[] cameras, Matrix4[] transforms)
         {
             context.CommandBuffer.QueueCommand(RenderCommandsLibrary.ClearColorAndDepthBuffer());
