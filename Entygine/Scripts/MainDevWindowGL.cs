@@ -77,8 +77,10 @@ namespace Entygine
             EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
             Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = new CameraData(45f, 800f / 600f, 0.1f, 100f) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.CreateTranslation(0, -2, -5) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f });
+
+            Vector3 cameraPos = new Vector3(0, 2, 5);
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, dir = -Vector3.UnitZ, pos = cameraPos });
 
             DevConsole.Log("Entity world created.");
 

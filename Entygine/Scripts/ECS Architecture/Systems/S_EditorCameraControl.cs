@@ -2,6 +2,7 @@
 using OpenToolkit.Mathematics;
 using System.Collections.Generic;
 using OpenToolkit.Windowing.Common.Input;
+using Entygine.DevTools;
 using System.Drawing.Drawing2D;
 
 namespace Entygine.Ecs.Systems
@@ -27,28 +28,28 @@ namespace Entygine.Ecs.Systems
                 speedDelta -= 0.01f;
 
             if (input.IsKeyDown(Key.W))
-                posDelta += Vector3.UnitZ;
-
-            if (input.IsKeyDown(Key.S))
                 posDelta -= Vector3.UnitZ;
 
-            if (input.IsKeyDown(Key.A))
-                posDelta += Vector3.UnitX;
+            if (input.IsKeyDown(Key.S))
+                posDelta += Vector3.UnitZ;
 
-            if (input.IsKeyDown(Key.D))
+            if (input.IsKeyDown(Key.A))
                 posDelta -= Vector3.UnitX;
 
-            if (input.IsKeyDown(Key.E))
-                posDelta -= Vector3.UnitY;
+            if (input.IsKeyDown(Key.D))
+                posDelta += Vector3.UnitX;
 
-            if (input.IsKeyDown(Key.Q))
+            if (input.IsKeyDown(Key.E))
                 posDelta += Vector3.UnitY;
 
+            if (input.IsKeyDown(Key.Q))
+                posDelta -= Vector3.UnitY;
+
             if (input.IsKeyDown(Key.Z))
-                yRotDelta += 0.1f;
+                yRotDelta += 0.01f;
 
             if (input.IsKeyDown(Key.X))
-                yRotDelta -= 0.1f;
+                yRotDelta -= 0.01f;
 
             if (speedDelta == 0 && posDelta == Vector3.Zero && yRotDelta == 0)
                 return;
@@ -70,18 +71,11 @@ namespace Entygine.Ecs.Systems
                             editorCamera.speed += speedDelta;
                             editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
 
-                            Vector3 position = transform.value.ExtractTranslation();
-                            position += posDelta * editorCamera.speed;
+                            editorCamera.pos += posDelta * editorCamera.speed;
 
-                            Quaternion rotation = transform.value.ExtractRotation();
-                            Quaternion rotationDelta = Quaternion.FromAxisAngle(Vector3.UnitY, yRotDelta);
-                            rotation *= rotationDelta;
-
-                            Vector3 scale = transform.value.ExtractScale();
-
-                            transform.value = Matrix4.CreateScale(scale)
-                                            * Matrix4.CreateFromQuaternion(rotation)
-                                            * Matrix4.CreateTranslation(position);
+                            Vector3 right = Vector3.Normalize(Vector3.Cross(editorCamera.dir, Vector3.UnitY));
+                            Vector3 up = Vector3.Normalize(Vector3.Cross(right, editorCamera.dir));
+                            transform.value = Matrix4.LookAt(editorCamera.pos, editorCamera.pos + editorCamera.dir, up);
 
                             transforms[c] = transform;
                             cameras[c] = editorCamera;
