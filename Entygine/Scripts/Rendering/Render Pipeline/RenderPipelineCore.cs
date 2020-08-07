@@ -14,6 +14,13 @@ namespace Entygine.Rendering.Pipeline
         {
             renderContext = new RenderContext(new RenderCommandBuffer());
             renderContext.AddData(new GeometryRenderData());
+            renderContext.AddData(new SkyboxRenderData());
+        }
+
+        public static void SetSkybox(Skybox skybox)
+        {
+            if (renderContext.TryGetData(out SkyboxRenderData skyboxRenderData))
+                skyboxRenderData.skybox = skybox;
         }
 
         public static void QueueMesh(Mesh mesh, Material mat, Matrix4 transform)

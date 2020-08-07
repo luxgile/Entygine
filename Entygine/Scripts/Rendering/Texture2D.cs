@@ -3,11 +3,10 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
-using System.Collections.Generic;
 
 namespace Entygine.Rendering
 {
-    public class Texture2D
+    public class Texture2D : BaseTexture
     {
         public int handle;
 
@@ -52,7 +51,7 @@ namespace Entygine.Rendering
             hasChanged = true;
         }
 
-        private void CalculatePackedData()
+        protected override void CalculatePackedData()
         {
             packedData = new byte[pixels.Length * 4];
             for (int i = 0, packedIndex = 0; i < pixels.Length; i++)
@@ -72,25 +71,22 @@ namespace Entygine.Rendering
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
 
-        public void UseTexture(TextureUnit unit)
-        {
-            if(hasChanged)
-            {
-                hasChanged = false;
-                CalculatePackedData();
-            }
-
-            GL.ActiveTexture(unit);
-            GL.BindTexture(TextureTarget.Texture2D, handle);
-        }
-
         public void SetPixels(Rgba32[] pixels)
         {
             this.pixels = pixels;
             hasChanged = true;
         }
 
-        public bool IsValid => handle != 0;
+
+        public override int Width => width;
+
+        public override int Height => height;
+
+        protected override TextureTarget TextureType => TextureTarget.Texture2D;
+
+        protected override int Handle => handle;
+
+        protected override bool HasChanged { get => hasChanged; set => hasChanged = value; }
 
         public static Texture2D CreateWhiteTexture(int width, int height)
         {

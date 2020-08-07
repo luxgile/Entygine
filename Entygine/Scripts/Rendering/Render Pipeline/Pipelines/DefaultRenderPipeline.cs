@@ -9,7 +9,13 @@ namespace Entygine.Rendering.Pipeline
             context.CommandBuffer.QueueCommand(RenderCommandsLibrary.ClearColorAndDepthBuffer());
 
             for (int i = 0; i < cameras.Length; i++)
-                context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawGeometry(cameras[i], transforms[i]));
+            {
+                CameraData camera = cameras[i];
+                Matrix4 cameraTransform = transforms[i];
+
+                context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawSkybox(camera, cameraTransform));
+                //context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawGeometry(camera, cameraTransform));
+            }
         }
     }
 }

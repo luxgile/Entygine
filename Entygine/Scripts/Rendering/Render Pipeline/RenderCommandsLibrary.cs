@@ -18,9 +18,10 @@ namespace Entygine.Rendering.Pipeline
         {
             return new RenderCommand("Draw Geometry", (ref RenderContext context) =>
             {
-                Matrix4 projection = camera.CalculatePerspective();
                 if (!context.TryGetData(out GeometryRenderData geometryData))
                     return;
+
+                Matrix4 projection = camera.CalculatePerspective();
 
                 List<MeshRenderGroup> renderGroups = geometryData.GetRenderGroups();
                 for (int i = 0; i < renderGroups.Count; i++)
@@ -49,6 +50,25 @@ namespace Entygine.Rendering.Pipeline
                         GL.DrawElements(PrimitiveType.Triangles, pair.mesh.GetIndiceCount(), DrawElementsType.UnsignedInt, 0);
                     }
                 }
+            });
+        }
+
+        public static RenderCommand DrawSkybox(CameraData camera, Matrix4 cameraTransform)
+        {
+            return new RenderCommand("Draw Geometry", (ref RenderContext context) =>
+            {
+                if (!context.TryGetData(out SkyboxRenderData skyboxRenderData))
+                    return;
+
+                Skybox skybox = skyboxRenderData.skybox;
+
+                GL.DepthMask(false);
+                skybox.Mesh.UpdateMeshData(skybox.Material);
+                skybox.Material.UseMaterial();
+                skybox.Material.SetMatrix("view", cameraTransform);
+                skybox.Material.SetMatrix("projection", camera.CalculatePerspective());
+                GL.DrawElements(PrimitiveType.Triangles, skybox.Mesh.GetIndiceCount(), DrawElementsType.UnsignedInt, 0);
+                GL.DepthMask(true);
             });
         }
     }

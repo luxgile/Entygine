@@ -9,11 +9,11 @@ namespace Entygine.Rendering
     {
         public Shader shader;
         //TODO: Switch this to an array of textures
-        public Texture2D mainTexture;
+        public BaseTexture mainTexture;
 
         private Dictionary<string, int> uniforms = new Dictionary<string, int>();
 
-        public Material(Shader shader, Texture2D mainTexture)
+        public Material(Shader shader, BaseTexture mainTexture)
         {
             this.shader = shader ?? throw new ArgumentNullException(nameof(shader));
             this.mainTexture = mainTexture;

@@ -46,6 +46,23 @@ namespace Entygine
 
             RenderPipelineCore.SetPipeline(new DefaultRenderPipeline());
 
+            Cubemap skyboxCubemap = new Cubemap(new string[]
+            {
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\right.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\left.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\top.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\bottom.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\front.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\back.png"),
+            });
+
+            asdasdasd
+            //TODO: NOT WORKING
+            Shader skyboxShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.vert"),
+                                                AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"));
+            Skybox skybox = new Skybox(new Material(skyboxShader, skyboxCubemap));
+            RenderPipelineCore.SetSkybox(skybox);
+
             Mesh meshResource = MeshPrimitives.CreateCube(1);
             Shader shaderResource = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
                                                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.frag"));
