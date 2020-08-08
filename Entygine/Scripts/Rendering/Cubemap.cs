@@ -77,7 +77,7 @@ namespace Entygine.Rendering
             GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
-            GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
+            //GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
         }
 
         public override int Width => width;
@@ -88,6 +88,6 @@ namespace Entygine.Rendering
 
         protected override int Handle => handle;
 
-        protected override bool HasChanged { get => hasChanged; set => hasChanged = true; }
+        protected override bool HasChanged { get => hasChanged; set => hasChanged = value; }
     }
 }

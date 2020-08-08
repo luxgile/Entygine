@@ -56,8 +56,6 @@ namespace Entygine
                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\back.png"),
             });
 
-            asdasdasd
-            //TODO: NOT WORKING
             Shader skyboxShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.vert"),
                                                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"));
             Skybox skybox = new Skybox(new Material(skyboxShader, skyboxCubemap));

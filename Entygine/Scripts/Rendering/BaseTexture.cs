@@ -26,6 +26,11 @@ namespace Entygine.Rendering
             GL.BindTexture(TextureType, Handle);
         }
 
+        public void FreeTexture()
+        {
+            GL.BindTexture(TextureType, 0);
+        }
+
         protected abstract void CalculatePackedData();
         public bool IsValid => Handle != 0;
     }

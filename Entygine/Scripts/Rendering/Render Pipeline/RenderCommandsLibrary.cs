@@ -1,4 +1,5 @@
-﻿using OpenToolkit.Graphics.OpenGL4;
+﻿using Entygine.DevTools;
+using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
 using System.Collections.Generic;
 
@@ -31,9 +32,7 @@ namespace Entygine.Rendering.Pipeline
                     MeshRender pair = renderGroup.MeshRender;
                     List<Matrix4> positions = renderGroup.Transforms;
 
-                    GL.BindVertexArray(pair.mesh.GetVertexArrayHandle());
-                    pair.mesh.UpdateMeshData(pair.mat);
-                    pair.mat.UseMaterial();
+                    GraphicsAPI.UseMeshMaterial(pair.mesh, pair.mat);
 
                     //Update camera pos for material
                     //TODO: Use 'Uniform buffer objects' to globally share this data
@@ -47,8 +46,10 @@ namespace Entygine.Rendering.Pipeline
                     {
                         pair.mat.SetMatrix("model", positions[p]);
 
-                        GL.DrawElements(PrimitiveType.Triangles, pair.mesh.GetIndiceCount(), DrawElementsType.UnsignedInt, 0);
+                        GraphicsAPI.DrawTriangles(pair.mesh.GetIndiceCount());
                     }
+
+                    GraphicsAPI.FreeMeshMaterial(pair.mesh, pair.mat);
                 }
             });
         }
@@ -62,13 +63,21 @@ namespace Entygine.Rendering.Pipeline
 
                 Skybox skybox = skyboxRenderData.skybox;
 
-                GL.DepthMask(false);
-                skybox.Mesh.UpdateMeshData(skybox.Material);
-                skybox.Material.UseMaterial();
-                skybox.Material.SetMatrix("view", cameraTransform);
+                GL.Disable(EnableCap.CullFace);
+                GL.DepthFunc(DepthFunction.Lequal);
+
+                GraphicsAPI.UseMeshMaterial(skybox.Mesh, skybox.Material);
+
+                skybox.Material.SetMatrix("view", cameraTransform.ClearTranslation());
                 skybox.Material.SetMatrix("projection", camera.CalculatePerspective());
-                GL.DrawElements(PrimitiveType.Triangles, skybox.Mesh.GetIndiceCount(), DrawElementsType.UnsignedInt, 0);
-                GL.DepthMask(true);
+
+                GraphicsAPI.DrawTriangles(skybox.Mesh.GetIndiceCount());
+
+                GraphicsAPI.FreeMeshMaterial(skybox.Mesh, skybox.Material);
+
+                GL.Enable(EnableCap.CullFace);
+                GL.DepthFunc(DepthFunction.Less);
+                GL.BindVertexArray(0);
             });
         }
     }

@@ -51,6 +51,12 @@ namespace Entygine.Rendering
             mainTexture.UseTexture(TextureUnit.Texture0);
         }
 
+        public void FreeMaterial()
+        {
+            GL.UseProgram(0);
+            mainTexture.FreeTexture();
+        }
+
         public void SetMatrix(string name, Matrix4 matrix)
         {
             if (uniforms.TryGetValue(name, out int value))

@@ -11,6 +11,7 @@ namespace Entygine.Rendering
         public Skybox(Material material)
         {
             this.material = material;
+            this.material.LoadMaterial();
 
             cube = MeshPrimitives.CreateCube(1);
         }
