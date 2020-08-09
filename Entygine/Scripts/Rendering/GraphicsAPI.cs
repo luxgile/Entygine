@@ -1,5 +1,7 @@
 ﻿using Entygine.DevTools;
 using OpenToolkit.Graphics.OpenGL4;
+using System;
+using System.Diagnostics;
 
 namespace Entygine.Rendering
 {
@@ -39,7 +41,9 @@ namespace Entygine.Rendering
         {
             ErrorCode error = GL.GetError();
             if (error != ErrorCode.NoError)
-                DevConsole.Log(error);
+            {
+                DevConsole.Log(error + "\n" + new StackTrace());
+            }
         }
     }
 }

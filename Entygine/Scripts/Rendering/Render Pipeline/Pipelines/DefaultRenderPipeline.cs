@@ -14,8 +14,10 @@ namespace Entygine.Rendering.Pipeline
                 Matrix4 cameraTransform = transforms[i];
 
                 context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawGeometry(camera, cameraTransform));
-                context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawSkybox(camera, cameraTransform));
+                //context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawSkybox(camera, cameraTransform));
             }
+
+            //context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawUI());
         }
     }
 }

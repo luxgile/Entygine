@@ -1,7 +1,10 @@
 ﻿using Entygine.DevTools;
+using Entygine.UI;
 using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Entygine.Rendering.Pipeline
 {
@@ -79,6 +82,39 @@ namespace Entygine.Rendering.Pipeline
                 GL.DepthFunc(DepthFunction.Less);
                 GL.BindVertexArray(0);
             });
+        }
+
+        public static RenderCommand DrawUI()
+        {
+            return new RenderCommand("Draw Geometry", (ref RenderContext context) =>
+            {
+                if (!context.TryGetData(out UICanvasRenderData canvasRenderData))
+                    return;
+
+                GraphicsAPI.UseMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
+                List<UICanvas> canvases = canvasRenderData.GetCanvases();
+                for (int i = 0; i < canvases.Count; i++)
+                {
+                    UICanvas canvas = canvases[i];
+                    DrawElement(canvasRenderData, canvas.Root, Vector2.Zero, Vector2.One);
+                }
+                GraphicsAPI.FreeMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
+            });
+
+            static void DrawElement(UICanvasRenderData canvasRenderData, UIElement element, Vector2 position, Vector2 size)
+            {
+                //position.X += element.Style.leftPadding;
+                //position.Y += element.Style.bottomPadding;
+                //size.X -= element.Style.rightPadding;
+                //size.Y -= element.Style.topPadding;
+
+                Matrix4 model = Matrix4.Identity;
+                model *= Matrix4.CreateTranslation(new Vector3(position));
+                model *= Matrix4.CreateScale(new Vector3(size));
+
+                canvasRenderData.Material.SetMatrix("model", model);
+                GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
+            }
         }
     }
 }

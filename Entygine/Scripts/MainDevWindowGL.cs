@@ -10,6 +10,9 @@ using OpenToolkit.Windowing.Common.Input;
 using Entygine.DevTools;
 using Entygine.Cycles;
 using Entygine.Rendering.Pipeline;
+using Entygine.UI;
+using System;
+using System.Runtime.InteropServices;
 
 namespace Entygine
 {
@@ -60,6 +63,8 @@ namespace Entygine
                                                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"));
             Skybox skybox = new Skybox(new Material(skyboxShader, skyboxCubemap));
             RenderPipelineCore.SetSkybox(skybox);
+            if (RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
+                canvasData.AddCanvas(new UICanvas());
 
             Mesh meshResource = MeshPrimitives.CreateCube(1);
             Shader shaderResource = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
@@ -102,6 +107,14 @@ namespace Entygine
             GL.ClearColor(0.1f, 0.1f, 0.2f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
+
+            GL.Enable(EnableCap.DebugOutputSynchronous);
+            GL.DebugMessageCallback(OnCallback, IntPtr.Zero);
+        }
+
+        private void OnCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
+        {
+            DevConsole.Log(type + " " + Marshal.PtrToStringAuto(message));
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)

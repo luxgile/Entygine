@@ -89,6 +89,11 @@ namespace Entygine.Rendering
             return layouts;
         }
 
+        public void SetVertexLayout(VertexBufferLayout[] layout)
+        {
+            this.layouts = layout;
+        }
+
         public int GetVertexLayoutSize()
         {
             int size = 0;
@@ -109,15 +114,13 @@ namespace Entygine.Rendering
                     switch (layout.Attribute)
                     {
                         case VertexAttribute.Position:
-                            packedData[++v] = verts[i].X;
-                            packedData[++v] = verts[i].Y;
-                            packedData[++v] = verts[i].Z;
+                        for (int s = 0; s < layout.Size; s++)
+                            packedData[++v] = verts[i][s];
                             break;
 
                         case VertexAttribute.Normal:
-                            packedData[++v] = normals[i].X;
-                            packedData[++v] = normals[i].Y;
-                            packedData[++v] = normals[i].Z;
+                        for (int s = 0; s < layout.Size; s++)
+                            packedData[++v] = normals[i][s];
                             break;
 
                         case VertexAttribute.Tangent:
@@ -127,8 +130,8 @@ namespace Entygine.Rendering
                             break;
 
                         case VertexAttribute.Uv0:
-                            packedData[++v] = uvs[i].X;
-                            packedData[++v] = uvs[i].Y;
+                        for (int s = 0; s < layout.Size; s++)
+                            packedData[++v] = uvs[i][s];
                             break;
 
                         case VertexAttribute.Uv1:

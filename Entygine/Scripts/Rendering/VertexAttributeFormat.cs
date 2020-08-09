@@ -5,7 +5,7 @@ namespace Entygine.Rendering
 {
     public enum VertexAttributeFormat
     {
-        Float32,
+        Float32, Int32,
     }
 
     public static class VertexAttributeFormatExtensions
@@ -16,6 +16,9 @@ namespace Entygine.Rendering
             {
                 case VertexAttributeFormat.Float32:
                 return sizeof(float);
+
+                case VertexAttributeFormat.Int32:
+                return sizeof(int);
             }
 
             throw new NotImplementedException();
@@ -27,6 +30,9 @@ namespace Entygine.Rendering
             {
                 case VertexAttributeFormat.Float32:
                 return VertexAttribPointerType.Float;
+
+                case VertexAttributeFormat.Int32:
+                return VertexAttribPointerType.Int;
             }
 
             throw new NotImplementedException();
