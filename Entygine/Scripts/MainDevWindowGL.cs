@@ -29,12 +29,14 @@ namespace Entygine
         {
             base.OnResize(e);
 
-            GL.Viewport(0, 0, Size.X, Size.Y);
+            Ogl.Viewport(0, 0, Size.X, Size.Y);
         }
 
         protected override void OnLoad()
         {
             base.OnLoad();
+
+            Ogl.enableErrorCheck = true;
 
             DevConsole.AddLogger(new ConsoleLoggerFile());
             DevConsole.AddLogger(new NativeConsoleLogger());
@@ -78,7 +80,7 @@ namespace Entygine
 
             Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
             world.EntityManager.SetComponent(planeEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 0, 0)) });
-            Mesh planeMesh = MeshPrimitives.CreatePlane(50);
+            Mesh planeMesh = MeshPrimitives.CreatePlaneXZ(50);
             Material planeMaterial = new Material(shaderResource, Texture2D.CreateWhiteTexture(64, 64));
             world.EntityManager.SetSharedComponent(planeEntity, new SC_RenderMesh(planeMesh, planeMaterial));
 
@@ -96,7 +98,7 @@ namespace Entygine
 
             EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
             Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = new CameraData(45f, 800f / 600f, 0.1f, 100f) });
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
 
             Vector3 cameraPos = new Vector3(0, 2, 5);
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
@@ -104,17 +106,11 @@ namespace Entygine
 
             DevConsole.Log("Entity world created.");
 
-            GL.ClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.CullFace);
+            Ogl.ClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+            Ogl.Enable(EnableCap.DepthTest);
+            Ogl.Enable(EnableCap.CullFace);
 
-            GL.Enable(EnableCap.DebugOutputSynchronous);
-            GL.DebugMessageCallback(OnCallback, IntPtr.Zero);
-        }
-
-        private void OnCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
-        {
-            DevConsole.Log(type + " " + Marshal.PtrToStringAuto(message));
+            //Ogl.Enable(EnableCap.DebugOutputSynchronous);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)

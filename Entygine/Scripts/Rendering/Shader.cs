@@ -1,4 +1,5 @@
-﻿using OpenToolkit.Graphics.OpenGL4;
+﻿using Entygine.Rendering;
+using OpenToolkit.Graphics.OpenGL4;
 using System;
 using System.IO;
 using System.Text;
@@ -10,6 +11,10 @@ namespace Entygine
         public int handle;
         public string vertexPath = "";
         public string fragmentPath = "";
+
+        public bool IsCompiled { get; private set; }
+
+        public static int ShadersLoaded { get; private set; }
 
         public Shader(string vertexPath, string fragmentPath)
         {
@@ -23,19 +28,26 @@ namespace Entygine
             int vertexShader = CompileShader(ShaderType.VertexShader, vertexPath);
             int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentPath);
 
-            handle = GL.CreateProgram();
-            GL.AttachShader(handle, vertexShader);
-            GL.AttachShader(handle, fragmentShader);
-            GL.LinkProgram(handle);
+            handle = Ogl.CreateProgram();
+            Ogl.AttachShader(handle, vertexShader);
+            Ogl.AttachShader(handle, fragmentShader);
+            Ogl.LinkProgram(handle);
 
-            GL.DetachShader(handle, vertexShader);
-            GL.DetachShader(handle, fragmentShader);
-            GL.DeleteShader(vertexShader);
-            GL.DeleteShader(fragmentShader);
+            string infoLog = Ogl.GetProgramInfoLog(handle);
+            if (!string.IsNullOrEmpty(infoLog))
+                Console.WriteLine(infoLog);
+
+            Ogl.DetachShader(handle, vertexShader);
+            Ogl.DetachShader(handle, fragmentShader);
+            Ogl.DeleteShader(vertexShader);
+            Ogl.DeleteShader(fragmentShader);
+
+            IsCompiled = true;
+            ShadersLoaded++;
         }
         public int GetAttributeLocation(string attribName)
         {
-            return GL.GetAttribLocation(handle, attribName);
+            return Ogl.GetAttribLocation(handle, attribName);
         }
 
         private int CompileShader(ShaderType type, string path)
@@ -44,11 +56,11 @@ namespace Entygine
             using (StreamReader reader = new StreamReader(path, Encoding.UTF8))
                 shaderSource = reader.ReadToEnd();
 
-            int shader = GL.CreateShader(type);
-            GL.ShaderSource(shader, shaderSource);
+            int shader = Ogl.CreateShader(type);
+            Ogl.ShaderSource(shader, shaderSource);
 
-            GL.CompileShader(shader);
-            string infoLog = GL.GetShaderInfoLog(shader);
+            Ogl.CompileShader(shader);
+            string infoLog = Ogl.GetShaderInfoLog(shader);
             if (!string.IsNullOrEmpty(infoLog))
                 Console.WriteLine(infoLog);
 

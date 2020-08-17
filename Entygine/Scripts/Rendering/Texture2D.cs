@@ -19,13 +19,13 @@ namespace Entygine.Rendering
 
         public Texture2D(string path)
         {
-            this.handle = GL.GenTexture();
+            this.handle = Ogl.GenTexture();
             LoadFromPath(path);
         }
 
         public Texture2D(int width, int height)
         {
-            this.handle = GL.GenTexture();
+            this.handle = Ogl.GenTexture();
             this.width = width;
             this.height = height;
 
@@ -62,13 +62,13 @@ namespace Entygine.Rendering
                 packedData[packedIndex++] = pixels[i].A;
             }
 
-            GL.BindTexture(TextureTarget.Texture2D, handle);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, packedData);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            Ogl.BindTexture(TextureTarget.Texture2D, handle);
+            Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, packedData);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+            Ogl.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
 
         public void SetPixels(Rgba32[] pixels)
@@ -94,6 +94,16 @@ namespace Entygine.Rendering
             Rgba32[] pixels = new Rgba32[width * height];
             for (int i = 0; i < pixels.Length; i++)
                 pixels[i] = new Rgba32(255, 255, 255, 255);
+            texture.SetPixels(pixels);
+            return texture;
+        }
+
+        public static Texture2D CreatePlainTexture(int width, int height, Rgba32 color)
+        {
+            Texture2D texture = new Texture2D(width, height);
+            Rgba32[] pixels = new Rgba32[width * height];
+            for (int i = 0; i < pixels.Length; i++)
+                pixels[i] = color;
             texture.SetPixels(pixels);
             return texture;
         }

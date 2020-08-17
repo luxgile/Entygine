@@ -24,7 +24,7 @@ namespace Entygine.Rendering
             if (paths.Length != 6)
                 throw new ArgumentException("Cubemap needs 6 path for every texture");
 
-            this.handle = GL.GenBuffer();
+            this.handle = Ogl.GenBuffer();
 
             LoadFromPath(paths);
         }
@@ -55,7 +55,7 @@ namespace Entygine.Rendering
         {
             packedData = new byte[6][];
 
-            GL.BindTexture(TextureTarget.TextureCubeMap, handle);
+            Ogl.BindTexture(TextureTarget.TextureCubeMap, handle);
 
             for (int i = 0; i < facesPixels.Length; i++)
             {
@@ -72,11 +72,11 @@ namespace Entygine.Rendering
                 GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, packedData[i]);
             }
 
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
             //GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
         }
 

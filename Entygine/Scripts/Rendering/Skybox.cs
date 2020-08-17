@@ -1,7 +1,4 @@
-﻿using OpenToolkit.Graphics.OpenGL4;
-using System.IO.Compression;
-
-namespace Entygine.Rendering
+﻿namespace Entygine.Rendering
 {
     public class Skybox
     {
@@ -14,6 +11,10 @@ namespace Entygine.Rendering
             this.material.LoadMaterial();
 
             cube = MeshPrimitives.CreateCube(1);
+            cube.SetVertexLayout(new VertexBufferLayout[]
+            {
+                new VertexBufferLayout(VertexAttribute.Position, VertexAttributeFormat.Float32, 3),
+            });
         }
 
         public Mesh Mesh => cube;

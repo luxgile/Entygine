@@ -2,7 +2,6 @@
 using OpenToolkit.Mathematics;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Entygine.Rendering
 {
@@ -31,9 +30,9 @@ namespace Entygine.Rendering
             this.uvs = uvs ?? throw new ArgumentNullException(nameof(uvs));
             this.tris = tris ?? throw new ArgumentNullException(nameof(tris));
 
-            vertexArrayHandle = GL.GenVertexArray();
-            vertexBuffer = GL.GenBuffer();
-            trisBuffer = GL.GenBuffer();
+            vertexArrayHandle = Ogl.GenVertexArray();
+            vertexBuffer = Ogl.GenBuffer();
+            trisBuffer = Ogl.GenBuffer();
 
             layouts = new[]
             {
@@ -58,13 +57,13 @@ namespace Entygine.Rendering
         {
             CalculatePackedData();
 
-            GL.BindVertexArray(vertexArrayHandle);
+            Ogl.BindVertexArray(vertexArrayHandle);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
-            GL.BufferData(BufferTarget.ArrayBuffer, packedData.Length * sizeof(float), packedData, BufferUsageHint.StaticDraw);
+            Ogl.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
+            Ogl.BufferData(BufferTarget.ArrayBuffer, packedData.Length * sizeof(float), packedData, BufferUsageHint.StaticDraw);
 
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, trisBuffer);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, tris.Length * sizeof(uint), tris, BufferUsageHint.StaticDraw);
+            Ogl.BindBuffer(BufferTarget.ElementArrayBuffer, trisBuffer);
+            Ogl.BufferData(BufferTarget.ElementArrayBuffer, tris.Length * sizeof(uint), tris, BufferUsageHint.StaticDraw);
 
             VertexBufferLayout[] layouts = GetVertexLayout();
             int layoutSize = GetVertexLayoutSize();
@@ -75,13 +74,13 @@ namespace Entygine.Rendering
                 int location = layout.Attribute.GetAttributeLocation(mat);
 
                 int stride = layoutSize * layout.Format.ByteSize();
-                GL.EnableVertexAttribArray(location);
-                GL.VertexAttribPointer(location, layout.Size, layout.Format.ToOpenGlAttribType(), false, stride, layoutOffset);
+                Ogl.EnableVertexAttribArray(location);
+                Ogl.VertexAttribPointer(location, layout.Size, layout.Format.ToOpenGlAttribType(), false, stride, layoutOffset);
 
                 layoutOffset += layout.Size * layout.Format.ByteSize();
             }
 
-            GL.BindVertexArray(0);
+            Ogl.BindVertexArray(0);
         }
 
         public VertexBufferLayout[] GetVertexLayout()
@@ -92,6 +91,8 @@ namespace Entygine.Rendering
         public void SetVertexLayout(VertexBufferLayout[] layout)
         {
             this.layouts = layout;
+
+            meshChanged = true;
         }
 
         public int GetVertexLayoutSize()

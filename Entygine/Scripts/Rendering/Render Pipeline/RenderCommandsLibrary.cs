@@ -1,10 +1,7 @@
-﻿using Entygine.DevTools;
-using Entygine.UI;
+﻿using Entygine.UI;
 using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace Entygine.Rendering.Pipeline
 {
@@ -14,7 +11,7 @@ namespace Entygine.Rendering.Pipeline
         {
             return new RenderCommand("Clear Buffers", (ref RenderContext context) =>
             {
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                Ogl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             });
         }
 
@@ -25,7 +22,7 @@ namespace Entygine.Rendering.Pipeline
                 if (!context.TryGetData(out GeometryRenderData geometryData))
                     return;
 
-                Matrix4 projection = camera.CalculatePerspective();
+                Matrix4 projection = camera.CalculateProjection();
 
                 List<MeshRenderGroup> renderGroups = geometryData.GetRenderGroups();
                 for (int i = 0; i < renderGroups.Count; i++)
@@ -66,21 +63,21 @@ namespace Entygine.Rendering.Pipeline
 
                 Skybox skybox = skyboxRenderData.skybox;
 
-                GL.Disable(EnableCap.CullFace);
-                GL.DepthFunc(DepthFunction.Lequal);
+                Ogl.Disable(EnableCap.CullFace);
+                Ogl.DepthFunc(DepthFunction.Lequal);
 
                 GraphicsAPI.UseMeshMaterial(skybox.Mesh, skybox.Material);
 
                 skybox.Material.SetMatrix("view", cameraTransform.ClearTranslation());
-                skybox.Material.SetMatrix("projection", camera.CalculatePerspective());
+                skybox.Material.SetMatrix("projection", camera.CalculateProjection());
 
                 GraphicsAPI.DrawTriangles(skybox.Mesh.GetIndiceCount());
 
                 GraphicsAPI.FreeMeshMaterial(skybox.Mesh, skybox.Material);
 
-                GL.Enable(EnableCap.CullFace);
-                GL.DepthFunc(DepthFunction.Less);
-                GL.BindVertexArray(0);
+                Ogl.Enable(EnableCap.CullFace);
+                Ogl.DepthFunc(DepthFunction.Less);
+                Ogl.BindVertexArray(0);
             });
         }
 
@@ -92,11 +89,24 @@ namespace Entygine.Rendering.Pipeline
                     return;
 
                 GraphicsAPI.UseMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
+
+                Matrix4 projection = canvasRenderData.Camera.CalculateProjection();
+                canvasRenderData.Material.SetMatrix("projection", projection);
+
                 List<UICanvas> canvases = canvasRenderData.GetCanvases();
                 for (int i = 0; i < canvases.Count; i++)
                 {
                     UICanvas canvas = canvases[i];
-                    DrawElement(canvasRenderData, canvas.Root, Vector2.Zero, Vector2.One);
+
+                    Matrix4 model = Matrix4.Identity;
+                    model *= Matrix4.CreateTranslation(new Vector3(0, 0, 0));
+                    //Okay this is not right, Check this shit out
+                    model *= Matrix4.CreateScale(new Vector3(0.0000001f, 0.0000001f, 0));
+
+                    canvasRenderData.Material.SetMatrix("model", model);
+                    GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
+
+                    //DrawElement(canvasRenderData, canvas.Root, Vector2.Zero, Vector2.One * 100);
                 }
                 GraphicsAPI.FreeMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
             });

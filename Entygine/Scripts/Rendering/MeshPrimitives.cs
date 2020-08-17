@@ -74,7 +74,7 @@ namespace Entygine.Rendering
             return mesh;
         }
 
-        public static Mesh CreatePlane(float size)
+        public static Mesh CreatePlaneXZ(float size)
         {
             float halfSize = size / 2;
             Vector3[] vertices = new Vector3[]
@@ -101,6 +101,38 @@ namespace Entygine.Rendering
                 new Vector3(0, 1, 0),
                 new Vector3(0, 1, 0),
                 new Vector3(0, 1, 0),
+            };
+
+            return new Mesh(vertices, normals, uvs, tris);
+        }
+
+        public static Mesh CreatePlaneXY(float size)
+        {
+            float halfSize = size / 2;
+            Vector3[] vertices = new Vector3[]
+            {
+                new Vector3(-halfSize, -halfSize, 0),
+                new Vector3(-halfSize, halfSize, 0),
+                new Vector3(halfSize, halfSize, 0),
+                new Vector3(halfSize, -halfSize, 0),
+            };
+            Vector2[] uvs = new Vector2[]
+            {
+                new Vector2(0, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                new Vector2(1, 0),
+            };
+            uint[] tris = new uint[]
+            {
+                0, 2, 1, 0, 3, 2 
+            };
+            Vector3[] normals = new Vector3[]
+            {
+                new Vector3(0, 0, 1),
+                new Vector3(0, 0, 1),
+                new Vector3(0, 0, 1),
+                new Vector3(0, 0, 1),
             };
 
             return new Mesh(vertices, normals, uvs, tris);

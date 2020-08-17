@@ -1,7 +1,4 @@
 ﻿using OpenToolkit.Graphics.OpenGL4;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Entygine.Rendering
 {
@@ -22,13 +19,13 @@ namespace Entygine.Rendering
                 CalculatePackedData();
             }
 
-            GL.ActiveTexture(unit);
-            GL.BindTexture(TextureType, Handle);
+            Ogl.ActiveTexture(unit);
+            Ogl.BindTexture(TextureType, Handle);
         }
 
         public void FreeTexture()
         {
-            GL.BindTexture(TextureType, 0);
+            Ogl.BindTexture(TextureType, 0);
         }
 
         protected abstract void CalculatePackedData();

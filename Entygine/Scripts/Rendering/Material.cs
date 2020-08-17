@@ -2,6 +2,7 @@
 using OpenToolkit.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
+using Entygine.DevTools;
 
 namespace Entygine.Rendering
 {
@@ -32,11 +33,11 @@ namespace Entygine.Rendering
             if (!shader.IsValid)
                 shader.CompileShader();
 
-            GL.GetProgram(shader.handle, GetProgramParameterName.ActiveUniforms, out int uniformCount);
+            Ogl.GetProgram(shader.handle, GetProgramParameterName.ActiveUniforms, out int uniformCount);
             for (int i = 0; i < uniformCount; i++)
             {
-                string key = GL.GetActiveUniform(shader.handle, i, out _, out _);
-                int location = GL.GetUniformLocation(shader.handle, key);
+                string key = Ogl.GetActiveUniform(shader.handle, i, out _, out _);
+                int location = Ogl.GetUniformLocation(shader.handle, key);
                 if (uniforms.ContainsKey(key))
                     uniforms[key] = location;
                 else
@@ -46,14 +47,17 @@ namespace Entygine.Rendering
 
         public void UseMaterial()
         {
-            GL.UseProgram(shader.handle);
+            if (Ogl.IsProgram(shader.handle))
+                Ogl.UseProgram(shader.handle);
+            else
+                DevConsole.Log($"Shader handle is not considered a program ({shader.handle})");
 
             mainTexture.UseTexture(TextureUnit.Texture0);
         }
 
         public void FreeMaterial()
         {
-            GL.UseProgram(0);
+            Ogl.UseProgram(0);
             mainTexture.FreeTexture();
         }
 
@@ -61,8 +65,8 @@ namespace Entygine.Rendering
         {
             if (uniforms.TryGetValue(name, out int value))
             {
-                GL.UseProgram(shader.handle);
-                GL.UniformMatrix4(value, true, ref matrix);
+                Ogl.UseProgram(shader.handle);
+                Ogl.UniformMatrix4(value, true, ref matrix);
             }
         }
 
@@ -70,8 +74,8 @@ namespace Entygine.Rendering
         {
             if (uniforms.TryGetValue(name, out int value))
             {
-                GL.UseProgram(shader.handle);
-                GL.Uniform3(value, vector);
+                Ogl.UseProgram(shader.handle);
+                Ogl.Uniform3(value, vector);
             }
             else
             {

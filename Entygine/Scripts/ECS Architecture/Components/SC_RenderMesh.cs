@@ -1,10 +1,9 @@
 ﻿using Entygine.Rendering;
-using OpenToolkit.Graphics.OpenGL4;
 using System;
 
 namespace Entygine.Ecs.Components
 {
-    public struct SC_RenderMesh : ISharedComponent, IDisposable
+    public struct SC_RenderMesh : ISharedComponent
     {
         public Mesh mesh;
         public Material material;
@@ -18,15 +17,6 @@ namespace Entygine.Ecs.Components
             isDisposed = false;
 
             material.LoadMaterial();
-        }
-
-        public void Dispose()
-        {
-            if (!isDisposed)
-            {
-                GL.DeleteProgram(material.shader.handle);
-                isDisposed = true;
-            }
         }
     }
 }
