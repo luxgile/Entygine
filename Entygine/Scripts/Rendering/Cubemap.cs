@@ -24,7 +24,7 @@ namespace Entygine.Rendering
             if (paths.Length != 6)
                 throw new ArgumentException("Cubemap needs 6 path for every texture");
 
-            this.handle = Ogl.GenBuffer();
+            this.handle = Ogl.GenTexture();
 
             LoadFromPath(paths);
         }

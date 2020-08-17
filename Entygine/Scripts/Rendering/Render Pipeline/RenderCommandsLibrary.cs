@@ -1,6 +1,8 @@
-﻿using Entygine.UI;
+﻿using Entygine.DevTools;
+using Entygine.UI;
 using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
+using SixLabors.ImageSharp;
 using System.Collections.Generic;
 
 namespace Entygine.Rendering.Pipeline
@@ -81,6 +83,8 @@ namespace Entygine.Rendering.Pipeline
             });
         }
 
+        static Vector3 m_size = new Vector3(0.00000001f, 0.00000001f, 1);
+        static Vector3 m_pos = new Vector3(0, 0, 0);
         public static RenderCommand DrawUI()
         {
             return new RenderCommand("Draw Geometry", (ref RenderContext context) =>
@@ -98,10 +102,26 @@ namespace Entygine.Rendering.Pipeline
                 {
                     UICanvas canvas = canvases[i];
 
+                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.N))
+                        m_size.X += 0.0000001f;
+                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.M))
+                        m_size.X -= 0.0000001f;
+
+                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.O))
+                        m_pos.X += 1000000f;
+                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.P))
+                        m_pos.X -= 1000000f;
+
                     Matrix4 model = Matrix4.Identity;
-                    model *= Matrix4.CreateTranslation(new Vector3(0, 0, 0));
-                    //Okay this is not right, Check this shit out
-                    model *= Matrix4.CreateScale(new Vector3(0.0000001f, 0.0000001f, 0));
+                    model *= Matrix4.CreateTranslation(m_pos);
+                    model *= Matrix4.CreateScale(m_size);
+                    List<Vector3> verts = new List<Vector3>();
+                    canvasRenderData.Mesh.GetVertices(ref verts);
+                    for (int v = 0; v < verts.Count; v++)
+                    {
+                        Vector4 result = new Vector4(verts[v], 1) * model * projection;
+                        DevConsole.Log(result);
+                    }
 
                     canvasRenderData.Material.SetMatrix("model", model);
                     GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());

@@ -68,6 +68,10 @@ namespace Entygine.Rendering
                 Ogl.UseProgram(shader.handle);
                 Ogl.UniformMatrix4(value, true, ref matrix);
             }
+            else
+            {
+                DevConsole.Log($"{name} wasn't found as matrix in shader.");
+            }
         }
 
         public void SetVector3(string name, Vector3 vector)
@@ -79,7 +83,7 @@ namespace Entygine.Rendering
             }
             else
             {
-                Console.WriteLine($"Key '{name}' not found in shader.");
+                DevConsole.Log($"{name} wasn't found as Vector3 in shader.");
             }
         }
 
