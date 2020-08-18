@@ -23,13 +23,8 @@ namespace Entygine.Rendering
 
         private bool meshChanged;
 
-        public Mesh(Vector3[] verts, Vector3[] normals, Vector2[] uvs, uint[] tris)
+        public Mesh() 
         {
-            this.verts = verts ?? throw new ArgumentNullException(nameof(verts));
-            this.normals = normals ?? throw new ArgumentNullException(nameof(normals));
-            this.uvs = uvs ?? throw new ArgumentNullException(nameof(uvs));
-            this.tris = tris ?? throw new ArgumentNullException(nameof(tris));
-
             vertexArrayHandle = Ogl.GenVertexArray();
             vertexBuffer = Ogl.GenBuffer();
             trisBuffer = Ogl.GenBuffer();
@@ -40,6 +35,13 @@ namespace Entygine.Rendering
                 new VertexBufferLayout(VertexAttribute.Uv0, VertexAttributeFormat.Float32, 2),
                 new VertexBufferLayout(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3),
             };
+        }
+        public Mesh(Vector3[] verts, Vector3[] normals, Vector2[] uvs, uint[] tris) : this()
+        {
+            this.verts = verts ?? throw new ArgumentNullException(nameof(verts));
+            this.normals = normals ?? throw new ArgumentNullException(nameof(normals));
+            this.uvs = uvs ?? throw new ArgumentNullException(nameof(uvs));
+            this.tris = tris ?? throw new ArgumentNullException(nameof(tris));
 
             meshChanged = true;
         }
@@ -117,44 +119,44 @@ namespace Entygine.Rendering
                         case VertexAttribute.Position:
                         for (int s = 0; s < layout.Size; s++)
                             packedData[++v] = verts[i][s];
-                            break;
+                        break;
 
                         case VertexAttribute.Normal:
                         for (int s = 0; s < layout.Size; s++)
                             packedData[++v] = normals[i][s];
-                            break;
+                        break;
 
                         case VertexAttribute.Tangent:
-                            break;
+                        break;
 
                         case VertexAttribute.Color:
-                            break;
+                        break;
 
                         case VertexAttribute.Uv0:
                         for (int s = 0; s < layout.Size; s++)
                             packedData[++v] = uvs[i][s];
-                            break;
+                        break;
 
                         case VertexAttribute.Uv1:
-                            break;
+                        break;
 
                         case VertexAttribute.Uv2:
-                            break;
+                        break;
 
                         case VertexAttribute.Uv3:
-                            break;
+                        break;
 
                         case VertexAttribute.Uv4:
-                            break;
+                        break;
 
                         case VertexAttribute.Uv5:
-                            break;
+                        break;
 
                         case VertexAttribute.Uv6:
-                            break;
+                        break;
 
                         case VertexAttribute.Uv7:
-                            break;
+                        break;
                     }
                 }
             }

@@ -104,7 +104,7 @@ namespace Entygine.Rendering.Pipeline
                     UICanvas canvas = canvases[i];
                     float windowWidth = MainDevWindowGL.Window.Size.X;
                     float windowHeight = MainDevWindowGL.Window.Size.Y;
-                    Vector2 center = new Vector2(0.5f, 0.5f);
+                    Vector2 center = Vector2.Zero;
                     Vector2 size = new Vector2(windowWidth, windowHeight);
                     DrawElement(canvasRenderData, canvas.Root, center, size);
                 }
@@ -117,16 +117,14 @@ namespace Entygine.Rendering.Pipeline
                 float windowWidth = MainDevWindowGL.Window.Size.X;
                 float windowHeight = MainDevWindowGL.Window.Size.Y;
 
-                adsasdasd
-                //TODO: REALLY confusing. Position is normalized in (0,0) to (1,1) but size is in pixels (0,0) to (800, 600).
-                position.X += element.Style.leftPadding / windowWidth;
-                position.Y += element.Style.bottomPadding / windowHeight;
+                position.X += element.Style.leftPadding;
+                position.Y += element.Style.bottomPadding;
                 size.X -= element.Style.rightPadding * 2;
                 size.Y -= element.Style.topPadding * 2;
 
                 Matrix4 model = Matrix4.Identity;
-                model *= Matrix4.CreateTranslation(new Vector3(position));
                 model *= Matrix4.CreateScale(new Vector3(size));
+                model *= Matrix4.CreateTranslation(new Vector3(position));
 
                 canvasRenderData.Material.SetMatrix("model", model);
                 GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
