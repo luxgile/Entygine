@@ -14,5 +14,6 @@ void main()
 {
 	texCoord = aTexCoord;
 	gl_Position = vec4(aPosition, 1.0) * model * view * projection;
+//	gl_Position = projection * view *  model * vec4(aPosition, 1.0);
 	normal = aNormal;
 }

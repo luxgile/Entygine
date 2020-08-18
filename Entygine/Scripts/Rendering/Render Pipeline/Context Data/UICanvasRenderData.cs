@@ -9,22 +9,27 @@ namespace Entygine.Rendering
 {
     public class UICanvasRenderData : RenderContextData
     {
+        private CameraData camera;
         private List<UICanvas> canvases = new List<UICanvas>();
 
         public UICanvasRenderData()
         {
-            Camera = CameraData.CreateOrthographicCamera(MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y, -1, 1);
+            camera = CameraData.CreateOrthographicCamera(MainDevWindowGL.Window.Size.X / MainDevWindowGL.Window.Size.Y, 1, -1, 1);
+            camera.SetOrthoResolution(MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y);
 
             Shader uiShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.vert"), AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.frag"));
-            Material = new Material(uiShader, Texture2D.CreatePlainTexture(64, 64, Rgba32.ParseHex("4f97cf")));
+
+            Texture2D texture = Texture2D.CreatePlainTexture(64, 64, Rgba32.ParseHex("4f97cf"));
+
+            Material = new Material(uiShader, texture);
             Material.LoadMaterial();
 
             Mesh = MeshPrimitives.CreatePlaneXY(1);
 
             Mesh.SetVertexLayout(new VertexBufferLayout[]
             {
-                new VertexBufferLayout(VertexAttribute.Position, VertexAttributeFormat.Int32, 2),
-                new VertexBufferLayout(VertexAttribute.Uv0, VertexAttributeFormat.Int32, 2),
+                new VertexBufferLayout(VertexAttribute.Position, VertexAttributeFormat.Float32, 2),
+                new VertexBufferLayout(VertexAttribute.Uv0, VertexAttributeFormat.Float32, 2),
             });
         }
 
@@ -33,6 +38,6 @@ namespace Entygine.Rendering
 
         public Mesh Mesh { get; }
         public Material Material { get; }
-        public CameraData Camera { get; }
+        public CameraData Camera => camera;
     }
 }

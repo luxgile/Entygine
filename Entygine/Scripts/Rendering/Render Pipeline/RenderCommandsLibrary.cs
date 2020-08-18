@@ -58,7 +58,7 @@ namespace Entygine.Rendering.Pipeline
 
         public static RenderCommand DrawSkybox(CameraData camera, Matrix4 cameraTransform)
         {
-            return new RenderCommand("Draw Geometry", (ref RenderContext context) =>
+            return new RenderCommand("Draw Skybox", (ref RenderContext context) =>
             {
                 if (!context.TryGetData(out SkyboxRenderData skyboxRenderData))
                     return;
@@ -83,15 +83,16 @@ namespace Entygine.Rendering.Pipeline
             });
         }
 
-        static Vector3 m_size = new Vector3(0.00000001f, 0.00000001f, 1);
-        static Vector3 m_pos = new Vector3(0, 0, 0);
+        static Vector3 m_size = new Vector3(200f, 200f, 1f);
+        static Vector3 m_pos = new Vector3(200f, 200f, 0);
         public static RenderCommand DrawUI()
         {
-            return new RenderCommand("Draw Geometry", (ref RenderContext context) =>
+            return new RenderCommand("Draw UI", (ref RenderContext context) =>
             {
                 if (!context.TryGetData(out UICanvasRenderData canvasRenderData))
                     return;
 
+                Ogl.Disable(EnableCap.CullFace);
                 GraphicsAPI.UseMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
 
                 Matrix4 projection = canvasRenderData.Camera.CalculateProjection();
@@ -101,42 +102,27 @@ namespace Entygine.Rendering.Pipeline
                 for (int i = 0; i < canvases.Count; i++)
                 {
                     UICanvas canvas = canvases[i];
-
-                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.N))
-                        m_size.X += 0.0000001f;
-                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.M))
-                        m_size.X -= 0.0000001f;
-
-                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.O))
-                        m_pos.X += 1000000f;
-                    if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenToolkit.Windowing.Common.Input.Key.P))
-                        m_pos.X -= 1000000f;
-
-                    Matrix4 model = Matrix4.Identity;
-                    model *= Matrix4.CreateTranslation(m_pos);
-                    model *= Matrix4.CreateScale(m_size);
-                    List<Vector3> verts = new List<Vector3>();
-                    canvasRenderData.Mesh.GetVertices(ref verts);
-                    for (int v = 0; v < verts.Count; v++)
-                    {
-                        Vector4 result = new Vector4(verts[v], 1) * model * projection;
-                        DevConsole.Log(result);
-                    }
-
-                    canvasRenderData.Material.SetMatrix("model", model);
-                    GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
-
-                    //DrawElement(canvasRenderData, canvas.Root, Vector2.Zero, Vector2.One * 100);
+                    float windowWidth = MainDevWindowGL.Window.Size.X;
+                    float windowHeight = MainDevWindowGL.Window.Size.Y;
+                    Vector2 center = new Vector2(0.5f, 0.5f);
+                    Vector2 size = new Vector2(windowWidth, windowHeight);
+                    DrawElement(canvasRenderData, canvas.Root, center, size);
                 }
                 GraphicsAPI.FreeMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
+                Ogl.Enable(EnableCap.CullFace);
             });
 
             static void DrawElement(UICanvasRenderData canvasRenderData, UIElement element, Vector2 position, Vector2 size)
             {
-                //position.X += element.Style.leftPadding;
-                //position.Y += element.Style.bottomPadding;
-                //size.X -= element.Style.rightPadding;
-                //size.Y -= element.Style.topPadding;
+                float windowWidth = MainDevWindowGL.Window.Size.X;
+                float windowHeight = MainDevWindowGL.Window.Size.Y;
+
+                adsasdasd
+                //TODO: REALLY confusing. Position is normalized in (0,0) to (1,1) but size is in pixels (0,0) to (800, 600).
+                position.X += element.Style.leftPadding / windowWidth;
+                position.Y += element.Style.bottomPadding / windowHeight;
+                size.X -= element.Style.rightPadding * 2;
+                size.Y -= element.Style.topPadding * 2;
 
                 Matrix4 model = Matrix4.Identity;
                 model *= Matrix4.CreateTranslation(new Vector3(position));

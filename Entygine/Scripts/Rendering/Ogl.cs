@@ -3,7 +3,6 @@ using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
 using SixLabors.ImageSharp;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Entygine.Rendering
@@ -164,16 +163,9 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
-        private static Dictionary<TextureTarget, int> bindedTextures = new Dictionary<TextureTarget, int>();
-
         public static void BindTexture(TextureTarget target, int handle)
         {
             GL.BindTexture(target, handle);
-
-            if (bindedTextures.ContainsKey(target))
-                bindedTextures[target] = handle;
-            else
-                bindedTextures.Add(target, handle);
 
             if (enableErrorCheck)
                 LogErrors();

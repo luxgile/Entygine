@@ -84,6 +84,12 @@ namespace Entygine
             Material planeMaterial = new Material(shaderResource, Texture2D.CreateWhiteTexture(64, 64));
             world.EntityManager.SetSharedComponent(planeEntity, new SC_RenderMesh(planeMesh, planeMaterial));
 
+            Entity planeEntity2 = world.EntityManager.CreateEntity(meshArchetype);
+            world.EntityManager.SetComponent(planeEntity2, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 5, -10)) });
+            Mesh planeMesh2 = MeshPrimitives.CreatePlaneXY(10);
+            Material planeMaterial2 = new Material(shaderResource, texture);
+            world.EntityManager.SetSharedComponent(planeEntity2, new SC_RenderMesh(planeMesh2, planeMaterial2));
+
             Entity boxEntity = world.EntityManager.CreateEntity(meshArchetype);
             world.EntityManager.SetComponent(boxEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 2, 0)) });
             world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
@@ -99,10 +105,12 @@ namespace Entygine
             EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
             Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
+            //world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreateOrthographicCamera(800 / 600f, 1f, 0.1f, 100f) });
 
-            Vector3 cameraPos = new Vector3(0, 2, 5);
+            Vector3 cameraPos = new Vector3(0, 10, 10);
+            Vector3 dir = (Vector3.Zero - cameraPos).Normalized();
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, dir = -Vector3.UnitZ, pos = cameraPos });
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, dir = dir, pos = cameraPos });
 
             DevConsole.Log("Entity world created.");
 

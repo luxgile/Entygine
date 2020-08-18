@@ -16,30 +16,40 @@ namespace Entygine.Rendering
         public float aspectRatio;
 
         //Orthographic
-        public float width;
-        public float height;
+        public float orthoSize;
 
         public static CameraData CreatePerpectiveCamera(float fov, float ratio, float nearPlane, float farPlane)
         {
-            CameraData camera = new CameraData();
-            camera.fov = fov;
-            camera.aspectRatio = ratio;
-            camera.nearPlane = nearPlane;
-            camera.farPlane = farPlane;
-            camera.mode = RenderingMode.Perspective;
-            return camera;
+            return new CameraData
+            {
+                fov = fov,
+                aspectRatio = ratio,
+                nearPlane = nearPlane,
+                farPlane = farPlane,
+                mode = RenderingMode.Perspective
+            };
         }
 
-        public static CameraData CreateOrthographicCamera(float width, float height, float nearPlane, float farPlane)
+        public static CameraData CreateOrthographicCamera(float aspectRatio, float orthoSize, float nearPlane, float farPlane)
         {
-            CameraData camera = new CameraData();
-            camera.width = width;
-            camera.height = height;
-            camera.nearPlane = nearPlane;
-            camera.farPlane = farPlane;
-            camera.mode = RenderingMode.Orthographic;
-            return camera;
+            return new CameraData
+            {
+                aspectRatio = aspectRatio,
+                nearPlane = nearPlane,
+                farPlane = farPlane,
+                orthoSize = orthoSize,
+                mode = RenderingMode.Orthographic
+            };
         }
+
+        public void SetOrthoResolution(float width, float height)
+        {
+            aspectRatio = width / height;
+            orthoSize = height / 2;
+        }
+
+        public float OrthoHeight => orthoSize * 2f;
+        public float OrthoWidth => OrthoHeight * aspectRatio;
 
         public float RadiansFov => MathHelper.DegreesToRadians(fov);
 
@@ -48,7 +58,7 @@ namespace Entygine.Rendering
             if (mode == RenderingMode.Perspective)
                 return Matrix4.CreatePerspectiveFieldOfView(RadiansFov, aspectRatio, nearPlane, farPlane);
             else
-                return Matrix4.CreateOrthographicOffCenter(0, width, 0, height, nearPlane, farPlane);
+                return Matrix4.CreateOrthographicOffCenter(0.0f, OrthoWidth, 0.0f, OrthoHeight, nearPlane, farPlane);
         }
     }
 }
