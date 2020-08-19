@@ -3,6 +3,7 @@ using OpenToolkit.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using Entygine.DevTools;
+using Entygine.Mathematics;
 
 namespace Entygine.Rendering
 {
@@ -84,6 +85,15 @@ namespace Entygine.Rendering
             else
             {
                 DevConsole.Log($"{name} wasn't found as Vector3 in shader.");
+            }
+        }
+
+        public void SetColor(string name, Color01 color)
+        {
+            if (uniforms.TryGetValue(name, out int value))
+            {
+                Ogl.UseProgram(shader.handle);
+                Ogl.Uniform4(value, color);
             }
         }
 

@@ -19,7 +19,7 @@ namespace Entygine.Rendering
 
             Shader uiShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.vert"), AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.frag"));
 
-            Texture2D texture = Texture2D.CreatePlainTexture(64, 64, Rgba32.ParseHex("4f97cf"));
+            Texture2D texture = Texture2D.CreateWhiteTexture(64, 64);
 
             Material = new Material(uiShader, texture);
             Material.LoadMaterial();

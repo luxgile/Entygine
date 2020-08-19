@@ -3,6 +3,7 @@ using Entygine.UI;
 using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
 using SixLabors.ImageSharp;
+using System;
 using System.Collections.Generic;
 
 namespace Entygine.Rendering.Pipeline
@@ -93,6 +94,9 @@ namespace Entygine.Rendering.Pipeline
                     return;
 
                 Ogl.Disable(EnableCap.CullFace);
+                Ogl.Disable(EnableCap.DepthTest);
+                Ogl.Enable(EnableCap.Blend);
+                Ogl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GraphicsAPI.UseMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
 
                 Matrix4 projection = canvasRenderData.Camera.CalculateProjection();
@@ -102,33 +106,29 @@ namespace Entygine.Rendering.Pipeline
                 for (int i = 0; i < canvases.Count; i++)
                 {
                     UICanvas canvas = canvases[i];
-                    float windowWidth = MainDevWindowGL.Window.Size.X;
-                    float windowHeight = MainDevWindowGL.Window.Size.Y;
-                    Vector2 center = Vector2.Zero;
-                    Vector2 size = new Vector2(windowWidth, windowHeight);
-                    DrawElement(canvasRenderData, canvas.Root, center, size);
+                    Matrix4[] models = canvas.CalculateModels();
+                    for (int m = 0; m < models.Length; m++)
+                    {
+                        Color01 color = new Color01(1, 1, 1, 0.4f);
+                        canvasRenderData.Material.SetMatrix("model", models[m]);
+                        canvasRenderData.Material.SetColor("color", color);
+                        GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
+                    }
+                    //DrawElement(canvasRenderData, canvas.Root, canvas.GetModelMatrix());
                 }
                 GraphicsAPI.FreeMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
                 Ogl.Enable(EnableCap.CullFace);
+                Ogl.Enable(EnableCap.DepthTest);
+                Ogl.Disable(EnableCap.Blend);
             });
 
-            static void DrawElement(UICanvasRenderData canvasRenderData, UIElement element, Vector2 position, Vector2 size)
-            {
-                float windowWidth = MainDevWindowGL.Window.Size.X;
-                float windowHeight = MainDevWindowGL.Window.Size.Y;
-
-                position.X += element.Style.leftPadding;
-                position.Y += element.Style.bottomPadding;
-                size.X -= element.Style.rightPadding * 2;
-                size.Y -= element.Style.topPadding * 2;
-
-                Matrix4 model = Matrix4.Identity;
-                model *= Matrix4.CreateScale(new Vector3(size));
-                model *= Matrix4.CreateTranslation(new Vector3(position));
-
-                canvasRenderData.Material.SetMatrix("model", model);
-                GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
-            }
+            //static void DrawElement(UICanvasRenderData canvasRenderData, UIElement element, Matrix4 parentMatrix)
+            //{
+            //    Matrix4 model = element.GetModelMatrix(parentMatrix);
+            //    canvasRenderData.Material.SetMatrix("model", model);
+            //    canvasRenderData.Material.SetColor("color", element.Color);
+            //    GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
+            //}
         }
     }
 }

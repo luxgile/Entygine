@@ -1,4 +1,5 @@
 ﻿using Entygine.DevTools;
+using Entygine.Mathematics;
 using OpenToolkit.Graphics.OpenGL4;
 using OpenToolkit.Mathematics;
 using SixLabors.ImageSharp;
@@ -283,6 +284,14 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        public static void BlendFunc(BlendingFactor source, BlendingFactor dest)
+        {
+            GL.BlendFunc(source, dest);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
         public static void UniformMatrix4(int location, bool transpose, ref Matrix4 matrix)
         {
             GL.UniformMatrix4(location, transpose, ref matrix);
@@ -291,9 +300,11 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        private static int currentProgram = 0;
         public static void UseProgram(int handle)
         {
             GL.UseProgram(handle);
+            currentProgram = handle;
 
             if (enableErrorCheck)
                 LogErrors();
@@ -302,6 +313,14 @@ namespace Entygine.Rendering
         public static void Uniform3(int location, Vector3 vector)
         {
             GL.Uniform3(location, vector);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        public static void Uniform4(int location, Color01 color)
+        {
+            GL.Uniform4(location, (Color4)color);
 
             if (enableErrorCheck)
                 LogErrors();
