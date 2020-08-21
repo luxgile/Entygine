@@ -45,7 +45,7 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
-        internal static string GetProgramInfoLog(int program)
+        public static string GetProgramInfoLog(int program)
         {
             string log = GL.GetProgramInfoLog(program);
 
@@ -53,6 +53,11 @@ namespace Entygine.Rendering
                 LogErrors();
 
             return log;
+        }
+
+        public static int GenFramebuffer()
+        {
+            return GL.GenFramebuffer();
         }
 
         public static void Viewport(int x, int y, int width, int height)
