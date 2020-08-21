@@ -1,4 +1,5 @@
 ﻿using OpenToolkit.Mathematics;
+using System;
 using System.Collections.Generic;
 
 namespace Entygine.UI
@@ -10,44 +11,54 @@ namespace Entygine.UI
         public UICanvas()
         {
             Root = new UIStackPanel();
-            Root.Children.Add(new UIElement());
-            Root.Children.Add(new UIElement());
-            Root.Children.Add(new UIElement());
+            Root.Children.Add(new UIImage());
+            Root.Children.Add(new UIImage());
+            Root.Children.Add(new UIImage());
         }
 
-        private Matrix4 GetModelMatrix()
+        public List<UI_IRenderable> GetRenderables()
         {
-            float windowWidth = MainDevWindowGL.Window.Size.X;
-            float windowHeight = MainDevWindowGL.Window.Size.Y;
-            Vector2 size = new Vector2(windowWidth, windowHeight);
+            List<UI_IRenderable> renderables = new List<UI_IRenderable>();
+            FindRenderables(Root);
+            return renderables;
 
-            Matrix4 model = Matrix4.Identity;
-            model *= Matrix4.CreateScale(new Vector3(size));
-            return model;
-        }
-
-        public Matrix4[] CalculateModels()
-        {
-            List<Matrix4> models = new List<Matrix4>();
-            GetModelsFromElement(ref models, GetModelMatrix(), Root);
-            return models.ToArray();
-        }
-
-        private void GetModelsFromElement(ref List<Matrix4> models, Matrix4 parentModel, UIElement element)
-        {
-            Matrix4 elementModel = element.GetModelMatrix(parentModel);
-            models.Add(elementModel);
-            if (element is UIPanel panel)
+            void FindRenderables(UIElement element)
             {
-                Matrix4[] childrenModels = panel.GetChildsModels(elementModel);
+                List<UIElement> children = element.Children;
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children[i] is UI_IRenderable renderable)
+                        renderables.Add(renderable);
+                }
 
-                for (int i = 0; i < element.Children.Count; i++)
-                    GetModelsFromElement(ref models, childrenModels[i], element.Children[i]);
+                //It's done in a different loop to order them properly
+                for (int i = 0; i < children.Count; i++)
+                    FindRenderables(children[i]);
             }
-            else
+        }
+
+        public void UpdateRenderers()
+        {
+            Rect rootRect = new Rect(Vector2.Zero, new Vector2(MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y));
+            UpdateElementRenderers(rootRect, Root);
+            static void UpdateElementRenderers(Rect parentRect, UIElement element)
             {
-                for (int i = 0; i < element.Children.Count; i++)
-                    GetModelsFromElement(ref models, elementModel, element.Children[i]);
+                Rect elementRect = element.GetRect(parentRect);
+                if (element is UI_IRenderable renderable)
+                    renderable.Rect = elementRect;
+
+                if (element is UIPanel panel)
+                {
+                    Rect[] childrenRect = panel.GetChildsRect(elementRect);
+
+                    for (int i = 0; i < element.Children.Count; i++)
+                        UpdateElementRenderers(childrenRect[i], element.Children[i]);
+                }
+                else
+                {
+                    for (int i = 0; i < element.Children.Count; i++)
+                        UpdateElementRenderers(elementRect, element.Children[i]);
+                }
             }
         }
     }

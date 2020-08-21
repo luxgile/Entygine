@@ -106,12 +106,14 @@ namespace Entygine.Rendering.Pipeline
                 for (int i = 0; i < canvases.Count; i++)
                 {
                     UICanvas canvas = canvases[i];
-                    Matrix4[] models = canvas.CalculateModels();
-                    for (int m = 0; m < models.Length; m++)
+                    canvas.UpdateRenderers();
+                    var renderables = canvas.GetRenderables();
+                    for (int m = 0; m < renderables.Count; m++)
                     {
-                        Color01 color = new Color01(1, 1, 1, 0.4f);
-                        canvasRenderData.Material.SetMatrix("model", models[m]);
-                        canvasRenderData.Material.SetColor("color", color);
+                        UI_IRenderable currRenderable = renderables[m];
+                        GraphicsAPI.UseMeshMaterial(canvasRenderData.Mesh, currRenderable.Material);
+                        canvasRenderData.Material.SetMatrix("model", currRenderable.Rect.GetModelMatrix());
+                        canvasRenderData.Material.SetColor("color", currRenderable.Color);
                         GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
                     }
                     //DrawElement(canvasRenderData, canvas.Root, canvas.GetModelMatrix());

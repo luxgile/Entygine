@@ -21,5 +21,7 @@ namespace Entygine.Rendering
         {
             return new Color4(color.r, color.g, color.b, color.a);
         }
+
+        public static readonly Color01 white = new Color01(1, 1, 1, 1);
     }
 }
