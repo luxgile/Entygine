@@ -11,11 +11,9 @@ namespace Entygine.Rendering
 
         public static void UseMeshMaterial(Mesh mesh, Material mat)
         {
-            Ogl.BindVertexArray(mesh.GetVertexArrayHandle());
-
             mat.UseMaterial();
-
             mesh.UpdateMeshData(mat);
+            Ogl.BindVertexArray(mesh.GetVertexArrayHandle());
         }
 
         public static void FreeMeshMaterial(Mesh mesh, Material mat)

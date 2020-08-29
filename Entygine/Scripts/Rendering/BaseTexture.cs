@@ -8,7 +8,7 @@ namespace Entygine.Rendering
         public abstract int Height { get; }
 
         protected abstract TextureTarget TextureType { get; }
-        protected abstract int Handle { get; }
+        public abstract int Handle { get; }
         protected abstract bool HasChanged { get; set; }
 
         public void UseTexture(TextureUnit unit)

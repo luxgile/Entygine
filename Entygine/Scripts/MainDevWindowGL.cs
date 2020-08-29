@@ -49,7 +49,7 @@ namespace Entygine
             world.Runner.AssignToWorker(coreWorker).CreateSystemsAuto(world);
             EntityWorld.SetActive(world);
 
-            RenderPipelineCore.SetPipeline(new DefaultRenderPipeline());
+            RenderPipelineCore.SetPipeline(new ForwardRenderPipeline());
 
             Cubemap skyboxCubemap = new Cubemap(new string[]
             {
@@ -65,8 +65,12 @@ namespace Entygine
                                                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"));
             Skybox skybox = new Skybox(new Material(skyboxShader, skyboxCubemap));
             RenderPipelineCore.SetSkybox(skybox);
+
             if (RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
                 canvasData.AddCanvas(new UICanvas());
+
+            if (RenderPipelineCore.TryGetContext(out LightsRenderData lightData))
+                lightData.lights.Add(new DirectionalLight());
 
             Mesh meshResource = MeshPrimitives.CreateCube(1);
             Shader shaderResource = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
@@ -105,7 +109,7 @@ namespace Entygine
             EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
             Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
-            //world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreateOrthographicCamera(800 / 600f, 1f, 0.1f, 100f) });
+            //world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreateOrthographicCamera(800 / 600f, 50f, 0.1f, 100f) });
 
             Vector3 cameraPos = new Vector3(0, 10, 10);
             Vector3 dir = (Vector3.Zero - cameraPos).Normalized();

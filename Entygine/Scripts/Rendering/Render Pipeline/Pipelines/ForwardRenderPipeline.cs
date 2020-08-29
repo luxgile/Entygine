@@ -2,11 +2,11 @@
 
 namespace Entygine.Rendering.Pipeline
 {
-    public class DefaultRenderPipeline : IRenderPipeline
+    public class ForwardRenderPipeline : IRenderPipeline
     {
         public void Render(ref RenderContext context, CameraData[] cameras, Matrix4[] transforms)
         {
-            context.CommandBuffer.QueueCommand(RenderCommandsLibrary.ClearColorAndDepthBuffer());
+            context.CommandBuffer.QueueCommand(RenderCommandsLibrary.GenerateShadowMaps());
 
             for (int i = 0; i < cameras.Length; i++)
             {
@@ -17,7 +17,7 @@ namespace Entygine.Rendering.Pipeline
                 context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawSkybox(camera, cameraTransform));
             }
 
-            context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawUI());
+            //context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawUI());
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Entygine.Rendering.Pipeline
             renderContext.AddData(new GeometryRenderData());
             renderContext.AddData(new SkyboxRenderData());
             renderContext.AddData(new UICanvasRenderData());
+            renderContext.AddData(new LightsRenderData());
         }
 
         public static bool TryGetContext<T0>(out T0 context) where T0 : RenderContextData => renderContext.TryGetData<T0>(out context);

@@ -11,7 +11,8 @@ namespace Entygine.Rendering
     {
         public Shader shader;
         //TODO: Switch this to an array of textures
-        public BaseTexture mainTexture;
+        private BaseTexture mainTexture;
+        private BaseTexture depthMap;
 
         private Dictionary<string, int> uniforms = new Dictionary<string, int>();
 
@@ -44,6 +45,9 @@ namespace Entygine.Rendering
                 else
                     uniforms.Add(key, location);
             }
+
+            SetInt("mainTexture", 0);
+            SetInt("shadowMap", 1);
         }
 
         public void UseMaterial()
@@ -53,13 +57,25 @@ namespace Entygine.Rendering
             else
                 DevConsole.Log($"Shader handle is not considered a program ({shader.handle})");
 
-            mainTexture.UseTexture(TextureUnit.Texture0);
+            mainTexture?.UseTexture(TextureUnit.Texture0);
+            depthMap?.UseTexture(TextureUnit.Texture1);
+        }
+
+        public void SetMainTexture(BaseTexture tex)
+        {
+            mainTexture = tex;
+        }
+
+        public void SetDepthMap(BaseTexture tex)
+        {
+            depthMap = tex;
         }
 
         public void FreeMaterial()
         {
             Ogl.UseProgram(0);
-            mainTexture.FreeTexture();
+            mainTexture?.FreeTexture();
+            depthMap?.FreeTexture();
         }
 
         public void SetMatrix(string name, Matrix4 matrix)
@@ -72,6 +88,19 @@ namespace Entygine.Rendering
             else
             {
                 DevConsole.Log($"{name} wasn't found as matrix in shader.");
+            }
+        }
+
+        public void SetInt(string name, int intValue)
+        {
+            if (uniforms.TryGetValue(name, out int value))
+            {
+                Ogl.UseProgram(shader.handle);
+                Ogl.Uniform1(value, intValue);
+            }
+            else
+            {
+                DevConsole.Log($"{name} wasn't found as int in shader.");
             }
         }
 
@@ -97,6 +126,6 @@ namespace Entygine.Rendering
             }
         }
 
-        public bool IsValid => shader.IsValid && mainTexture.IsValid;
+        public bool IsValid => shader.IsValid && (mainTexture?.IsValid ?? true);
     }
 }

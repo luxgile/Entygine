@@ -53,12 +53,17 @@ namespace Entygine.Rendering
 
         public float RadiansFov => MathHelper.DegreesToRadians(fov);
 
-        public Matrix4 CalculateProjection()
+        public Matrix4 CalculateProjection(bool orthoCentered = false)
         {
             if (mode == RenderingMode.Perspective)
                 return Matrix4.CreatePerspectiveFieldOfView(RadiansFov, aspectRatio, nearPlane, farPlane);
             else
-                return Matrix4.CreateOrthographicOffCenter(0.0f, OrthoWidth, 0.0f, OrthoHeight, nearPlane, farPlane);
+            {
+                if (!orthoCentered)
+                    return Matrix4.CreateOrthographicOffCenter(0.0f, OrthoWidth, 0.0f, OrthoHeight, nearPlane, farPlane);
+                else
+                    return Matrix4.CreateOrthographic(OrthoWidth, OrthoHeight, nearPlane, farPlane);
+            }
         }
     }
 }

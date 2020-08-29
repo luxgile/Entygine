@@ -72,11 +72,11 @@ namespace Entygine.Rendering
                 GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, packedData[i]);
             }
 
-            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, TextureWrapMode.ClampToEdge);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, TextureWrapMode.ClampToEdge);
+            Ogl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, TextureWrapMode.ClampToEdge);
             //GL.GenerateMipmap(GenerateMipmapTarget.TextureCubeMap);
         }
 
@@ -86,7 +86,7 @@ namespace Entygine.Rendering
 
         protected override TextureTarget TextureType => TextureTarget.TextureCubeMap;
 
-        protected override int Handle => handle;
+        public override int Handle => handle;
 
         protected override bool HasChanged { get => hasChanged; set => hasChanged = value; }
     }

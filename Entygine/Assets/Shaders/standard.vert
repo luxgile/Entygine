@@ -6,14 +6,17 @@ layout (location = 2) in vec3 aNormal;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 lightSpace;
 
 out vec2 texCoord;
 out vec3 normal;
+out vec4 lightPosSpace;
 
 void main()
 {
 	texCoord = aTexCoord;
-	gl_Position = vec4(aPosition, 1.0) * model * view * projection;
-//	gl_Position = projection * view *  model * vec4(aPosition, 1.0);
-	normal = aNormal;
+	vec4 localPos = vec4(aPosition, 1.0) * model;
+	lightPosSpace = localPos * lightSpace;
+	gl_Position = localPos * view * projection;
+	normal = transpose(inverse(mat3(model))) * aNormal;
 }

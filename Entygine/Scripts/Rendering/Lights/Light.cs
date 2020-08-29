@@ -1,14 +1,18 @@
-﻿namespace Entygine.Rendering
+﻿using OpenToolkit.Mathematics;
+
+namespace Entygine.Rendering
 {
     public abstract class Light
     {
-        private int depthMapHandle;
+        public abstract DepthTexture Depthmap { get; }
+        protected int DepthMapHandleFBO { get; }
 
         public Light()
         {
-            depthMapHandle = Ogl.GenFramebuffer();
+            DepthMapHandleFBO = Ogl.GenFramebuffer();
         }
 
-        public abstract int DepthMapHandle { get; }
+        public abstract void BindShadowMap();
+        public abstract Matrix4 GetProjection();
     }
 }

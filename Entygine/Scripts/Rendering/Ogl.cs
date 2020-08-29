@@ -19,9 +19,12 @@ namespace Entygine.Rendering
                 DevConsole.Log(error + "\n" + new StackTrace());
         }
 
+        private static int bindedVertexArray = 0;
         public static void BindVertexArray(int handle)
         {
             GL.BindVertexArray(handle);
+
+            bindedVertexArray = handle;
 
             if (enableErrorCheck)
                 LogErrors();
@@ -57,7 +60,44 @@ namespace Entygine.Rendering
 
         public static int GenFramebuffer()
         {
-            return GL.GenFramebuffer();
+            int framebuffer = GL.GenFramebuffer();
+
+            if (enableErrorCheck)
+                LogErrors();
+
+            return framebuffer;
+        }
+
+        public static void BindFramebuffer(FramebufferTarget target, int handle)
+        {
+            GL.BindFramebuffer(target, handle);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        public static void FramebufferTexture2D(FramebufferTarget target, FramebufferAttachment attachment, TextureTarget texTarget, int handle, int level)
+        {
+            GL.FramebufferTexture2D(target, attachment, texTarget, handle, level);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        public static void DrawBuffer(DrawBufferMode mode)
+        {
+            GL.DrawBuffer(mode);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        public static void ReadBuffer(ReadBufferMode mode)
+        {
+            GL.ReadBuffer(mode);
+
+            if (enableErrorCheck)
+                LogErrors();
         }
 
         public static void Viewport(int x, int y, int width, int height)
@@ -106,8 +146,8 @@ namespace Entygine.Rendering
         {
             int attLoc = GL.GetAttribLocation(program, attribName);
 
-            if (attLoc == -1)
-                DevConsole.Log("Location for " + attribName + " was not found.");
+            //if (attLoc == -1)
+            //    DevConsole.Log("Location for " + attribName + " was not found.");
 
             if (enableErrorCheck)
                 LogErrors();
@@ -169,10 +209,11 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        private static int textureBinded;
         public static void BindTexture(TextureTarget target, int handle)
         {
             GL.BindTexture(target, handle);
-
+            textureBinded = handle;
             if (enableErrorCheck)
                 LogErrors();
         }
@@ -241,9 +282,30 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
-        public static void TexParameter(TextureTarget target, TextureParameterName pname, int param)
+        public static void TexParameter(TextureTarget target, TextureParameterName pname, float[] param)
         {
             GL.TexParameter(target, pname, param);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void TexParameter(TextureTarget target, TextureParameterName pname, TextureWrapMode param)
+        {
+            GL.TexParameter(target, pname, (int)param);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void TexParameter(TextureTarget target, TextureParameterName pname, TextureMagFilter param)
+        {
+            GL.TexParameter(target, pname, (int)param);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void TexParameter(TextureTarget target, TextureParameterName pname, TextureMinFilter param)
+        {
+            GL.TexParameter(target, pname, (int)param);
 
             if (enableErrorCheck)
                 LogErrors();
@@ -281,6 +343,14 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        public static void CullFace(CullFaceMode mode)
+        {
+            GL.CullFace(mode);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
         public static void DepthFunc(DepthFunction depth)
         {
             GL.DepthFunc(depth);
@@ -310,6 +380,14 @@ namespace Entygine.Rendering
         {
             GL.UseProgram(handle);
             currentProgram = handle;
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        public static void Uniform1(int location, int value)
+        {
+            GL.Uniform1(location, value);
 
             if (enableErrorCheck)
                 LogErrors();

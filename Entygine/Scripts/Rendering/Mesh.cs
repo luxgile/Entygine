@@ -51,14 +51,14 @@ namespace Entygine.Rendering
             if (meshChanged)
             {
                 meshChanged = false;
-                ForceUpdateMeshData(mat);
+                CalculatePackedData();
             }
+
+            BindMaterial(mat);
         }
 
-        public void ForceUpdateMeshData(Material mat)
+        private void BindMaterial(Material mat)
         {
-            CalculatePackedData();
-
             Ogl.BindVertexArray(vertexArrayHandle);
 
             Ogl.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
@@ -74,6 +74,9 @@ namespace Entygine.Rendering
             {
                 VertexBufferLayout layout = layouts[l];
                 int location = layout.Attribute.GetAttributeLocation(mat);
+
+                if (location == -1)
+                    continue;
 
                 int stride = layoutSize * layout.Format.ByteSize();
                 Ogl.EnableVertexAttribArray(location);
@@ -105,7 +108,7 @@ namespace Entygine.Rendering
             return size;
         }
 
-        private void CalculatePackedData()
+        public void CalculatePackedData()
         {
             int layoutSize = GetVertexLayoutSize();
             packedData = new float[verts.Length * layoutSize];
@@ -173,6 +176,21 @@ namespace Entygine.Rendering
             for (int i = 0; i < this.verts.Length; i++)
             {
                 vertices.Add(this.verts[i]);
+            }
+        }
+
+        public void SetNormals(Vector3[] normals)
+        {
+            this.normals = normals;
+            meshChanged = true;
+        }
+
+        public void GetNormals(ref List<Vector3> normals)
+        {
+            normals.Clear();
+            for (int i = 0; i < this.normals.Length; i++)
+            {
+                normals.Add(this.normals[i]);
             }
         }
 

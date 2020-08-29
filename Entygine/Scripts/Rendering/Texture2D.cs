@@ -20,12 +20,26 @@ namespace Entygine.Rendering
         public Texture2D(string path)
         {
             this.handle = Ogl.GenTexture();
+
+            Ogl.BindTexture(TextureTarget.Texture2D, handle);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureWrapMode.Repeat);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, TextureWrapMode.Repeat);
+
             LoadFromPath(path);
         }
 
         public Texture2D(int width, int height)
         {
-            this.handle = Ogl.GenTexture();
+            handle = Ogl.GenTexture();
+
+            Ogl.BindTexture(TextureTarget.Texture2D, handle);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureWrapMode.Repeat);
+            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, TextureWrapMode.Repeat);
+
             this.width = width;
             this.height = height;
 
@@ -64,10 +78,6 @@ namespace Entygine.Rendering
 
             Ogl.BindTexture(TextureTarget.Texture2D, handle);
             Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, packedData);
-            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             Ogl.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
 
@@ -84,7 +94,7 @@ namespace Entygine.Rendering
 
         protected override TextureTarget TextureType => TextureTarget.Texture2D;
 
-        protected override int Handle => handle;
+        public override int Handle => handle;
 
         protected override bool HasChanged { get => hasChanged; set => hasChanged = value; }
 
