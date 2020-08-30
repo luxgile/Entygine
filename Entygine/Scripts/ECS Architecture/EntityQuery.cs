@@ -72,6 +72,7 @@ namespace Entygine.Ecs
         private void PerformEntityIteration(IQueryEntityIterator entityIterator, bool checkVersion, uint version)
         {
             StructArray<EntityChunk> chunks = world.EntityManager.GetChunks();
+            bool generalWrite = IsGeneralWrite();
             for (int i = 0; i < chunks.Count; i++)
             {
                 ref EntityChunk chunk = ref chunks[i];
@@ -85,7 +86,8 @@ namespace Entygine.Ecs
                         entityIterator.Iteration(ref chunk, c);
 
                         //TODO: Update chunk version only if write
-                        chunk.ChunkVersion = world.EntityManager.Version;
+                        if (generalWrite || NeedsUpdate(ref chunk))
+                            chunk.ChunkVersion = world.EntityManager.Version;
                     }
                 }
             }
@@ -102,6 +104,34 @@ namespace Entygine.Ecs
                 anyCheck = chunk.Archetype.HasAnyTypes(anyTypes);
 
             return withCheck && anyCheck;
+        }
+
+        private bool IsGeneralWrite()
+        {
+            if (withTypes == null)
+                return false;
+
+            for (int i = 0; i < withTypes.Length; i++)
+            {
+                if (!withTypes[i].IsReadOnly)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool NeedsUpdate(ref EntityChunk chunk)
+        {
+            if (anyTypes == null)
+                return false;
+
+            for (int i = 0; i < anyTypes.Length; i++)
+            {
+                TypeCache type = anyTypes[i];
+                if (chunk.Archetype.HasTypes(type) && !type.IsReadOnly)
+                    return true;
+            }
+            return false;
         }
     }
 }

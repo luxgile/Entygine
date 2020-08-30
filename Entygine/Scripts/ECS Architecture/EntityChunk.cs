@@ -85,6 +85,17 @@ namespace Entygine.Ecs
             }
         }
 
+        public bool HasEntity(Entity entity)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (entities[i].Equals(entity))
+                    return true;
+            }
+
+            return false;
+        }
+
         public Entity GetEntity(int index)
         {
             return entities[index];

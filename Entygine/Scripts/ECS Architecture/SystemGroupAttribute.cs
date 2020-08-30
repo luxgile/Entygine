@@ -3,6 +3,12 @@ using System;
 
 namespace Entygine.Ecs
 {
+    /// <summary>
+    /// Used to assign a system to a defined logic group. Avaliable ones are:
+    /// <see cref="EarlyPhaseId"/>: for early execution.
+    /// <see cref="DefaultPhaseId"/>: for default execution.
+    /// <see cref="LatePhaseId"/>: for late execution.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class SystemGroupAttribute : Attribute
     {

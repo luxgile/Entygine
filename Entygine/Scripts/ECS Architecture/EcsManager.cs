@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Entygine.Ecs
@@ -11,25 +12,6 @@ namespace Entygine.Ecs
         public EntityManager()
         {
             chunks = new StructArray<EntityChunk>();
-        }
-
-        public List<int> GetChunksWith(EntityArchetype archetype, bool readOnly)
-        {
-            List<int> chunksFound = new List<int>();
-            for (int i = 0; i < chunks.Count; i++)
-            {
-                ref EntityChunk currChunk = ref chunks[i];
-                if (currChunk.HasArchetype(archetype))
-                {
-                    chunksFound.Add(i);
-                    if (!readOnly)
-                    {
-                        //TODO: Make somehow you can't change a chunk if it's on Read Only
-                        currChunk.ChunkVersion = version;
-                    }
-                }
-            }
-            return chunksFound;
         }
 
         public ref EntityChunk GetChunk(int index) => ref chunks[index];
@@ -55,41 +37,72 @@ namespace Entygine.Ecs
 
         public void SetSharedComponent<T0>(Entity entity, T0 component) where T0 : ISharedComponent
         {
+            int chunkFound = -1;
             for (int i = 0; i < chunks.Count; i++)
             {
                 int index = i;
                 ref EntityChunk chunk = ref chunks[index];
-                for (int e = 0; e < chunk.Count; e++)
+                if (chunk.HasEntity(entity))
                 {
-                    Entity currEntity = chunk.GetEntity(e);
-                    if (currEntity.id == entity.id)
+                    //Already has the component.
+                    if (chunk.HasSharedComponents(component))
+                        return;
+
+                    //Needs to be initialized
+                    if (chunk.IsSharedComponentEmpty<T0>())
                     {
-                        if (chunk.HasSharedComponents(component))
-                            return;
-
-                        if (chunk.IsSharedComponentEmpty<T0>())
-                            chunk.SetSharedComponent(component);
-                        else
-                        {
-                            //Create a new chunk with the given archetype and new shared component
-                            chunk.GetComponentsFromEntity(entity, out List<IComponent> components);
-                            chunk.DestroyEntity(entity);
-
-                            //TODO: Check if a better chunk is avaliable instead of creating one always
-                            int newChunkIndex = CreateChunk(chunk.Archetype);
-                            ref EntityChunk newChunk = ref chunks[newChunkIndex];
-                            newChunk.AddEntity(entity);
-                            newChunk.SetSharedComponents(chunk.GetSharedComponents());
-                            newChunk.SetSharedComponent(component);
-                            newChunk.SetComponents(entity, components.ToArray());
-                        }
-
+                        chunk.SetSharedComponent(component);
                         return;
                     }
+
+                    //Entity can't stay in this chunk so we stop and find a valid chunk.
+                    chunkFound = index;
+                    break;
                 }
             }
 
-            throw new Exception("Entity not found.");
+            if(chunkFound == -1)
+                throw new Exception("Entity not found.");
+
+            ref EntityChunk fromChunk = ref chunks[chunkFound];
+            ISharedComponent[] sharedsToCopy = fromChunk.GetSharedComponents();
+            ISharedComponent[] sharedsToFind = new ISharedComponent[sharedsToCopy.Length];
+            Array.Copy(sharedsToCopy, sharedsToFind, sharedsToCopy.Length);
+            for (int i = 0; i < sharedsToFind.Length; i++)
+            {
+                if (sharedsToFind[i] is T0)
+                    sharedsToFind[i] = component;
+            }
+
+            for (int i = 0; i < chunks.Count; i++)
+            {
+                int index = i;
+                ref EntityChunk chunk = ref chunks[index];
+                if(!chunk.IsFull && chunk.HasArchetype(fromChunk.Archetype) && (chunk.HasSharedComponents(sharedsToFind)))
+                {
+                    //Valid chunk found. Move entity to it.
+                    fromChunk.GetComponentsFromEntity(entity, out List<IComponent> components);
+                    fromChunk.DestroyEntity(entity);
+
+                    chunk.AddEntity(entity);
+                    chunk.SetSharedComponent(component);
+                    chunk.SetComponents(entity, components.ToArray());
+                    return;
+                }
+            }
+
+            {
+                //Create a new chunk with the given archetype and new shared component
+                fromChunk.GetComponentsFromEntity(entity, out List<IComponent> components);
+                fromChunk.DestroyEntity(entity);
+
+                int newChunkIndex = CreateChunk(fromChunk.Archetype);
+                ref EntityChunk newChunk = ref chunks[newChunkIndex];
+                newChunk.AddEntity(entity);
+                newChunk.SetSharedComponents(fromChunk.GetSharedComponents());
+                newChunk.SetSharedComponent(component);
+                newChunk.SetComponents(entity, components.ToArray());
+            }
         }
 
         public int GetEntityCount()
@@ -115,7 +128,7 @@ namespace Entygine.Ecs
         /// </summary>
         private int GetAvaliableChunk(EntityArchetype archetype)
         {
-            List<int> chunksFound = GetChunksWith(archetype, true);
+            List<int> chunksFound = GetChunksWith(archetype);
             if (chunksFound.Count == 0)
                 return CreateChunk(archetype);
             else
@@ -127,6 +140,18 @@ namespace Entygine.Ecs
                 else
                     return lastChunk;
             }
+        }
+
+        private List<int> GetChunksWith(EntityArchetype archetype)
+        {
+            List<int> chunksFound = new List<int>();
+            for (int i = 0; i < chunks.Count; i++)
+            {
+                ref EntityChunk currChunk = ref chunks[i];
+                if (currChunk.HasArchetype(archetype))
+                    chunksFound.Add(i);
+            }
+            return chunksFound;
         }
 
         private int CreateChunk(EntityArchetype archetype)

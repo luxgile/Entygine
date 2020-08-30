@@ -80,30 +80,30 @@ namespace Entygine
             Material materialResource = new Material(shaderResource, texture);
             SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
 
-            EntityArchetype meshArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform));
+            EntityArchetype meshArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform), typeof(C_Position));
 
             Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(planeEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 0, 0)) });
+            world.EntityManager.SetComponent(planeEntity, new C_Position() { value = new Vector3(0, 0, 0) });
             Mesh planeMesh = MeshPrimitives.CreatePlaneXZ(50);
             Material planeMaterial = new Material(shaderResource, Texture2D.CreateWhiteTexture(64, 64));
             world.EntityManager.SetSharedComponent(planeEntity, new SC_RenderMesh(planeMesh, planeMaterial));
 
             Entity planeEntity2 = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(planeEntity2, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 5, -10)) });
+            world.EntityManager.SetComponent(planeEntity2, new C_Position() { value = new Vector3(0, 5, -10) });
             Mesh planeMesh2 = MeshPrimitives.CreatePlaneXY(10);
             Material planeMaterial2 = new Material(shaderResource, texture);
             world.EntityManager.SetSharedComponent(planeEntity2, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
             Entity boxEntity = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(boxEntity, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(0, 2, 0)) });
+            world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vector3(0, 2, 0) });
             world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
 
             Entity boxEntity2 = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(boxEntity2, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(2, 2, 0)) });
+            world.EntityManager.SetComponent(boxEntity2, new C_Position() { value = new Vector3(2, 2, 0) });
             world.EntityManager.SetSharedComponent(boxEntity2, renderMesh);
 
             Entity boxEntity3 = world.EntityManager.CreateEntity(meshArchetype);
-            world.EntityManager.SetComponent(boxEntity3, new C_Transform() { value = Matrix4.CreateTranslation(new Vector3(-2, 2, 0)) });
+            world.EntityManager.SetComponent(boxEntity3, new C_Position() { value = new Vector3(-2, 2, 0) });
             world.EntityManager.SetSharedComponent(boxEntity3, renderMesh);
 
             EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));

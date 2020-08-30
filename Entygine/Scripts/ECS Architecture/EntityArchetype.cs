@@ -86,7 +86,7 @@ namespace Entygine.Ecs
         {
             for (int i = 0; i < types.Length; i++)
             {
-                if (!HasType(types[i]))
+                if (HasType(types[i]))
                     return true;
             }
 
