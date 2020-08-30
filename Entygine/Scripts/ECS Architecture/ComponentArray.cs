@@ -6,17 +6,17 @@ namespace Entygine.Ecs
 {
     public class ComponentArray
     {
-        private Type componentType;
+        private TypeCache componentType;
         private IComponent[] components;
 
-        public ComponentArray(Type componentType, int count)
+        public ComponentArray(TypeCache componentType, int count)
         {
             this.componentType = componentType ?? throw new ArgumentNullException(nameof(componentType));
             components = new IComponent[count];
 
             //TODO: This is awful but works for now
             for (int i = 0; i < count; i++)
-                components[i] = (IComponent)Activator.CreateInstance(componentType);
+                components[i] = (IComponent)Activator.CreateInstance(componentType.Type);
         }
 
         public IComponent this[int index]
@@ -37,11 +37,11 @@ namespace Entygine.Ecs
 
         public bool TypeMatch<T0>() where T0 : IComponent
         {
-            return TypeMatch(typeof(T0));
+            return TypeMatch(TypeCache.GetTypeCache(typeof(T0), true));
         }
-        public bool TypeMatch(Type type)
+        public bool TypeMatch(TypeCache type)
         {
-            return type == this.componentType;
+            return type == componentType;
         }
 
         public T0[] CastTo<T0>() where T0 : IComponent
