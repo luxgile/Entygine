@@ -16,9 +16,9 @@ namespace Entygine.Ecs
 
         public EcsRunner AssignToWorker(WorkerCycleCore workerCore)
         {
-            SetupLogicPhase<EarlyPhaseId>(workerCore, OnEarlyPhase, "Logic Ecs Execution");
-            SetupLogicPhase<DefaultPhaseId>(workerCore, OnDefaultPhase, "Logic Ecs Execution");
-            SetupLogicPhase<LatePhaseId>(workerCore, OnLatePhase, "Logic Ecs Execution");
+            SetupLogicPhase<MainPhases.EarlyPhaseId>(workerCore, OnEarlyPhase, "Logic Ecs Execution");
+            SetupLogicPhase<MainPhases.DefaultPhaseId>(workerCore, OnDefaultPhase, "Logic Ecs Execution");
+            SetupLogicPhase<MainPhases.LatePhaseId>(workerCore, OnLatePhase, "Logic Ecs Execution");
 
             SetupRenderPhase<RootPhaseId>(workerCore, OnRenderPhase, "Render Ecs Execution");
 
@@ -26,7 +26,7 @@ namespace Entygine.Ecs
 
             static void SetupLogicPhase<T0>(WorkerCycleCore workerCore, Action callback, string name) where T0 : IPhaseId
             {
-                workerCore.FindFirstLogicPhaseAndModify<T0>((ref WorkerPhase phase) => 
+                workerCore.FindFirstLogicPhaseAndModify<T0>((ref WorkerPhase phase) =>
                 {
                     WorkerPhase[] subPhases = phase.GetPhases();
                     WorkerPhase ecsPhase = new WorkerPhase(EcsPhaseId.Default, name);
@@ -77,21 +77,62 @@ namespace Entygine.Ecs
             SystemGroupAttribute att = system.GetType().GetCustomAttribute<SystemGroupAttribute>();
             if (att == null)
                 defaultSystems.Add(system);
-            else 
+            else
             {
                 if (att.PhaseType == PhaseType.Logic)
                 {
-                    if (att.GroupType == typeof(EarlyPhaseId))
-                        earlySystems.Add(system);
-                    else if (att.GroupType == typeof(DefaultPhaseId))
-                        defaultSystems.Add(system);
-                    else if (att.GroupType == typeof(LatePhaseId))
-                        lateSystems.Add(system);
+                    if (att.GroupType == typeof(MainPhases.EarlyPhaseId))
+                        AddSystem(ref earlySystems, system);
+                    else if (att.GroupType == typeof(MainPhases.DefaultPhaseId))
+                        AddSystem(ref defaultSystems, system);
+                    else if (att.GroupType == typeof(MainPhases.LatePhaseId))
+                        AddSystem(ref lateSystems, system);
                 }
                 else if (att.PhaseType == PhaseType.Render)
                     renderSystems.Add(system);
                 else if (att.PhaseType == PhaseType.Physics)
                     throw new NotImplementedException();
+            }
+        }
+
+        private void AddSystem(ref List<BaseSystem> systems, BaseSystem system)
+        {
+            var afterAtt = system.GetType().GetCustomAttribute<AfterSystemAttribute>();
+            if (afterAtt != null)
+            {
+                int index = FindSystem(ref systems, afterAtt.SystemType);
+                if (index != -1)
+                {
+                    if (index >= systems.Count)
+                        systems.Add(system);
+                    else
+                        systems.Insert(index + 1, system);
+
+                    return;
+                }
+            }
+
+            var beforeAtt = system.GetType().GetCustomAttribute<BeforeSystemAttribute>();
+            if (beforeAtt != null)
+            {
+                int index = FindSystem(ref systems, beforeAtt.SystemType);
+                if (index != -1)
+                {
+                    systems.Insert(index, system);
+                    return;
+                }
+            }
+
+            systems.Add(system);
+
+            static int FindSystem(ref List<BaseSystem> systems, Type systemType)
+            {
+                for (int i = 0; i < systems.Count; i++)
+                {
+                    if (systems[i].GetType() == systemType)
+                        return i;
+                }
+                return -1;
             }
         }
 

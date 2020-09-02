@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Entygine.Ecs.Systems
 {
-    [SystemGroup(typeof(DefaultPhaseId), PhaseType.Render)]
+    [SystemGroup(typeof(MainPhases.DefaultPhaseId), PhaseType.Render)]
     public class S_DrawCameras : BaseSystem
     {
         private EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform));

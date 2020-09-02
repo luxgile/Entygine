@@ -4,7 +4,7 @@ using OpenToolkit.Mathematics;
 
 namespace Entygine.Rendering
 {
-    [SystemGroup(typeof(DefaultPhaseId))]
+    [SystemGroup(typeof(MainPhases.LatePhaseId))]
     public class S_TransformConverter : BaseSystem
     {
         private EntityQuery query;

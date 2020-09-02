@@ -10,11 +10,15 @@ namespace Entygine.Ecs.Systems
         private readonly EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
         private EntityQuery query;
 
+        private float scrollDelta;
+
         protected override void OnSystemCreated()
         {
             base.OnSystemCreated();
 
             query = new EntityQuery(World).With(TypeCache.WriteType(typeof(C_Transform)), TypeCache.WriteType(typeof(C_EditorCamera)));
+
+            MainDevWindowGL.Window.MouseWheel += (x) => scrollDelta = x.OffsetY;
         }
 
         protected override void OnPerformFrame()
@@ -23,7 +27,7 @@ namespace Entygine.Ecs.Systems
 
             float speedDelta = 0;
             Vector3 posDelta = Vector3.Zero;
-            float yRotDelta = 0;
+            Vector2 rotDelta = Vector2.Zero;
 
             //TODO: Create input system
             KeyboardState input = MainDevWindowGL.Window.KeyboardState;
@@ -32,6 +36,9 @@ namespace Entygine.Ecs.Systems
 
             if (input.IsKeyDown(Key.LControl))
                 speedDelta -= 0.01f;
+
+            if(input.IsKeyDown(Key.AltLeft) && MainDevWindowGL.Window.IsMouseButtonDown(MouseButton.Button1))
+                rotDelta = MainDevWindowGL.Window.MouseDelta;
 
             if (input.IsKeyDown(Key.W))
                 posDelta -= Vector3.UnitZ;
@@ -51,52 +58,16 @@ namespace Entygine.Ecs.Systems
             if (input.IsKeyDown(Key.Q))
                 posDelta -= Vector3.UnitY;
 
-            if (input.IsKeyDown(Key.Z))
-                yRotDelta += 0.01f;
-
-            if (input.IsKeyDown(Key.X))
-                yRotDelta -= 0.01f;
-
-            if (speedDelta == 0 && posDelta == Vector3.Zero && yRotDelta == 0)
-                return;
-
-            query.Perform(new Iterator() { posDelta = posDelta, speedDelta = speedDelta }, LastVersionWorked);
-
-            //List<int> chunksIndexes = World.EntityManager.GetChunksWith(cameraArchetype, false);
-            //for (int i = 0; i < chunksIndexes.Count; i++)
-            //{
-            //    ref EntityChunk chunk = ref World.EntityManager.GetChunk(chunksIndexes[i]);
-            //    if (chunk.HasChanged(LastVersionWorked))
-            //    {
-            //        chunk.ChunkVersion = World.EntityManager.Version;
-            //        if (chunk.TryGetComponents<C_Transform>(out ComponentArray transforms) && chunk.TryGetComponents<C_EditorCamera>(out ComponentArray cameras))
-            //        {
-            //            for (int c = 0; c < chunk.Count; c++)
-            //            {
-            //                C_Transform transform = (C_Transform)transforms[c];
-            //                C_EditorCamera editorCamera = (C_EditorCamera)cameras[c];
-
-            //                editorCamera.speed += speedDelta;
-            //                editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
-
-            //                editorCamera.pos += posDelta * editorCamera.speed;
-
-            //                Vector3 right = Vector3.Normalize(Vector3.Cross(editorCamera.dir, Vector3.UnitY));
-            //                Vector3 up = Vector3.Normalize(Vector3.Cross(right, editorCamera.dir));
-            //                transform.value = Matrix4.LookAt(editorCamera.pos, editorCamera.pos + editorCamera.dir, up);
-
-            //                transforms[c] = transform;
-            //                cameras[c] = editorCamera;
-            //            }
-            //        }
-            //    }
-            //}
+            query.Perform(new Iterator() { posDelta = posDelta, speedDelta = speedDelta, rotDelta = rotDelta, distDelta = scrollDelta }, LastVersionWorked);
+            scrollDelta = 0;
         }
 
         private struct Iterator : IQueryEntityIterator
         {
             public float speedDelta;
+            public float distDelta;
             public Vector3 posDelta;
+            public Vector2 rotDelta;
 
             public void Iteration(ref EntityChunk chunk, int index)
             {
@@ -106,11 +77,22 @@ namespace Entygine.Ecs.Systems
                 editorCamera.speed += speedDelta;
                 editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
 
-                editorCamera.pos += posDelta * editorCamera.speed;
+                editorCamera.focusDistance -= distDelta;
 
-                Vector3 right = Vector3.Normalize(Vector3.Cross(editorCamera.dir, Vector3.UnitY));
-                Vector3 up = Vector3.Normalize(Vector3.Cross(right, editorCamera.dir));
-                transform.value = Matrix4.LookAt(editorCamera.pos, editorCamera.pos + editorCamera.dir, up);
+                editorCamera.yaw -= rotDelta.X;
+                editorCamera.pitch -= rotDelta.Y;
+
+                Vector3 dir = new Vector3(
+                    (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch))
+                  , (float)MathHelper.Sin(MathHelper.DegreesToRadians(editorCamera.pitch))
+                  , (float)MathHelper.Sin(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch)));
+
+                Vector3 right = Vector3.Normalize(Vector3.Cross(dir, Vector3.UnitY));
+                Vector3 up = Vector3.Normalize(Vector3.Cross(right, dir));
+
+                Vector3 posDeltaRelative = -right * posDelta.X + dir * posDelta.Z + Vector3.UnitY * posDelta.Y;
+                editorCamera.focusPoint += posDeltaRelative * editorCamera.speed;
+                transform.value = Matrix4.LookAt(editorCamera.focusPoint + dir * editorCamera.focusDistance, editorCamera.focusPoint, up);
 
                 chunk.SetComponent(index, transform);
                 chunk.SetComponent(index, editorCamera);

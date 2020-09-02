@@ -55,8 +55,8 @@ namespace Entygine
             {
                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\right.png"),
                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\left.png"),
-                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\top.png"),
                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\bottom.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\top.png"),
                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\front.png"),
                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\back.png"),
             });
@@ -111,10 +111,9 @@ namespace Entygine
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
             //world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreateOrthographicCamera(800 / 600f, 50f, 0.1f, 100f) });
 
-            Vector3 cameraPos = new Vector3(0, 10, 10);
-            Vector3 dir = (Vector3.Zero - cameraPos).Normalized();
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, dir = dir, pos = cameraPos });
+            //Vector3 cameraPos = new Vector3(0, 10, 10);
+            //world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115});
 
             DevConsole.Log("Entity world created.");
 
