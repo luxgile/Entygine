@@ -13,6 +13,7 @@ using Entygine.Rendering.Pipeline;
 using Entygine.UI;
 using System;
 using System.Runtime.InteropServices;
+using Entygine.Physics;
 
 namespace Entygine
 {
@@ -38,8 +39,7 @@ namespace Entygine
 
             Ogl.enableErrorCheck = true;
 
-            DevConsole.AddLogger(new ConsoleLoggerFile());
-            DevConsole.AddLogger(new NativeConsoleLogger());
+            InitConsole();
 
             DevConsole.Log("Creating Entity World...");
 
@@ -51,27 +51,29 @@ namespace Entygine
 
             RenderPipelineCore.SetPipeline(new ForwardRenderPipeline());
 
-            Cubemap skyboxCubemap = new Cubemap(new string[]
-            {
-                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\right.png"),
-                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\left.png"),
-                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\bottom.png"),
-                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\top.png"),
-                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\front.png"),
-                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\back.png"),
-            });
+            InitPhysics();
+            InitSkybox();
+            InitUI();
+            InitLight();
+            InitScene(world);
 
-            Shader skyboxShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.vert"),
-                                                AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"));
-            Skybox skybox = new Skybox(new Material(skyboxShader, skyboxCubemap));
-            RenderPipelineCore.SetSkybox(skybox);
+            DevConsole.Log("Entity world created.");
 
-            if (RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
-                canvasData.AddCanvas(new UICanvas());
+            Ogl.ClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+            Ogl.Enable(EnableCap.DepthTest);
+            Ogl.Enable(EnableCap.CullFace);
 
-            if (RenderPipelineCore.TryGetContext(out LightsRenderData lightData))
-                lightData.lights.Add(new DirectionalLight());
+            //Ogl.Enable(EnableCap.DebugOutputSynchronous);
+        }
 
+        private void InitPhysics()
+        {
+            PhysicsCore core = new PhysicsCore();
+            
+        }
+
+        private static void InitScene(EntityWorld world)
+        {
             Mesh meshResource = MeshPrimitives.CreateCube(1);
             Shader shaderResource = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
                                                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.frag"));
@@ -113,15 +115,43 @@ namespace Entygine
 
             //Vector3 cameraPos = new Vector3(0, 10, 10);
             //world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115});
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115 });
+        }
 
-            DevConsole.Log("Entity world created.");
+        private static void InitLight()
+        {
+            if (RenderPipelineCore.TryGetContext(out LightsRenderData lightData))
+                lightData.lights.Add(new DirectionalLight());
+        }
 
-            Ogl.ClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-            Ogl.Enable(EnableCap.DepthTest);
-            Ogl.Enable(EnableCap.CullFace);
+        private static void InitUI()
+        {
+            if (RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
+                canvasData.AddCanvas(new UICanvas());
+        }
 
-            //Ogl.Enable(EnableCap.DebugOutputSynchronous);
+        private static void InitSkybox()
+        {
+            Cubemap skyboxCubemap = new Cubemap(new string[]
+                        {
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\right.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\left.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\bottom.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\top.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\front.png"),
+                AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\back.png"),
+                        });
+
+            Shader skyboxShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.vert"),
+                                                AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"));
+            Skybox skybox = new Skybox(new Material(skyboxShader, skyboxCubemap));
+            RenderPipelineCore.SetSkybox(skybox);
+        }
+
+        private static void InitConsole()
+        {
+            DevConsole.AddLogger(new ConsoleLoggerFile());
+            DevConsole.AddLogger(new NativeConsoleLogger());
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
