@@ -26,6 +26,19 @@ namespace Entygine.Mathematics
             set { if (index == 0) x = value; if (index == 1) y = value; if (index == 2) z = value; throw new IndexOutOfRangeException(); }
         }
 
+        public static Vec3f operator +(Vec3f a, Vec3f b)
+        {
+            return new Vec3f(a.x + b.x, a.y + b.y, a.z + b.z);
+        }
+        public static Vec3f operator -(Vec3f a, Vec3f b)
+        {
+            return new Vec3f(a.x - b.x, a.y - b.y, a.z - b.z);
+        }
+        public static Vec3f operator*(Vec3f vec, float v)
+        {
+            return new Vec3f(vec.x * v, vec.y * v, vec.z * v);
+        }
+
         public Vec2f XY => new Vec2f(x, y);
         public Vec2f XZ => new Vec2f(x, z);
         public Vec2f YZ => new Vec2f(y, z);

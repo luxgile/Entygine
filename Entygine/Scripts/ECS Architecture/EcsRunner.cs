@@ -24,7 +24,7 @@ namespace Entygine.Ecs
 
             return this;
 
-            static void SetupLogicPhase<T0>(WorkerCycleCore workerCore, Action callback, string name) where T0 : IPhaseId
+            static void SetupLogicPhase<T0>(WorkerCycleCore workerCore, Action<float> callback, string name) where T0 : IPhaseId
             {
                 workerCore.FindFirstLogicPhaseAndModify<T0>((ref WorkerPhase phase) =>
                 {
@@ -37,7 +37,7 @@ namespace Entygine.Ecs
                 });
             }
 
-            static void SetupRenderPhase<T0>(WorkerCycleCore workerCore, Action callback, string name) where T0 : IPhaseId
+            static void SetupRenderPhase<T0>(WorkerCycleCore workerCore, Action<float> callback, string name) where T0 : IPhaseId
             {
                 workerCore.FindFirstRenderPhaseAndModify<T0>((ref WorkerPhase phase) =>
                 {
@@ -136,28 +136,28 @@ namespace Entygine.Ecs
             }
         }
 
-        private void OnEarlyPhase()
+        private void OnEarlyPhase(float dt)
         {
             for (int i = 0; i < earlySystems.Count; i++)
-                earlySystems[i].PerformWork();
+                earlySystems[i].PerformWork(dt);
         }
 
-        private void OnDefaultPhase()
+        private void OnDefaultPhase(float dt)
         {
             for (int i = 0; i < defaultSystems.Count; i++)
-                defaultSystems[i].PerformWork();
+                defaultSystems[i].PerformWork(dt);
         }
 
-        private void OnLatePhase()
+        private void OnLatePhase(float dt)
         {
             for (int i = 0; i < lateSystems.Count; i++)
-                lateSystems[i].PerformWork();
+                lateSystems[i].PerformWork(dt);
         }
 
-        private void OnRenderPhase()
+        private void OnRenderPhase(float dt)
         {
             for (int i = 0; i < renderSystems.Count; i++)
-                renderSystems[i].PerformWork();
+                renderSystems[i].PerformWork(dt);
         }
     }
 }

@@ -16,7 +16,7 @@
             OnSystemDestroyed();
         }
 
-        public void PerformWork()
+        public void PerformWork(float dt)
         {
             if(!started)
             {
@@ -26,13 +26,13 @@
 
             World.EntityManager.Version++;
 
-            OnPerformFrame();
+            OnPerformFrame(dt);
 
             lastVersionWorked = World.EntityManager.Version;
         }
 
         protected virtual void OnSystemCreated() { }
-        protected virtual void OnPerformFrame() { }
+        protected virtual void OnPerformFrame(float dt) { }
         protected virtual void OnSystemDestroyed() { }
 
         public EntityWorld World => world;

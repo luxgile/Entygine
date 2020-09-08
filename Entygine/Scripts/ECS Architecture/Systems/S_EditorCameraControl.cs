@@ -21,9 +21,9 @@ namespace Entygine.Ecs.Systems
             MainDevWindowGL.Window.MouseWheel += (x) => scrollDelta = x.OffsetY;
         }
 
-        protected override void OnPerformFrame()
+        protected override void OnPerformFrame(float dt)
         {
-            base.OnPerformFrame();
+            base.OnPerformFrame(dt);
 
             float speedDelta = 0;
             Vector3 posDelta = Vector3.Zero;
@@ -37,7 +37,7 @@ namespace Entygine.Ecs.Systems
             if (input.IsKeyDown(Key.LControl))
                 speedDelta -= 0.01f;
 
-            if(input.IsKeyDown(Key.AltLeft) && MainDevWindowGL.Window.IsMouseButtonDown(MouseButton.Button1))
+            if (input.IsKeyDown(Key.AltLeft) && MainDevWindowGL.Window.IsMouseButtonDown(MouseButton.Button1))
                 rotDelta = MainDevWindowGL.Window.MouseDelta;
 
             if (input.IsKeyDown(Key.W))
@@ -58,12 +58,13 @@ namespace Entygine.Ecs.Systems
             if (input.IsKeyDown(Key.Q))
                 posDelta -= Vector3.UnitY;
 
-            query.Perform(new Iterator() { posDelta = posDelta, speedDelta = speedDelta, rotDelta = rotDelta, distDelta = scrollDelta }, LastVersionWorked);
+            query.Perform(new Iterator() { deltaTime = dt, posDelta = posDelta, speedDelta = speedDelta, rotDelta = rotDelta, distDelta = scrollDelta }, LastVersionWorked);
             scrollDelta = 0;
         }
 
         private struct Iterator : IQueryEntityIterator
         {
+            public float deltaTime;
             public float speedDelta;
             public float distDelta;
             public Vector3 posDelta;
@@ -74,13 +75,13 @@ namespace Entygine.Ecs.Systems
                 if (!chunk.TryGetComponent(index, out C_EditorCamera editorCamera) || !chunk.TryGetComponent(index, out C_Transform transform))
                     return;
 
-                editorCamera.speed += speedDelta;
+                editorCamera.speed += speedDelta * deltaTime;
                 editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
 
-                editorCamera.focusDistance -= distDelta;
+                editorCamera.focusDistance -= distDelta * deltaTime;
 
-                editorCamera.yaw -= rotDelta.X;
-                editorCamera.pitch -= rotDelta.Y;
+                editorCamera.yaw -= rotDelta.X * deltaTime * editorCamera.sensitivity;
+                editorCamera.pitch -= rotDelta.Y * deltaTime * editorCamera.sensitivity;
 
                 Vector3 dir = new Vector3(
                     (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch))
@@ -91,6 +92,8 @@ namespace Entygine.Ecs.Systems
                 Vector3 up = Vector3.Normalize(Vector3.Cross(right, dir));
 
                 Vector3 posDeltaRelative = -right * posDelta.X + dir * posDelta.Z + Vector3.UnitY * posDelta.Y;
+                posDeltaRelative *= deltaTime;
+
                 editorCamera.focusPoint += posDeltaRelative * editorCamera.speed;
                 transform.value = Matrix4.LookAt(editorCamera.focusPoint + dir * editorCamera.focusDistance, editorCamera.focusPoint, up);
 

@@ -17,9 +17,9 @@ namespace Entygine.Rendering
                 .Any(TypeCache.ReadType(typeof(C_Position)), TypeCache.ReadType(typeof(C_Rotation)), TypeCache.ReadType(typeof(C_UniformScale)));
         }
 
-        protected override void OnPerformFrame()
+        protected override void OnPerformFrame(float dt)
         {
-            base.OnPerformFrame();
+            base.OnPerformFrame(dt);
 
             query.Perform(new Iterator(), LastVersionWorked);
         }

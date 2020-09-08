@@ -44,10 +44,7 @@ namespace Entygine
             DevConsole.Log("Creating Entity World...");
 
             coreWorker = new WorkerCycleCore();
-
-            EntityWorld world = EntityWorld.CreateWorld();
-            world.Runner.AssignToWorker(coreWorker).CreateSystemsAuto(world);
-            EntityWorld.SetActive(world);
+            EntityWorld world = InitEcs();
 
             RenderPipelineCore.SetPipeline(new ForwardRenderPipeline());
 
@@ -66,10 +63,19 @@ namespace Entygine
             //Ogl.Enable(EnableCap.DebugOutputSynchronous);
         }
 
+        private EntityWorld InitEcs()
+        {
+            EntityWorld world = EntityWorld.CreateWorld();
+            world.Runner.AssignToWorker(coreWorker).CreateSystemsAuto(world);
+            EntityWorld.SetActive(world);
+            return world;
+        }
+
         private void InitPhysics()
         {
-            PhysicsCore core = new PhysicsCore();
-            
+            PhysicsRunner physicsRunner = new PhysicsRunner();
+            physicsRunner.AddWorld(new PhysicsWorld());
+            physicsRunner.AssignToWorker(coreWorker);
         }
 
         private static void InitScene(EntityWorld world)
@@ -115,7 +121,8 @@ namespace Entygine
 
             //Vector3 cameraPos = new Vector3(0, 10, 10);
             //world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
-            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() { speed = 0.2f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115 });
+            world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() 
+            { speed = 2f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115, sensitivity = 10 });
         }
 
         private static void InitLight()
@@ -158,7 +165,7 @@ namespace Entygine
         {
             base.OnUpdateFrame(e);
 
-            coreWorker.PerformLogicCycle();
+            coreWorker.PerformLogicCycle((float)e.Time);
 
             if (KeyboardState.IsKeyDown(Key.Space))
                 EntityWorld.Active.DEBUG_LOG_INFO();
@@ -171,7 +178,7 @@ namespace Entygine
         {
             base.OnRenderFrame(e);
 
-            coreWorker.PerformRenderCycle();
+            coreWorker.PerformRenderCycle((float)e.Time);
 
             SwapBuffers();
         }

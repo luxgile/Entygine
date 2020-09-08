@@ -9,7 +9,7 @@ namespace Entygine.Cycles
         private IPhaseId id;
         private WorkerPhase[] subPhases;
 
-        private Action phasePerformed;
+        private Action<float> phasePerformed;
 
         public WorkerPhase(IPhaseId id, string name)
         {
@@ -19,34 +19,34 @@ namespace Entygine.Cycles
             phasePerformed = null;
         }
 
-        public void SetCallback(Action callback)
+        public void SetCallback(Action<float> callback)
         {
             phasePerformed = callback;
         }
 
-        public void PerformPhase()
+        public void PerformPhase(float deltaTime)
         {
-            try { phasePerformed?.Invoke(); }
+            try { phasePerformed?.Invoke(deltaTime); }
             catch (Exception e) { Console.WriteLine(e); }
 
             try 
             {
                 for (int i = 0; i < subPhases.Length; i++)
-                    subPhases[i].PerformPhase();
+                    subPhases[i].PerformPhase(deltaTime);
             }
             catch (Exception e) { Console.WriteLine(e); }
         }
 
         public bool IsPhase<T>() where T : IPhaseId => IsPhase(typeof(T));
 
-        internal void FindFirstLogicPhaseAndModify(Type phaseId, WorkerPhaseModifierDelegate callback)
+        internal void FindFirstPhaseAndModify(Type phaseId, WorkerPhaseModifierDelegate callback)
         {
             for (int i = 0; i < subPhases.Length; i++)
             {
                 if (subPhases[i].IsPhase(phaseId))
                     callback(ref subPhases[i]);
                 else
-                    subPhases[i].FindFirstLogicPhaseAndModify(phaseId, callback);
+                    subPhases[i].FindFirstPhaseAndModify(phaseId, callback);
             }
         }
 

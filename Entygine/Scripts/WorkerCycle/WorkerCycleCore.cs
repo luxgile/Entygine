@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entygine.DevTools;
+using System;
 using System.Collections.Generic;
 
 namespace Entygine.Cycles
@@ -10,7 +11,6 @@ namespace Entygine.Cycles
 
         private WorkerPhase logicRoot;
         private WorkerPhase renderRoot;
-        private WorkerPhase physicsRoot;
 
         internal WorkerCycleCore()
         {
@@ -26,9 +26,6 @@ namespace Entygine.Cycles
 
             //Render Phase
             renderRoot = new WorkerPhase(RootPhaseId.Default, "Render Root Phase");
-
-            //Physics Phase
-            physicsRoot = new WorkerPhase(RootPhaseId.Default, "Physics Root Phase");
         }
 
         public void FindFirstLogicPhaseAndModify<T0>(WorkerPhaseModifierDelegate callback) where T0 : IPhaseId
@@ -42,23 +39,18 @@ namespace Entygine.Cycles
                 callback(ref workerPhase);
             else
             {
-                workerPhase.FindFirstLogicPhaseAndModify(phaseId, callback);
+                workerPhase.FindFirstPhaseAndModify(phaseId, callback);
             }
         }
 
-        internal void PerformLogicCycle()
+        internal void PerformLogicCycle(float deltaTime)
         {
-            logicRoot.PerformPhase();
+            logicRoot.PerformPhase(deltaTime);
         }
 
-        internal void PerformRenderCycle()
+        internal void PerformRenderCycle(float deltaTime)
         {
-            renderRoot.PerformPhase();
-        }
-
-        internal void PerformPhysicsCycle()
-        {
-            physicsRoot.PerformPhase();
+            renderRoot.PerformPhase(deltaTime);
         }
     }
 }
