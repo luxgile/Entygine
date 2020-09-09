@@ -34,9 +34,26 @@ namespace Entygine.Mathematics
         {
             return new Vec3f(a.x - b.x, a.y - b.y, a.z - b.z);
         }
-        public static Vec3f operator*(Vec3f vec, float v)
+        public static Vec3f operator *(float v, Vec3f vec) => Multiply(vec, v);
+        public static Vec3f operator *(Vec3f vec, float v) => Multiply(vec, v);
+
+        public static Vec3f Multiply(in Vec3f vec, in float v)
         {
             return new Vec3f(vec.x * v, vec.y * v, vec.z * v);
+        }
+        public static Vec3f Cross(in Vec3f lhs, in Vec3f rhs)
+        {
+            return new Vec3f()
+            {
+                x = (lhs.y * rhs.z) - (lhs.z * rhs.y),
+                y = (lhs.z * rhs.x) - (lhs.x * rhs.z),
+                z = (lhs.x * rhs.y) - (lhs.y * rhs.x),
+            };
+        }
+
+        public static float Dot(in Vec3f lhs, in Vec3f rhs)
+        {
+            return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
         }
 
         public Vec2f XY => new Vec2f(x, y);

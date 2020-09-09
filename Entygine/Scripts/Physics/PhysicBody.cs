@@ -6,10 +6,10 @@ namespace Entygine.Physics
     public class PhysicBody
     {
         public Vec3f position;
-        public Quaternion rotation;
+        public Quatf rotation;
 
         public Vec3f velocity;
-        public Quaternion torque;
+        public Quatf torque;
 
         private Vec3f acumulatedForce;
 
