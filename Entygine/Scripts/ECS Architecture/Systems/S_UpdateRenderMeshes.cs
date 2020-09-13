@@ -8,15 +8,15 @@ namespace Entygine.Ecs.Systems
     {
         private EntityQuery query = new EntityQuery();
 
-        protected override void OnPerformFrame()
+        protected override void OnPerformFrame(float dt)
         {
-            base.OnPerformFrame();
+            base.OnPerformFrame(dt);
 
             query.With(TypeCache.WriteType(typeof(SC_RenderMesh)));
-            IterateQuery(new Iterator2(), query);
+            IterateQuery(new Iterator(), query);
         }
 
-        private struct Iterator2 : IQueryChunkIterator
+        private struct Iterator : IQueryChunkIterator
         {
             public void Iteration(ref EntityChunk chunk)
             {

@@ -1,6 +1,5 @@
 ﻿using Entygine.Ecs;
 using Entygine.Ecs.Components;
-using Entygine.Ecs.Systems;
 using Entygine.Rendering;
 using OpenToolkit.Mathematics;
 using OpenToolkit.Graphics.OpenGL4;
@@ -11,12 +10,7 @@ using Entygine.DevTools;
 using Entygine.Cycles;
 using Entygine.Rendering.Pipeline;
 using Entygine.UI;
-<<<<<<< HEAD
-using System;
-using System.Runtime.InteropServices;
 using Entygine.Physics;
-=======
->>>>>>> develop
 
 namespace Entygine
 {
@@ -125,7 +119,7 @@ namespace Entygine
             //Vector3 cameraPos = new Vector3(0, 10, 10);
             //world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
             world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera() 
-            { speed = 2f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115, sensitivity = 10 });
+            { speed = 10f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115, sensitivity = 20 });
         }
 
         private static void InitLight()

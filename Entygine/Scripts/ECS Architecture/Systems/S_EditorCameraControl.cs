@@ -8,15 +8,13 @@ namespace Entygine.Ecs.Systems
     public class S_EditorCameraControl : BaseSystem
     {
         private readonly EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
-        private EntityQuery query;
+        private EntityQuery query = new EntityQuery();
 
         private float scrollDelta;
 
         protected override void OnSystemCreated()
         {
             base.OnSystemCreated();
-
-            query = new EntityQuery(World).With(TypeCache.WriteType(typeof(C_Transform)), TypeCache.WriteType(typeof(C_EditorCamera)));
 
             MainDevWindowGL.Window.MouseWheel += (x) => scrollDelta = x.OffsetY;
         }
@@ -60,6 +58,7 @@ namespace Entygine.Ecs.Systems
 
             Iterator iterator = new Iterator()
             {
+                deltaTime = dt,
                 posDelta = posDelta,
                 speedDelta = speedDelta,
                 rotDelta = rotDelta,
@@ -67,7 +66,7 @@ namespace Entygine.Ecs.Systems
             };
 
             query.With(TypeCache.WriteType(typeof(C_Transform)), TypeCache.WriteType(typeof(C_EditorCamera)));
-            IterateQuery(iterator, query);
+            IterateQuery(iterator, query, false);
 
             scrollDelta = 0;
         }
