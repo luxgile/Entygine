@@ -7,7 +7,7 @@ namespace Entygine.Ecs.Systems
 {
     public class S_EditorCameraControl : BaseSystem
     {
-        private EntityQuery query = new EntityQuery().With(TypeCache.WriteType(typeof(C_Transform)), TypeCache.WriteType(typeof(C_EditorCamera)));
+        private EntityQuery query = new EntityQuery();
 
         private float scrollDelta;
 
@@ -62,6 +62,8 @@ namespace Entygine.Ecs.Systems
                 rotDelta = rotDelta,
                 distDelta = scrollDelta,
             };
+
+            query.With(TypeCache.WriteType(typeof(C_Transform)), TypeCache.WriteType(typeof(C_EditorCamera)));
             IterateQuery(iterator, query);
             scrollDelta = 0;
         }

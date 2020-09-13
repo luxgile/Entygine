@@ -50,7 +50,7 @@ namespace Entygine.Rendering.Pipeline
                 {
                     MeshRenderGroup renderGroup = renderGroups[i];
 
-                    MeshRender pair = renderGroup.MeshRender;
+                    RenderMesh pair = renderGroup.MeshRender;
                     List<Matrix4> positions = renderGroup.Transforms;
 
                     pair.mat.SetDepthMap(mainLight.Depthmap);
@@ -112,7 +112,7 @@ namespace Entygine.Rendering.Pipeline
                     {
                         MeshRenderGroup renderGroup = renderGroups[i];
 
-                        MeshRender pair = renderGroup.MeshRender;
+                        RenderMesh pair = renderGroup.MeshRender;
                         List<Matrix4> positions = renderGroup.Transforms;
 
                         GraphicsAPI.UseMeshMaterial(pair.mesh, lightData.depthMat);

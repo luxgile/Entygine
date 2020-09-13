@@ -24,13 +24,6 @@ namespace Entygine.Rendering.Pipeline
                 skyboxRenderData.skybox = skybox;
         }
 
-        public static void QueueMesh(Mesh mesh, Material mat, Matrix4 transform)
-        {
-            MeshRender renderMesh = new MeshRender() { mat = mat, mesh = mesh };
-            if (renderContext.TryGetData(out GeometryRenderData geometryData))
-                geometryData.AddMesh(renderMesh, transform);
-        }
-
         public static void Draw(CameraData[] cameras, Matrix4[] transforms)
         {
             renderContext.ClearBuffer();

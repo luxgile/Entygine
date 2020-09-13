@@ -7,12 +7,14 @@ namespace Entygine.Rendering
     [SystemGroup(typeof(MainPhases.LatePhaseId))]
     public class S_TransformConverter : BaseSystem
     {
-        private EntityQuery query = new EntityQuery().With(TypeCache.WriteType(typeof(C_Transform)))
-                .Any(TypeCache.ReadType(typeof(C_Position)), TypeCache.ReadType(typeof(C_Rotation)), TypeCache.ReadType(typeof(C_UniformScale)));
+        private EntityQuery query = new EntityQuery();
 
         protected override void OnPerformFrame()
         {
             base.OnPerformFrame();
+
+            query.With(TypeCache.WriteType(typeof(C_Transform)))
+                .Any(TypeCache.ReadType(typeof(C_Position)), TypeCache.ReadType(typeof(C_Rotation)), TypeCache.ReadType(typeof(C_UniformScale)));
 
             IterateQuery(new Iterator(), query);
         }
