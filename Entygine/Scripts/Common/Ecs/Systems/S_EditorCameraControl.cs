@@ -8,7 +8,6 @@ namespace Entygine.Ecs.Systems
 {
     public class S_EditorCameraControl : BaseSystem
     {
-        private readonly EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
         private EntityQuery query = new EntityQuery();
 
         private float scrollDelta;
