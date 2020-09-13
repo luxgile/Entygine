@@ -4,14 +4,14 @@ using System.Text;
 
 namespace Entygine.Rendering
 {
-    public class MeshRender
+    public class RenderMesh
     {
         public Material mat;
         public Mesh mesh;
 
         public override bool Equals(object obj)
         {
-            return obj is MeshRender pair &&
+            return obj is RenderMesh pair &&
                    EqualityComparer<Material>.Default.Equals(mat, pair.mat) &&
                    EqualityComparer<Mesh>.Default.Equals(mesh, pair.mesh);
         }

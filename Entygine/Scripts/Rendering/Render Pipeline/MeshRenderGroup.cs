@@ -6,16 +6,16 @@ namespace Entygine.Rendering
 {
     public class MeshRenderGroup
     {
-        public MeshRender MeshRender { get; internal set; }
+        public RenderMesh MeshRender { get; internal set; }
         public List<Matrix4> Transforms { get; internal set; }
 
-        public MeshRenderGroup(MeshRender meshRender)
+        public MeshRenderGroup(RenderMesh meshRender)
         {
             MeshRender = meshRender;
             Transforms = new List<Matrix4>();
         }
 
-        public bool HasMeshRender(MeshRender meshRender)
+        public bool HasMeshRender(RenderMesh meshRender)
         {
             return MeshRender.Equals(meshRender);
         }
@@ -23,6 +23,11 @@ namespace Entygine.Rendering
         public void AddTransform(Matrix4 transform)
         {
             Transforms.Add(transform);
+        }
+
+        public void ClearTransforms()
+        {
+            Transforms.Clear();
         }
     }
 }
