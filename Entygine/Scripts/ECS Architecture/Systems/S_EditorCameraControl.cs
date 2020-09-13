@@ -2,6 +2,7 @@
 using OpenToolkit.Mathematics;
 using System.Collections.Generic;
 using OpenToolkit.Windowing.Common.Input;
+using Entygine.DevTools;
 
 namespace Entygine.Ecs.Systems
 {
@@ -11,6 +12,7 @@ namespace Entygine.Ecs.Systems
         private EntityQuery query = new EntityQuery();
 
         private float scrollDelta;
+        private Vector2 lastCursorPos;
 
         protected override void OnSystemCreated()
         {
@@ -35,8 +37,12 @@ namespace Entygine.Ecs.Systems
             if (input.IsKeyDown(Key.LControl))
                 speedDelta -= 0.01f;
 
+            Vector2 cursorPos = MainDevWindowGL.Window.MouseState.Position;
+
             if (input.IsKeyDown(Key.AltLeft) && MainDevWindowGL.Window.IsMouseButtonDown(MouseButton.Button1))
-                rotDelta = MainDevWindowGL.Window.MouseDelta;
+                rotDelta = cursorPos - lastCursorPos;
+
+            lastCursorPos = cursorPos;
 
             if (input.IsKeyDown(Key.W))
                 posDelta -= Vector3.UnitZ;
@@ -89,8 +95,8 @@ namespace Entygine.Ecs.Systems
 
                 editorCamera.focusDistance -= distDelta * deltaTime;
 
-                editorCamera.yaw -= rotDelta.X * deltaTime * editorCamera.sensitivity;
-                editorCamera.pitch -= rotDelta.Y * deltaTime * editorCamera.sensitivity;
+                editorCamera.yaw += rotDelta.X * deltaTime * editorCamera.sensitivity;
+                editorCamera.pitch += rotDelta.Y * deltaTime * editorCamera.sensitivity;
 
                 Vector3 dir = new Vector3(
                     (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch))
