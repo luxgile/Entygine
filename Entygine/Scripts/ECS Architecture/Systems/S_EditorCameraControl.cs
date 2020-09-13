@@ -58,7 +58,17 @@ namespace Entygine.Ecs.Systems
             if (input.IsKeyDown(Key.Q))
                 posDelta -= Vector3.UnitY;
 
-            query.Perform(new Iterator() { deltaTime = dt, posDelta = posDelta, speedDelta = speedDelta, rotDelta = rotDelta, distDelta = scrollDelta }, LastVersionWorked);
+            Iterator iterator = new Iterator()
+            {
+                posDelta = posDelta,
+                speedDelta = speedDelta,
+                rotDelta = rotDelta,
+                distDelta = scrollDelta,
+            };
+
+            query.With(TypeCache.WriteType(typeof(C_Transform)), TypeCache.WriteType(typeof(C_EditorCamera)));
+            IterateQuery(iterator, query);
+
             scrollDelta = 0;
         }
 

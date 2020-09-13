@@ -18,7 +18,7 @@
 
         public void PerformWork(float dt)
         {
-            if(!started)
+            if (!started)
             {
                 started = true;
                 OnSystemCreated();
@@ -34,6 +34,14 @@
         protected virtual void OnSystemCreated() { }
         protected virtual void OnPerformFrame(float dt) { }
         protected virtual void OnSystemDestroyed() { }
+
+        protected void IterateQuery(IQueryIterator iterator, EntityQuery query, bool onlyDirty = true)
+        {
+            if (onlyDirty)
+                EntityIterator.PerformIteration(World, iterator, query, LastVersionWorked);
+            else
+                EntityIterator.PerformIteration(World, iterator, query);
+        }
 
         public EntityWorld World => world;
         public uint LastVersionWorked => lastVersionWorked;

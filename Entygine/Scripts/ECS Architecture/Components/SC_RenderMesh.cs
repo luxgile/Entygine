@@ -5,18 +5,16 @@ namespace Entygine.Ecs.Components
 {
     public struct SC_RenderMesh : ISharedComponent
     {
-        public Mesh mesh;
-        public Material material;
-
-        private bool isDisposed;
-
-        public SC_RenderMesh(Mesh mesh, Material material)
+        public int id;
+        public RenderMesh value;
+        public SC_RenderMesh(RenderMesh renderMesh)
         {
-            this.mesh = mesh ?? throw new ArgumentNullException(nameof(mesh));
-            this.material = material ?? throw new ArgumentNullException(nameof(material));
-            isDisposed = false;
+            id = -1;
+            value = renderMesh;
 
-            material.LoadMaterial();
+            value.mat.LoadMaterial();
         }
+
+        public SC_RenderMesh(Mesh mesh, Material mat) : this(new RenderMesh() { mesh = mesh, mat = mat }) { }
     }
 }

@@ -7,21 +7,16 @@ namespace Entygine.Rendering
     [SystemGroup(typeof(MainPhases.LatePhaseId))]
     public class S_TransformConverter : BaseSystem
     {
-        private EntityQuery query;
-
-        protected override void OnSystemCreated()
-        {
-            base.OnSystemCreated();
-
-            query = new EntityQuery(World).With(TypeCache.WriteType(typeof(C_Transform)))
-                .Any(TypeCache.ReadType(typeof(C_Position)), TypeCache.ReadType(typeof(C_Rotation)), TypeCache.ReadType(typeof(C_UniformScale)));
-        }
+        private EntityQuery query = new EntityQuery();
 
         protected override void OnPerformFrame(float dt)
         {
             base.OnPerformFrame(dt);
 
-            query.Perform(new Iterator(), LastVersionWorked);
+            query.With(TypeCache.WriteType(typeof(C_Transform)))
+                .Any(TypeCache.ReadType(typeof(C_Position)), TypeCache.ReadType(typeof(C_Rotation)), TypeCache.ReadType(typeof(C_UniformScale)));
+
+            IterateQuery(new Iterator(), query);
         }
 
         private struct Iterator : IQueryEntityIterator

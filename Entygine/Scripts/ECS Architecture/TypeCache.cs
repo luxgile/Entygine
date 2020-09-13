@@ -10,6 +10,7 @@ namespace Entygine.Ecs
 
         public static TypeCache WriteType(Type type) => GetTypeCache(type, false);
         public static TypeCache ReadType(Type type) => GetTypeCache(type, true);
+        public static TypeCache ReadType<T>() => GetTypeCache(typeof(T), true);
         public static TypeCache GetTypeCache(Type type, bool readOnly)
         {
             Guid hash = type.GUID;

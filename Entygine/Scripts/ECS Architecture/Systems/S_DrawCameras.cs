@@ -11,21 +11,14 @@ namespace Entygine.Ecs.Systems
     [SystemGroup(typeof(MainPhases.DefaultPhaseId), PhaseType.Render)]
     public class S_DrawCameras : BaseSystem
     {
-        private EntityArchetype cameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform));
-        private EntityQuery query;
-
-        protected override void OnSystemCreated()
-        {
-            base.OnSystemCreated();
-
-            query = new EntityQuery(World).With(TypeCache.ReadType(typeof(C_Camera)), TypeCache.ReadType(typeof(C_Transform)));
-        }
+        private EntityQuery query = new EntityQuery();
 
         protected override void OnPerformFrame(float dt)
         {
             base.OnPerformFrame(dt);
 
-            query.Perform(new Iterator());
+            query.With(TypeCache.ReadType(typeof(C_Camera)), TypeCache.ReadType(typeof(C_Transform)));
+            IterateQuery(new Iterator(), query, false);
         }
 
         private struct Iterator : IQueryChunkIterator

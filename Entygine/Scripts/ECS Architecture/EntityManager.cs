@@ -27,6 +27,7 @@ namespace Entygine.Ecs
                     if (currEntity.id == entity.id)
                     {
                         chunk.SetComponent(e, component);
+                        chunk.UpdateVersion(version);
                         return;
                     }
                 }
@@ -118,7 +119,7 @@ namespace Entygine.Ecs
             uint id = (uint)GetEntityCount() + 1;
             int chunkIndex = GetAvaliableChunk(archetype);
             ref EntityChunk chunk = ref chunks[chunkIndex];
-            chunk.ChunkVersion = version;
+            chunk.UpdateVersion(version);
             Entity entity = chunk.CreateEntity(id);
             return entity;
         }
@@ -156,10 +157,8 @@ namespace Entygine.Ecs
 
         private int CreateChunk(EntityArchetype archetype)
         {
-            EntityChunk chunk = new EntityChunk(archetype)
-            {
-                ChunkVersion = version
-            };
+            EntityChunk chunk = new EntityChunk(archetype);
+            chunk.UpdateVersion(version);
 
             int index = -1;
             bool added = false;
