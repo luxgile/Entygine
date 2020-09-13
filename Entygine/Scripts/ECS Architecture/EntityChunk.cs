@@ -109,6 +109,11 @@ namespace Entygine.Ecs
             return version < chunkVersion;
         }
 
+        public void UpdateVersion(uint version)
+        {
+            chunkVersion = version;
+        }
+
         public bool TryGetComponent<T0>(int index, out T0 component) where T0 : IComponent
         {
             if (TryGetComponents<T0>(out ComponentArray comp))
@@ -318,7 +323,6 @@ namespace Entygine.Ecs
         public uint ChunkVersion
         {
             get => chunkVersion;
-            internal set => chunkVersion = value;
         }
     }
 }

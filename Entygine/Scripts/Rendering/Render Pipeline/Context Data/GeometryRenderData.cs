@@ -14,7 +14,10 @@ namespace Entygine.Rendering
             {
                 MeshRenderGroup currentGroup = renderGroups[i];
                 if (currentGroup.HasMeshRender(meshRender))
+                {
                     currentGroup.AddTransform(transform);
+                    return;
+                }
             }
 
             MeshRenderGroup newGroup = new MeshRenderGroup(meshRender);
