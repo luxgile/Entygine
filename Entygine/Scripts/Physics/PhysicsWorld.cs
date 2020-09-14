@@ -1,26 +1,45 @@
 ﻿using Entygine.Mathematics;
+using System;
 using System.Collections.Generic;
 
 namespace Entygine.Physics
 {
     public class PhysicsWorld
     {
-        private List<PhysicBody> bodies = new List<PhysicBody>();
+        private Dictionary<int, PhysicBody> bodies = new Dictionary<int, PhysicBody>();
 
-        public Vec3f Gravity { get; set; }
+        public static PhysicsWorld Default { get; private set; }
 
-        public void RegisterBody(PhysicBody body)
+        public Vec3f Gravity { get; set; } = new Vec3f(0, -9.8f, 0);
+
+        public static void SetDefaultWorld(PhysicsWorld world)
         {
-            bodies.Add(body);
+            Default = world;
+        }
+
+        public void UpdatePhysicsBody(int id, PhysicBody body)
+        {
+            bodies[id] = body;
+        }
+
+        public PhysicBody GetPhysicsBody(int id)
+        {
+            return bodies[id];
+        }
+
+        public int CreatePhysicsBody(PhysicBody body)
+        {
+            int id = new Random().Next();
+            bodies.Add(id, body);
+            return id;
         }
 
         public void StepPhysics(float dt)
         {
-            for (int i = 0; i < bodies.Count; i++)
+            foreach (KeyValuePair<int, PhysicBody> pair in bodies)
             {
-                PhysicBody body = bodies[i];
-                body.AddForce(Gravity);
-                body.Step(dt);
+                pair.Value.AddVelocity(Gravity);
+                pair.Value.Step(dt);
             }
         }
     }

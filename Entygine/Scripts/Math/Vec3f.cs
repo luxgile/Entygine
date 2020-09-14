@@ -26,6 +26,15 @@ namespace Entygine.Mathematics
             set { if (index == 0) x = value; if (index == 1) y = value; if (index == 2) z = value; throw new IndexOutOfRangeException(); }
         }
 
+        public static explicit operator OpenToolkit.Mathematics.Vector3(Vec3f v)
+        {
+            return new OpenToolkit.Mathematics.Vector3(v.x, v.y, v.z);
+        }
+        public static explicit operator Vec3f(OpenToolkit.Mathematics.Vector3 v)
+        {
+            return new Vec3f(v.X, v.Y, v.Z);
+        }
+
         public static Vec3f operator +(Vec3f a, Vec3f b)
         {
             return new Vec3f(a.x + b.x, a.y + b.y, a.z + b.z);
@@ -54,6 +63,11 @@ namespace Entygine.Mathematics
         public static float Dot(in Vec3f lhs, in Vec3f rhs)
         {
             return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
+        }
+
+        public override string ToString()
+        {
+            return $"({x}, {y}, {z})";
         }
 
         public Vec2f XY => new Vec2f(x, y);

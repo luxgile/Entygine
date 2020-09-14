@@ -2,7 +2,7 @@
 using Entygine.Ecs;
 using OpenToolkit.Mathematics;
 
-namespace Entygine.Rendering
+namespace Entygine.Ecs
 {
     [SystemGroup(typeof(MainPhases.LatePhaseId))]
     public class S_TransformConverter : BaseSystem

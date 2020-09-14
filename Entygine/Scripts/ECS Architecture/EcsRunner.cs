@@ -76,7 +76,7 @@ namespace Entygine.Ecs
 
             SystemGroupAttribute att = system.GetType().GetCustomAttribute<SystemGroupAttribute>();
             if (att == null)
-                defaultSystems.Add(system);
+                AddSystem(ref defaultSystems, system);
             else
             {
                 if (att.PhaseType == PhaseType.Logic)
@@ -89,41 +89,89 @@ namespace Entygine.Ecs
                         AddSystem(ref lateSystems, system);
                 }
                 else if (att.PhaseType == PhaseType.Render)
-                    renderSystems.Add(system);
-                else if (att.PhaseType == PhaseType.Physics)
-                    throw new NotImplementedException();
+                    AddSystem(ref renderSystems, system);
             }
         }
 
         private void AddSystem(ref List<BaseSystem> systems, BaseSystem system)
         {
-            var afterAtt = system.GetType().GetCustomAttribute<AfterSystemAttribute>();
-            if (afterAtt != null)
-            {
-                int index = FindSystem(ref systems, afterAtt.SystemType);
-                if (index != -1)
-                {
-                    if (index >= systems.Count)
-                        systems.Add(system);
-                    else
-                        systems.Insert(index + 1, system);
-
-                    return;
-                }
-            }
-
-            var beforeAtt = system.GetType().GetCustomAttribute<BeforeSystemAttribute>();
-            if (beforeAtt != null)
-            {
-                int index = FindSystem(ref systems, beforeAtt.SystemType);
-                if (index != -1)
-                {
-                    systems.Insert(index, system);
-                    return;
-                }
-            }
-
             systems.Add(system);
+            SortSystems(ref systems);
+        }
+
+        private void SortSystems(ref List<BaseSystem> systems)
+        {
+            HashSet<BaseSystem> sortedSystems = new HashSet<BaseSystem>();
+            HashSet<BaseSystem> loopDetectionHash = new HashSet<BaseSystem>();
+            for (int i = 0; i < systems.Count; i++)
+            {
+                loopDetectionHash.Clear();
+                SortAfterSystem(ref systems, systems[i]);
+
+                loopDetectionHash.Clear();
+                SortBeforeSystem(ref systems, systems[i]);
+            }
+
+            void SortAfterSystem(ref List<BaseSystem> systems, BaseSystem system)
+            {
+                if (sortedSystems.Contains(system))
+                    return;
+
+                var att = system.GetType().GetCustomAttribute<AfterSystemAttribute>();
+                if (att == null)
+                    return;
+
+                int index = FindSystem(ref systems, att.SystemType);
+                if (index == -1)
+                    return;
+
+                if(loopDetectionHash.Contains(system))
+                {
+                    DevConsole.Log("Loop found sorting systems.");
+                    return;
+                }
+
+                loopDetectionHash.Add(system);
+
+                SortAfterSystem(ref systems, systems[index]);
+
+                systems.Remove(system);
+                if (index + 1 >= systems.Count)
+                    systems.Add(system);
+                else
+                    systems.Insert(index + 1, system);
+
+                sortedSystems.Add(system);
+            }
+
+            void SortBeforeSystem(ref List<BaseSystem> systems, BaseSystem system)
+            {
+                if (sortedSystems.Contains(system))
+                    return;
+
+                var att = system.GetType().GetCustomAttribute<BeforeSystemAttribute>();
+                if (att == null)
+                    return;
+
+                int index = FindSystem(ref systems, att.SystemType);
+                if (index == -1)
+                    return;
+
+                if (loopDetectionHash.Contains(system))
+                {
+                    DevConsole.Log("Loop found sorting systems.");
+                    return;
+                }
+
+                loopDetectionHash.Add(system);
+
+                SortBeforeSystem(ref systems, systems[index]);
+
+                systems.Remove(system);
+                systems.Insert(index, system);
+
+                sortedSystems.Add(system);
+            }
 
             static int FindSystem(ref List<BaseSystem> systems, Type systemType)
             {

@@ -16,6 +16,7 @@ namespace Entygine.Cycles
         {
             //Logic Phase
             logicRoot = new WorkerPhase(RootPhaseId.Default, "Logic Root Phase");
+
             List<WorkerPhase> phases = new List<WorkerPhase>()
             {
                 new WorkerPhase(MainPhases.EarlyPhaseId.Default, "Early Phase"),

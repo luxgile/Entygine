@@ -26,5 +26,5 @@ namespace Entygine.Ecs
         }
     }
 
-    public enum PhaseType { Logic, Render, Physics }
+    public enum PhaseType { Logic, Render }
 }

@@ -1,5 +1,4 @@
 ﻿using Entygine.Mathematics;
-using OpenToolkit.Mathematics;
 
 namespace Entygine.Physics
 {
@@ -8,19 +7,24 @@ namespace Entygine.Physics
         public Vec3f position;
         public Quatf rotation;
 
+        public bool isStatic;
+
         public Vec3f velocity;
         public Quatf torque;
 
         private Vec3f acumulatedForce;
 
-        public void AddForce(Vec3f force)
+        public void AddVelocity(Vec3f force)
         {
             acumulatedForce += force;
         }
 
         public void Step(float stepTime)
         {
-            velocity += acumulatedForce;
+            if (isStatic)
+                return;
+
+            velocity += acumulatedForce * stepTime;
             acumulatedForce = Vec3f.Zero;
 
             position += velocity * stepTime;
