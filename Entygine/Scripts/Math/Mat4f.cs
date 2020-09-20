@@ -18,10 +18,6 @@
         public float v13;
         public float v23;
         public float v33;
-        public float v04;
-        public float v14;
-        public float v24;
-        public float v34;
 
         public Vec4f Row1 => new Vec4f(v00, v10, v20, v30);
         public Vec4f Row2 => new Vec4f(v01, v11, v21, v31);

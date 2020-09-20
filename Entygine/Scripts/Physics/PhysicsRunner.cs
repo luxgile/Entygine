@@ -17,7 +17,7 @@ namespace Entygine.Physics
             set
             {
                 stepTime = value;
-                if (stepTime <= Mathematics.Math.Epsilon)
+                if (stepTime <= Mathematics.MathUtils.Epsilon)
                     stepTime = 0.001f;
             }
         }
