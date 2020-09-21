@@ -3,7 +3,7 @@ using System;
 
 namespace Entygine.Mathematics
 {
-    public static partial class MathUtils
+    public static class MathUtils
     {
         public static readonly float Epsilon = 0.0000001f;
 

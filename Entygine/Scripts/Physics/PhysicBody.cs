@@ -52,6 +52,12 @@ namespace Entygine.Physics
             globalInverseInertiaTensor = orientation * localInverseInertiaTensor * inverseOrientation;
         }
 
+        public void SetPosition(Vec3f position)
+        {
+            this.position = position;
+            UpdateGlobalCentroidFromPos();
+        }
+
         public void SetColliders(params Collider[] colls)
         {
             colliders = colls;

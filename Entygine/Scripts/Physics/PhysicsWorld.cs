@@ -36,11 +36,15 @@ namespace Entygine.Physics
 
         public void StepPhysics(float dt)
         {
+            //Apply forces
             foreach (KeyValuePair<int, PhysicBody> pair in bodies)
             {
-                pair.Value.AddVelocity(Gravity);
+                pair.Value.ApplyForce(Gravity);
                 pair.Value.Step(dt);
             }
+
+            //Detect Collisions
+            //Solve constrains
         }
     }
 }

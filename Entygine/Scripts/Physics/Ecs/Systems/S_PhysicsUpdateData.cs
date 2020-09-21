@@ -25,7 +25,7 @@ namespace Entygine.Physics.Ecs
                 if (chunk.TryGetComponent(index, out C_PhysicsBody physicsBody))
                 {
                     if (chunk.TryGetComponent(index, out C_Position pos))
-                        physicsBody.body.position = (Vec3f)pos.value;
+                        physicsBody.body.SetPosition(pos.value);
 
                     chunk.SetComponent(index, physicsBody);
                 }

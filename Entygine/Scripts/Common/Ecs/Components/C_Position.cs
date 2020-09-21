@@ -1,9 +1,9 @@
-﻿using OpenToolkit.Mathematics;
+﻿using Entygine.Mathematics;
 
 namespace Entygine.Ecs
 {
     public struct C_Position : IComponent
     {
-        public Vector3 value;
+        public Vec3f value;
     }
 }

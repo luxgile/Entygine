@@ -25,7 +25,7 @@ namespace Entygine.Ecs
             {
                 Vector3 pos = Vector3.Zero;
                 if (chunk.TryGetComponent(index, out C_Position positionComponent))
-                    pos = positionComponent.value;
+                    pos = (Vector3)positionComponent.value;
 
                 Quaternion rot = Quaternion.Identity;
                 if (chunk.TryGetComponent(index, out C_Rotation rotationComponent))

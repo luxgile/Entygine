@@ -90,6 +90,12 @@ namespace Entygine.Mathematics
             return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
         }
 
+        public static float Distance(in Vec3f a, in Vec3f b)
+        {
+            return MathUtils.Sqrt(((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y)) +
+                                      ((b.z - a.z) * (b.z - a.z)));
+        }
+
         public Vec3f Normalized()
         {
             Vec3f copy = this;
