@@ -19,5 +19,41 @@ namespace Entygine.Mathematics
         public static float Acos(float radians) => (float)MathHelper.Acos(radians);
         public static float Sin(float radians) => (float)MathHelper.Sin(radians);
         public static float Asin(float radians) => (float)MathHelper.Asin(radians);
+
+        public static float Min(float v1, float v2) => v1 < v2 ? v1 : v2;
+        public static float Min(params float[] values)
+        {
+            int length = values.Length;
+            if (length == 0)
+                return 0.0f;
+
+            float num = values[0];
+            for (int i = 1; i < length; ++i)
+            {
+                if (values[i] < num)
+                    num = values[i];
+            }
+            return num;
+        }
+
+        public static float Min(out int index, params float[] values)
+        {
+            index = -1;
+            int length = values.Length;
+            if (length == 0)
+                return 0.0f;
+
+            float num = values[0];
+            index = 0;
+            for (int i = 1; i < length; ++i)
+            {
+                if (values[i] < num)
+                {
+                    index = i;
+                    num = values[i];
+                }
+            }
+            return num;
+        }
     }
 }

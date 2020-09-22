@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Entygine.Mathematics
 {
     [StructLayout(LayoutKind.Explicit)]
-    public struct Vec3f
+    public struct Vec3f : IEquatable<Vec3f>
     {
         [FieldOffset(0)]
         public float x;
@@ -12,6 +13,11 @@ namespace Entygine.Mathematics
         public float y;
         [FieldOffset(8)]
         public float z;
+
+        public static readonly Vec3f Zero = new Vec3f(0, 0, 0);
+        public static readonly Vec3f Up = new Vec3f(0, 1, 0);
+        public static readonly Vec3f Right = new Vec3f(1, 0, 0);
+        public static readonly Vec3f Forward = new Vec3f(0, 0, 1);
 
         public Vec3f(float x, float y, float z)
         {
@@ -96,6 +102,14 @@ namespace Entygine.Mathematics
                                       ((b.z - a.z) * (b.z - a.z)));
         }
 
+        /// <summary>
+        /// Checks if two vectors are the same or really close to each other, avoiding float pointing errors.
+        /// </summary>
+        public static bool Aproximates(in Vec3f a, in Vec3f b)
+        {
+            return (a - b).SqrMagnitude < MathUtils.Epsilon;
+        }
+
         public Vec3f Normalized()
         {
             Vec3f copy = this;
@@ -124,6 +138,11 @@ namespace Entygine.Mathematics
             return $"({x}, {y}, {z})";
         }
 
+        public bool Equals([AllowNull] Vec3f other)
+        {
+            return Aproximates(this, other);
+        }
+
         public float SqrMagnitude => (x * x) + (y * y) + (z * z);
         public float Magnitude => MathUtils.Sqrt(SqrMagnitude);
         public float MagnitudeFast => MathUtils.InverseSqrtFast(SqrMagnitude);
@@ -132,10 +151,5 @@ namespace Entygine.Mathematics
 
         public Vec2f XZ => new Vec2f(x, z);
         public Vec2f YZ => new Vec2f(y, z);
-
-        public static readonly Vec3f Zero = new Vec3f(0, 0, 0);
-        public static readonly Vec3f Up = new Vec3f(0, 1, 0);
-        public static readonly Vec3f Right = new Vec3f(1, 0, 0);
-        public static readonly Vec3f Forward = new Vec3f(0, 0, 1);
     }
 }
