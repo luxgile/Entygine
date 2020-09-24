@@ -6,6 +6,31 @@ namespace Entygine.Physics
 {
     public class GeneralCollisionDetection
     {
+        private class FaceData
+        {
+            public Triangle triangle;
+            public Triangle aSupport;
+            public Triangle bSupport;
+        }
+
+        private class LineData
+        {
+            public Line line;
+            public Line aSup;
+            public Line bSup;
+
+            public override bool Equals(object obj)
+            {
+                return obj is LineData data &&
+                       line.Equals(data.line);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(line);
+            }
+        }
+
         private void CsoSupport(Collider a, Collider b, Vec3f dir, out Vec3f support, out Vec3f supportA, out Vec3f supportB)
         {
             PhysicBody bodyA = a.body;
@@ -23,16 +48,20 @@ namespace Entygine.Physics
             support = supportA - supportB;
         }
 
-        private bool Gjk(Collider colliderA, Collider colliderB)
+        private bool Gjk(Collider colliderA, Collider colliderB, out ContactData contactData)
         {
+            contactData = default;
             Vec3f a, b, c, d;
+            Vec3f Asa, Asb, Asc, Asd, Bsa, Bsb, Bsc, Bsd;
             a = b = c = d = Vec3f.Zero;
+            Asa = Asb = Asc = Asd = Vec3f.Zero;
+            Bsa = Bsb = Bsc = Bsd = Vec3f.Zero;
             Vec3f searchDir = colliderA.localCentroid - colliderB.localCentroid;
 
-            CsoSupport(colliderB, colliderA, searchDir, out c, out _, out _);
+            CsoSupport(colliderB, colliderA, searchDir, out c, out Asc, out Bsc);
             searchDir = -c;
 
-            CsoSupport(colliderB, colliderA, searchDir, out b, out _, out _);
+            CsoSupport(colliderB, colliderA, searchDir, out b, out Asb, out Bsb);
 
             if (Vec3f.Dot(b, searchDir) < 0)
                 return false;
@@ -48,72 +77,78 @@ namespace Entygine.Physics
             int simplexDimension = 2;
             for (int i = 0; i < 64; i++)
             {
-                CsoSupport(colliderB, colliderA, searchDir, out a, out _, out _);
+                CsoSupport(colliderB, colliderA, searchDir, out a, out Asa, out Bsa);
                 if (Vec3f.Dot(a, searchDir) < 0) { return false; }
 
                 simplexDimension++;
                 if (simplexDimension == 3)
                 {
-                    UpdateSimplex3(ref a, ref b, ref c, ref d, ref simplexDimension, ref searchDir);
+                    UpdateSimplex3(ref a, ref b, ref c, ref d, ref simplexDimension, ref searchDir, ref Asa, ref Asb, ref Asc, ref Asd
+                        , ref Bsa, ref Bsb, ref Bsc, ref Bsd);
                 }
-                else if (UpdateSimplex4(ref a, ref b, ref c, ref d, ref simplexDimension, ref searchDir))
+                else if (UpdateSimplex4(ref a, ref b, ref c, ref d, ref simplexDimension, ref searchDir, ref Asa, ref Asb, ref Asc, ref Asd
+                        , ref Bsa, ref Bsb, ref Bsc, ref Bsd))
                 {
-                    //if (mtv) *mtv = EPA(a, b, c, d, coll1, coll2);
+                    contactData = Epa(colliderA, colliderB, a, b, c, d, Asa, Asb, Asc, Asd, Bsa, Bsb, Bsc, Bsd);
                     return true;
                 }
             }
             return false;
         }
 
-        private ContactData Epa(Collider colliderA, Collider colliderB, Vec3f a, Vec3f b, Vec3f c, Vec3f d)
+        private ContactData Epa(Collider colliderA, Collider colliderB, Vec3f a, Vec3f b, Vec3f c, Vec3f d,
+            Vec3f Asa, Vec3f Asb, Vec3f Asc, Vec3f Asd, Vec3f Bsa, Vec3f Bsb, Vec3f Bsc, Vec3f Bsd)
         {
-            List<Triangle> faces = new List<Triangle>
+            List<FaceData> faces = new List<FaceData>
             {
-                new Triangle(a, b, c),
-                new Triangle(a, c, d),
-                new Triangle(a, d, b),
-                new Triangle(b, d, c)
+                new FaceData{ triangle = new Triangle(a, b, c), aSupport = new Triangle(Asa, Asb, Asc), bSupport = new Triangle(Bsa, Bsb, Bsc) },
+                new FaceData{ triangle = new Triangle(a, c, d), aSupport = new Triangle(Asa, Asc, Asd), bSupport = new Triangle(Bsa, Bsc, Bsd) },
+                new FaceData{ triangle = new Triangle(a, d, b), aSupport = new Triangle(Asa, Asd, Asb), bSupport = new Triangle(Bsa, Bsd, Bsb) },
+                new FaceData{ triangle = new Triangle(b, d, c), aSupport = new Triangle(Asb, Asd, Asc), bSupport = new Triangle(Bsb, Bsd, Bsc) },
             };
 
-            Triangle prevFace = faces[0];
+            FaceData prevFace = faces[0];
             for (int maxIt = 0; maxIt < 64; maxIt++)
             {
-                int closestFace = GetClosestTriangle(faces, out float minDistance);
+                int closestFaceIndex = GetClosestTriangle(faces, out float distance, out Vec3f projectedPoint);
+                Vec3f searchDir = faces[closestFaceIndex].triangle.GetNormal();
+                CsoSupport(colliderA, colliderB, searchDir, out Vec3f support, out Vec3f supportA, out Vec3f supportB);
 
-                if(/* IF CLOSEST IS NO CLOSER THAN PREVIOUS FACE */)
+                //If closest is no closer than previous face
+                if (distance >= prevFace.triangle.ClosestPointToPoint(Vec3f.Zero).SqrMagnitude)
                 {
-                    //Project the origin onto the closest triangle. This is our closest point to the origin on the CSO’s boundary. 
-                    //Compute the barycentric coordinates of this closest point using the vertices from this triangle. 
-                    //The barycentric coordinates are linear combination coefficients of vertices from the triangle. For each collider, 
-                    //linearly combine the support points corresponding to the vertices of the triangle, 
-                    //using the same barycentric coordinates as coefficients. This gives us contact points on each collider in local space. 
-                    //We can then convert these contact points to world space.
+                    FaceData closestFace = faces[closestFaceIndex];
+                    Vec3f barycentric = closestFace.triangle.GetBarycentric(projectedPoint);
+                    Vec3f localA = closestFace.aSupport.a * barycentric.x + closestFace.aSupport.b * barycentric.y + closestFace.aSupport.c * barycentric.z;
+                    Vec3f localB = closestFace.bSupport.a * barycentric.x + closestFace.bSupport.b * barycentric.y + closestFace.bSupport.c * barycentric.z;
+                    return new ContactData(colliderA.body.LocalToGlobalPos(localA), localA, colliderB.body.LocalToGlobalPos(localB)
+                        , localB, searchDir, distance);
                 }
 
-                Vec3f searchDir = faces[closestFace].GetNormal();
-                CsoSupport(colliderA, colliderB, searchDir, out Vec3f support, out _, out _);
+                prevFace = faces[closestFaceIndex];
 
-                List<Line> edgesToFix = new List<Line>();
+
+                List<LineData> edgesToFix = new List<LineData>();
                 for (int i = 0; i < faces.Count; i++)
                 {
-                    Triangle currFace = faces[i];
+                    FaceData currFace = faces[i];
 
                     //Remove face and add edges be fixed. Remove if they are already in the list since it doesn't have any faces conected.
-                    if (Vec3f.Dot(currFace.GetNormal(), support - currFace.a) > 0)
+                    if (Vec3f.Dot(currFace.triangle.GetNormal(), support - currFace.triangle.a) > 0)
                     {
-                        Line ab = currFace.AB;
+                        LineData ab = new LineData() { line = currFace.triangle.AB, aSup = currFace.aSupport.AB, bSup = currFace.bSupport.AB };
                         if (edgesToFix.Contains(ab))
                             edgesToFix.Remove(ab);
                         else
                             edgesToFix.Add(ab);
 
-                        Line ac = currFace.AC;
+                        LineData ac = new LineData() { line = currFace.triangle.AC, aSup = currFace.aSupport.AC, bSup = currFace.bSupport.AC };
                         if (edgesToFix.Contains(ac))
                             edgesToFix.Remove(ac);
                         else
                             edgesToFix.Add(ac);
 
-                        Line bc = currFace.BC;
+                        LineData bc = new LineData() { line = currFace.triangle.BC, aSup = currFace.aSupport.BC, bSup = currFace.bSupport.BC };
                         if (edgesToFix.Contains(bc))
                             edgesToFix.Remove(bc);
                         else
@@ -126,27 +161,47 @@ namespace Entygine.Physics
 
                 for (int i = 0; i < edgesToFix.Count; i++)
                 {
-                    Triangle face = new Triangle(edgesToFix[i].a, edgesToFix[i].b, support);
-                    if (Vec3f.Dot(face.a, face.GetNormal()) + MathUtils.Epsilon < 0)
+                    LineData currEdge = edgesToFix[i];
+                    FaceData face = new FaceData()
                     {
-                        Vec3f temp = face.a;
-                        face.a = face.b;
-                        face.b = temp;
+                        triangle = new Triangle(currEdge.line.a, currEdge.line.b, support),
+                        aSupport = new Triangle(currEdge.aSup.a, currEdge.aSup.b, supportA),
+                        bSupport = new Triangle(currEdge.bSup.a, currEdge.bSup.b, supportB),
+                    };
+
+                    if (Vec3f.Dot(face.triangle.a, face.triangle.GetNormal()) + MathUtils.Epsilon < 0)
+                    {
+                        Vec3f temp = face.triangle.a;
+                        face.triangle.a = face.triangle.b;
+                        face.triangle.b = temp;
+
+                        temp = face.aSupport.a;
+                        face.aSupport.a = face.aSupport.b;
+                        face.aSupport.b = temp;
+
+                        temp = face.bSupport.a;
+                        face.bSupport.a = face.bSupport.b;
+                        face.bSupport.b = temp;
                     }
 
                     faces.Add(face);
                 }
             }
 
-            static int GetClosestTriangle(List<Triangle> faces, out float distance)
+            return default;
+
+            static int GetClosestTriangle(List<FaceData> faces, out float distance, out Vec3f projectedPoint)
             {
+                projectedPoint = Vec3f.Zero;
                 float mDist = distance = float.MaxValue;
                 int index = -1;
                 for (int i = 0; i < faces.Count; i++)
                 {
-                    float d = faces[i].ClosestPointToPoint(Vec3f.Zero).MagnitudeFast;
-                    if(d < mDist)
+                    Vec3f p = faces[i].triangle.ClosestPointToPoint(Vec3f.Zero);
+                    float d = p.MagnitudeFast;
+                    if (d < mDist)
                     {
+                        projectedPoint = p;
                         mDist = d;
                         distance = d;
                         index = i;
@@ -156,7 +211,8 @@ namespace Entygine.Physics
             }
         }
 
-        private bool UpdateSimplex4(ref Vec3f a, ref Vec3f b, ref Vec3f c, ref Vec3f d, ref int simplexDimension, ref Vec3f searchDir)
+        private bool UpdateSimplex4(ref Vec3f a, ref Vec3f b, ref Vec3f c, ref Vec3f d, ref int simplexDimension, ref Vec3f searchDir,
+            ref Vec3f Asa, ref Vec3f Asb, ref Vec3f Asc, ref Vec3f Asd, ref Vec3f Bsa, ref Vec3f Bsb, ref Vec3f Bsc, ref Vec3f Bsd)
         {
             Vec3f ABC = Vec3f.Cross(b - a, c - a);
             Vec3f ACD = Vec3f.Cross(c - a, d - a);
@@ -174,8 +230,17 @@ namespace Entygine.Physics
             if (Vec3f.Dot(ABC, AO) > 0)
             {
                 d = c;
+                Asd = Asc;
+                Bsd = Bsc;
+
                 c = b;
+                Asc = Asb;
+                Bsc = Bsb;
+
                 b = a;
+                Asb = Asa;
+                Bsb = Bsa;
+
                 searchDir = ABC;
                 return false;
             }
@@ -183,6 +248,9 @@ namespace Entygine.Physics
             if (Vec3f.Dot(ACD, AO) > 0)
             {
                 b = a;
+                Asb = Asa;
+                Bsb = Bsa;
+
                 searchDir = ACD;
                 return false;
             }
@@ -190,8 +258,17 @@ namespace Entygine.Physics
             if (Vec3f.Dot(ADB, AO) > 0)
             {
                 c = d;
+                Asc = Asd;
+                Bsc = Bsd;
+
                 d = b;
+                Asd = Asb;
+                Bsd = Bsb;
+
                 b = a;
+                Asb = Asa;
+                Bsb = Bsa;
+
                 searchDir = ADB;
                 return false;
             }
@@ -204,7 +281,8 @@ namespace Entygine.Physics
             //to just one of the faces, maybe test it later.
         }
 
-        private void UpdateSimplex3(ref Vec3f a, ref Vec3f b, ref Vec3f c, ref Vec3f d, ref int simplexDimension, ref Vec3f searchDir)
+        private void UpdateSimplex3(ref Vec3f a, ref Vec3f b, ref Vec3f c, ref Vec3f d, ref int simplexDimension, ref Vec3f searchDir,
+            ref Vec3f Asa, ref Vec3f Asb, ref Vec3f Asc, ref Vec3f Asd, ref Vec3f Bsa, ref Vec3f Bsb, ref Vec3f Bsc, ref Vec3f Bsd)
         {
             Vec3f normal = Vec3f.Cross(b - a, c - a);
             Vec3f originDir = -a;
@@ -213,12 +291,18 @@ namespace Entygine.Physics
             if (Vec3f.Dot(Vec3f.Cross(b - a, normal), originDir) > 0)
             {
                 c = a;
+                Asc = Asa;
+                Bsc = Bsa;
+
                 searchDir = Vec3f.Cross(Vec3f.Cross(b - a, originDir), b - a);
                 return;
             }
             if (Vec3f.Dot(Vec3f.Cross(normal, c - a), originDir) > 0)
             {
                 b = a;
+                Asb = Asa;
+                Bsb = Bsa;
+
                 searchDir = Vec3f.Cross(Vec3f.Cross(c - a, originDir), c - a);
                 return;
             }
@@ -227,14 +311,29 @@ namespace Entygine.Physics
             if (Vec3f.Dot(normal, originDir) > 0)
             {
                 d = c;
+                Asd = Asc;
+                Bsd = Bsc;
+
                 c = b;
+                Asc = Asb;
+                Bsc = Bsb;
+
                 b = a;
+                Asb = Asa;
+                Bsb = Bsa;
+
                 searchDir = normal;
                 return;
             }
 
             d = b;
+            Asd = Asb;
+            Bsd = Bsb;
+
             b = a;
+            Asb = Asa;
+            Bsb = Bsa;
+
             searchDir = -normal;
             return;
         }

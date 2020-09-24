@@ -16,16 +16,22 @@ namespace Entygine.Physics
 
         public float depth;
 
-        public ContactData(Vec3f worldPointA, Vec3f worldPointB, Vec3f localPointA, Vec3f localPointB, Vec3f normal, Vec3f tang1, Vec3f tang2, float depth)
+        public ContactData(Vec3f worldPointA, Vec3f localPointA, Vec3f worldPointB, Vec3f localPointB, Vec3f normal, float depth)
         {
-            this.worldPointA = worldPointA;
-            this.worldPointB = worldPointB;
             this.localPointA = localPointA;
             this.localPointB = localPointB;
-            this.normal = normal;
-            this.tang1 = tang1;
-            this.tang2 = tang2;
+            this.worldPointA = worldPointA;
+            this.worldPointB = worldPointB;
             this.depth = depth;
+            this.normal = normal;
+
+            if (normal.x >= 0.57735f)
+                tang1 = new Vec3f(normal.y, -normal.x, 0);
+            else
+                tang1 = new Vec3f(0.0f, normal.z, -normal.y);
+
+            tang1.Normalize();
+            tang2 = Vec3f.Cross(normal, tang1);
         }
     }
 }

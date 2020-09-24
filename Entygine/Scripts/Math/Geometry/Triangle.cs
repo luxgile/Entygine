@@ -16,6 +16,25 @@
         public Line BC => new Line(c, b);
         public Vec3f GetNormal() => Vec3f.Cross(b - a, c - a).Normalized();
         public Plane CreatePlane() => new Plane(a, b, c);
+        public Vec3f GetBarycentric(Vec3f point)
+        {
+            Vec3f v0 = b - a;
+            Vec3f v1 = c - a;
+            Vec3f v2 = point - a;
+
+            float d00 = Vec3f.Dot(v0, v0);
+            float d01 = Vec3f.Dot(v0, v1);
+            float d11 = Vec3f.Dot(v1, v1);
+            float d20 = Vec3f.Dot(v2, v0);
+            float d21 = Vec3f.Dot(v2, v1);
+            float denom = d00 * d11 - d01 * d01;
+
+            float v = (d11 * d20 - d01 * d21) / denom;
+            float w = (d00 * d21 - d01 * d20) / denom;
+            float u = 1.0f - v - w;
+
+            return new Vec3f(u, v, w);
+        }
 
         public static bool ContainsPoint(Vec3f a, Vec3f b, Vec3f c, Vec3f point)
         {
