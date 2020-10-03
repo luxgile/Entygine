@@ -1,7 +1,9 @@
-﻿using Entygine.Mathematics;
-using OpenToolkit.Mathematics;
+﻿using BepuPhysics;
+using BepuPhysics.Collidables;
+using Entygine.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Entygine.Physics
 {
@@ -95,6 +97,18 @@ namespace Entygine.Physics
             localInverseInertiaTensor = localInertiaTensor.Inverted();
         }
 
+        public void AddToSimulation(Simulation sim)
+        {
+
+            List<IConvexShape> shapes = new List<IConvexShape>();
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                var shape = colliders[i].Shape;
+                shape.ComputeInertia(1, out BodyInertia inertia);
+                
+            }
+        }
+
         public Vec3f LocalToGlobalPos(in Vec3f v)
         {
             return orientation * v + position;
@@ -124,26 +138,28 @@ namespace Entygine.Physics
             torqueAccumulator += Vec3f.Cross(point - globalCentroid, force);
         }
 
-        public void Step(float stepTime)
-        {
-            if (isStatic)
-                return;
+        //public void Step(float stepTime)
+        //{
+        //    if (isStatic)
+        //        return;
 
-            linearVelocity += InverseMass * forceAccumulator * stepTime;
-            angularVelocity += globalInverseInertiaTensor * torqueAccumulator * stepTime;
+        //    linearVelocity += InverseMass * forceAccumulator * stepTime;
+        //    angularVelocity += globalInverseInertiaTensor * torqueAccumulator * stepTime;
 
-            forceAccumulator = Vec3f.Zero;
-            angularVelocity = Vec3f.Zero;
+        //    forceAccumulator = Vec3f.Zero;
+        //    angularVelocity = Vec3f.Zero;
 
-            globalCentroid += linearVelocity * stepTime;
+        //    globalCentroid += linearVelocity * stepTime;
 
-            Vec3f axis = angularVelocity.Normalized();
-            float angle = angularVelocity.Magnitude * stepTime;
-            orientation = Mat3f.CreateRotation(axis, angle) * orientation;
+        //    Vec3f axis = angularVelocity.Normalized();
+        //    float angle = angularVelocity.Magnitude * stepTime;
+        //    orientation = Mat3f.CreateRotation(axis, angle) * orientation;
 
-            UpdatePosFromGlobalCentroid();
-            UpdateOrientation();
-            UpdateInertiaTensor();
-        }
+        //    UpdatePosFromGlobalCentroid();
+        //    UpdateOrientation();
+        //    UpdateInertiaTensor();
+        //}
+
+        public Vec3f Position => position;
     }
 }

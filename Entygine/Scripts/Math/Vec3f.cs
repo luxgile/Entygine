@@ -40,6 +40,14 @@ namespace Entygine.Mathematics
         {
             return new Vec3f(v.X, v.Y, v.Z);
         }
+        public static explicit operator System.Numerics.Vector3(Vec3f v)
+        {
+            return new System.Numerics.Vector3(v.x, v.y, v.z);
+        }
+        public static explicit operator Vec3f(System.Numerics.Vector3 v)
+        {
+            return new Vec3f(v.X, v.Y, v.Z);
+        }
 
         public static Vec3f operator +(Vec3f a, Vec3f b) => new Vec3f(a.x + b.x, a.y + b.y, a.z + b.z);
         public static Vec3f operator -(Vec3f a, Vec3f b) => new Vec3f(a.x - b.x, a.y - b.y, a.z - b.z);

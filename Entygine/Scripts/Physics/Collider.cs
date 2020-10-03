@@ -1,4 +1,5 @@
-﻿using Entygine.Mathematics;
+﻿using BepuPhysics.Collidables;
+using Entygine.Mathematics;
 
 namespace Entygine.Physics
 {
@@ -10,5 +11,6 @@ namespace Entygine.Physics
         public Vec3f localCentroid;
 
         public abstract Vec3f FurthestPointInDirection(Vec3f dir);
+        public abstract IConvexShape Shape { get; }
     }
 }

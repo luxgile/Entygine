@@ -25,7 +25,7 @@ namespace Entygine.Physics.Ecs
                     && chunk.TryGetComponent(index, out C_Position position))
                 {
                     PhysicBody body = PhysicsWorld.Default.GetPhysicsBody(pb.id);
-                    position.value = (Vector3)body.position;
+                    position.value = body.Position;
                     chunk.SetComponent(index, position);
                 }
             }
