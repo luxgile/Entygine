@@ -32,11 +32,11 @@ namespace Entygine.Mathematics
             set { if (index == 0) x = value; if (index == 1) y = value; if (index == 2) z = value; throw new IndexOutOfRangeException(); }
         }
 
-        public static explicit operator OpenToolkit.Mathematics.Vector3(Vec3f v)
+        public static explicit operator OpenTK.Mathematics.Vector3(Vec3f v)
         {
-            return new OpenToolkit.Mathematics.Vector3(v.x, v.y, v.z);
+            return new OpenTK.Mathematics.Vector3(v.x, v.y, v.z);
         }
-        public static explicit operator Vec3f(OpenToolkit.Mathematics.Vector3 v)
+        public static explicit operator Vec3f(OpenTK.Mathematics.Vector3 v)
         {
             return new Vec3f(v.X, v.Y, v.Z);
         }

@@ -1,10 +1,9 @@
-﻿using Entygine.Rendering;
-using OpenToolkit.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using System;
 using System.IO;
 using System.Text;
 
-namespace Entygine
+namespace Entygine.Rendering
 {
     public class Shader
     {

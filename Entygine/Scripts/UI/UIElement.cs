@@ -1,6 +1,6 @@
 ﻿using Entygine.Rendering;
-using OpenToolkit.Mathematics;
-using OpenToolkit.Windowing.Desktop;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
 

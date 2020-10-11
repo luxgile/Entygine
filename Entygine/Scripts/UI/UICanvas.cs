@@ -1,4 +1,4 @@
-﻿using OpenToolkit.Mathematics;
+﻿using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 
@@ -11,9 +11,18 @@ namespace Entygine.UI
         public UICanvas()
         {
             Root = new UIStackPanel();
-            Root.Children.Add(new UIImage());
-            Root.Children.Add(new UIImage());
-            Root.Children.Add(new UIImage());
+            UIImage image1 = new UIImage();
+            image1.Children.Add(new UIText("Im children one"));
+
+            UIImage image2 = new UIImage();
+            image2.Children.Add(new UIText("Im children two"));
+
+            UIImage image3 = new UIImage();
+            image3.Children.Add(new UIText("Im children three"));
+
+            Root.Children.Add(image1);
+            Root.Children.Add(image2);
+            Root.Children.Add(image3);
         }
 
         public List<UI_IRenderable> GetRenderables()

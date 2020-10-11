@@ -6,6 +6,7 @@ namespace Entygine.UI
     {
         Material Material { get; set; }
         Rect Rect { get; set; }
-        Color01 Color { get; set; }
+
+        void DrawUI(Mesh mesh);
     }
 }

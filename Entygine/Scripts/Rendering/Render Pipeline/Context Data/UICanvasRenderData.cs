@@ -1,6 +1,6 @@
 ﻿using Entygine.Rendering.Pipeline;
 using Entygine.UI;
-using OpenToolkit.Mathematics;
+using OpenTK.Mathematics;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
@@ -16,13 +16,6 @@ namespace Entygine.Rendering
         {
             camera = CameraData.CreateOrthographicCamera(MainDevWindowGL.Window.Size.X / MainDevWindowGL.Window.Size.Y, 1, -1, 1);
             camera.SetOrthoResolution(MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y);
-
-            Shader uiShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.vert"), AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.frag"));
-
-            Texture2D texture = Texture2D.CreateWhiteTexture(64, 64);
-
-            Material = new Material(uiShader, texture);
-            Material.LoadMaterial();
 
             //Mesh = MeshPrimitives.CreatePlaneXY(1);
 
@@ -56,7 +49,6 @@ namespace Entygine.Rendering
         public List<UICanvas> GetCanvases() => canvases;
 
         public Mesh Mesh { get; }
-        public Material Material { get; }
         public CameraData Camera => camera;
     }
 }

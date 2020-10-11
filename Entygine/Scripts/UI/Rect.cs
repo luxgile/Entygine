@@ -1,4 +1,4 @@
-﻿using OpenToolkit.Mathematics;
+﻿using OpenTK.Mathematics;
 using System;
 
 namespace Entygine.UI
@@ -12,6 +12,15 @@ namespace Entygine.UI
         {
             this.pos = pos;
             this.size = size;
+        }
+
+        public static Rect operator *(Rect r, float scale) => Scale(r, scale);
+        public static Rect Scale(in Rect r, in float scale)
+        {
+            Rect result = r;
+            result.pos *= scale;
+            result.size *= scale;
+            return result;
         }
 
         public Matrix4 GetModelMatrix()

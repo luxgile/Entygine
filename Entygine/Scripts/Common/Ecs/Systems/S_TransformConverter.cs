@@ -1,6 +1,5 @@
 ﻿using Entygine.Cycles;
-using Entygine.Ecs;
-using OpenToolkit.Mathematics;
+using OpenTK.Mathematics;
 
 namespace Entygine.Ecs
 {

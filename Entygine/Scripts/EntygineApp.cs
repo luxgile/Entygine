@@ -1,5 +1,5 @@
 ﻿using Entygine.DevTools;
-using OpenToolkit.Windowing.Desktop;
+using OpenTK.Windowing.Desktop;
 
 namespace Entygine
 {
@@ -12,7 +12,7 @@ namespace Entygine
 
             gameWindowSettings.UpdateFrequency = 60.0d;
             nativeWindowSettings.Title = "Entygine";
-            nativeWindowSettings.Size = new OpenToolkit.Mathematics.Vector2i(800, 600);
+            nativeWindowSettings.Size = new OpenTK.Mathematics.Vector2i(800, 600);
 
             using MainDevWindowGL mainWindow = new MainDevWindowGL(gameWindowSettings, nativeWindowSettings);
 

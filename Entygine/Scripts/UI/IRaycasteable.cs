@@ -1,6 +1,6 @@
 ﻿namespace Entygine.UI
 {
-    public interface IRaycasteable
+    public interface IRaycastable
     {
         bool Raycast(MouseData mouse);
     }
