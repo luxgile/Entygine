@@ -162,6 +162,8 @@ namespace Entygine
         {
             base.OnUpdateFrame(e);
 
+            FrameContext.Current = new FrameData(FrameContext.Current.count + 1, (float)e.Time);
+
             coreWorker.PerformLogicCycle((float)e.Time);
 
             if (KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Space))

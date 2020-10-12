@@ -18,6 +18,8 @@ namespace Entygine.Rendering
         {
             lib = new Library();
             font = lib.NewFace(path, 0);
+            font.SetPixelSizes(0, 64);
+            UpdateTextures();
         }
 
         public void SetSize(uint size)
@@ -26,7 +28,19 @@ namespace Entygine.Rendering
             hasChanged = true;
         }
 
-        public FontCharacter GetCharacter(char c) => characters[c];
+        public FontCharacter GetCharacter(char c)
+        {
+            if(hasChanged)
+            {
+                hasChanged = false;
+                UpdateTextures();
+            }
+
+            if (characters.TryGetValue(c, out FontCharacter character))
+                return character;
+
+            throw new System.NotSupportedException($"Character {c} is not supported by this font.");
+        }
 
         private void UpdateTextures()
         {
@@ -45,7 +59,7 @@ namespace Entygine.Rendering
                 int textureID = Ogl.GenTexture();
                 Ogl.BindTexture(TextureTarget.Texture2D, textureID);
                 Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R8, width, height
-                    , 0, PixelFormat.Red, PixelType.UnsignedByte, font.Glyph.Bitmap.BufferData);
+                    , 0, PixelFormat.Red, PixelType.UnsignedByte, font.Glyph.Bitmap.Buffer);
                 Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureWrapMode.ClampToEdge);
                 Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, TextureWrapMode.ClampToEdge);
                 Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);

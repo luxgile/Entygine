@@ -333,6 +333,13 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        public static void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalFormat, int width, int height, int border, PixelFormat format, PixelType type, IntPtr ptr)
+        {
+            GL.TexImage2D(target, level, internalFormat, width, height, border, format, type, ptr);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
         public static void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalFormat, int width, int height, int border, PixelFormat format, PixelType type, byte[] data)
         {
             GL.TexImage2D(target, level, internalFormat, width, height, border, format, type, data);

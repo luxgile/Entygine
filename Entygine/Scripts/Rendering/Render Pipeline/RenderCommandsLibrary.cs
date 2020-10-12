@@ -179,6 +179,8 @@ namespace Entygine.Rendering.Pipeline
                 for (int i = 0; i < canvases.Count; i++)
                 {
                     UICanvas canvas = canvases[i];
+                    canvas.deltaTimeText.Text = $"{FrameContext.Current.count} frame - {FrameContext.Current.delta * 1000:F1}ms - {1 / FrameContext.Current.delta:F1}fps";
+
                     canvas.UpdateRenderers();
                     var renderables = canvas.GetRenderables();
                     for (int m = 0; m < renderables.Count; m++)
@@ -187,7 +189,6 @@ namespace Entygine.Rendering.Pipeline
                         currRenderable.Material.SetMatrix("projection", projection);
                         currRenderable.DrawUI(canvasRenderData.Mesh);
                     }
-                    //DrawElement(canvasRenderData, canvas.Root, canvas.GetModelMatrix());
                 }
 
                 Ogl.Enable(EnableCap.CullFace);

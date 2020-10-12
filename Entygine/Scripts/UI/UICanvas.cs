@@ -1,5 +1,4 @@
 ﻿using OpenTK.Mathematics;
-using System;
 using System.Collections.Generic;
 
 namespace Entygine.UI
@@ -8,17 +7,18 @@ namespace Entygine.UI
     {
         public UIElement Root { get; set; }
 
+        public UIText deltaTimeText;
+
         public UICanvas()
         {
             Root = new UIStackPanel();
+            deltaTimeText = new UIText();
             UIImage image1 = new UIImage();
-            image1.Children.Add(new UIText("Im children one"));
+            image1.Children.Add(deltaTimeText);
 
             UIImage image2 = new UIImage();
-            image2.Children.Add(new UIText("Im children two"));
 
             UIImage image3 = new UIImage();
-            image3.Children.Add(new UIText("Im children three"));
 
             Root.Children.Add(image1);
             Root.Children.Add(image2);

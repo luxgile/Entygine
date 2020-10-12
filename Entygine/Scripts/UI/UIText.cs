@@ -6,16 +6,18 @@ namespace Entygine.UI
     public class UIText : UIElement, UI_IRenderable
     {
         public string Text { get; set; }
-        public float Size { get; set; } = 12;
+        public float Size { get; set; } = 0.5f;
         public Font Font { get; set; }
         public Color01 Color { get; set; }
         public Rect Rect { get; set; }
         public Material Material { get; set; }
 
-        public UIText(string text)
+        public UIText(string text) : this()
         {
             Text = text;
-
+        }
+        public UIText()
+        {
             Shader shader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\text.vert")
                 , AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\text.frag"));
             Material = new Material(shader, Texture2D.CreateWhiteTexture(1, 1));
