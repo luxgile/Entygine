@@ -6,17 +6,17 @@ using System.Collections.Generic;
 
 namespace Entygine.Rendering.Pipeline
 {
-    public static class RenderCommandsLibrary
+    public static partial class RenderCommandsLibrary
     {
-        public static float yaw = 142;
-        public static float pitch = -300;
-        public static Vector3 LIGHT_FORWARD => new Vector3(
+        private static float yaw = 142;
+        private static float pitch = -300;
+        private static Vector3 LIGHT_FORWARD => new Vector3(
             (float)MathHelper.Cos(MathHelper.DegreesToRadians(yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(pitch))
             , (float)MathHelper.Sin(MathHelper.DegreesToRadians(pitch))
             , (float)MathHelper.Sin(MathHelper.DegreesToRadians(yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(pitch)));
-        public static Vector3 LIGHT_FORWARD_NORMALIZED => LIGHT_FORWARD.Normalized();
-        public static Vector3 LIGHT_UP => Vector3.Cross(Vector3.Cross(LIGHT_FORWARD_NORMALIZED, Vector3.UnitY), LIGHT_FORWARD_NORMALIZED).Normalized();
-        public static Matrix4 LIGHT_VIEW => Matrix4.LookAt(LIGHT_FORWARD_NORMALIZED * 50, Vector3.Zero, LIGHT_UP);
+        private static Vector3 LIGHT_FORWARD_NORMALIZED => LIGHT_FORWARD.Normalized();
+        private static Vector3 LIGHT_UP => Vector3.Cross(Vector3.Cross(LIGHT_FORWARD_NORMALIZED, Vector3.UnitY), LIGHT_FORWARD_NORMALIZED).Normalized();
+        private static Matrix4 LIGHT_VIEW => Matrix4.LookAt(LIGHT_FORWARD_NORMALIZED * 50, Vector3.Zero, LIGHT_UP);
 
         public static RenderCommand DrawGeometry(CameraData camera, Matrix4 cameraTransform)
         {
@@ -42,6 +42,7 @@ namespace Entygine.Rendering.Pipeline
 
                 Ogl.Viewport(0, 0, MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y);
                 Ogl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
                 Light mainLight = lightData.lights[0];
                 Matrix4 projection = camera.CalculateProjection();
 
@@ -158,53 +159,6 @@ namespace Entygine.Rendering.Pipeline
                 Ogl.DepthFunc(DepthFunction.Less);
                 Ogl.BindVertexArray(0);
             });
-        }
-
-        public static RenderCommand DrawUI()
-        {
-            return new RenderCommand("Draw UI", (ref RenderContext context) =>
-            {
-                if (!context.TryGetData(out UICanvasRenderData canvasRenderData))
-                    return;
-
-                Ogl.Disable(EnableCap.CullFace);
-                Ogl.Disable(EnableCap.DepthTest);
-                Ogl.Enable(EnableCap.Blend);
-                Ogl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-                GraphicsAPI.UseMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
-
-                Matrix4 projection = canvasRenderData.Camera.CalculateProjection();
-                canvasRenderData.Material.SetMatrix("projection", projection);
-
-                List<UICanvas> canvases = canvasRenderData.GetCanvases();
-                for (int i = 0; i < canvases.Count; i++)
-                {
-                    UICanvas canvas = canvases[i];
-                    canvas.UpdateRenderers();
-                    var renderables = canvas.GetRenderables();
-                    for (int m = 0; m < renderables.Count; m++)
-                    {
-                        UI_IRenderable currRenderable = renderables[m];
-                        GraphicsAPI.UseMeshMaterial(canvasRenderData.Mesh, currRenderable.Material);
-                        canvasRenderData.Material.SetMatrix("model", currRenderable.Rect.GetModelMatrix());
-                        canvasRenderData.Material.SetColor("color", currRenderable.Color);
-                        GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
-                    }
-                    //DrawElement(canvasRenderData, canvas.Root, canvas.GetModelMatrix());
-                }
-                GraphicsAPI.FreeMeshMaterial(canvasRenderData.Mesh, canvasRenderData.Material);
-                Ogl.Enable(EnableCap.CullFace);
-                Ogl.Enable(EnableCap.DepthTest);
-                Ogl.Disable(EnableCap.Blend);
-            });
-
-            //static void DrawElement(UICanvasRenderData canvasRenderData, UIElement element, Matrix4 parentMatrix)
-            //{
-            //    Matrix4 model = element.GetModelMatrix(parentMatrix);
-            //    canvasRenderData.Material.SetMatrix("model", model);
-            //    canvasRenderData.Material.SetColor("color", element.Color);
-            //    GraphicsAPI.DrawTriangles(canvasRenderData.Mesh.GetIndiceCount());
-            //}
         }
     }
 }

@@ -3,6 +3,7 @@ using OpenToolkit.Mathematics;
 using System.Collections.Generic;
 using OpenToolkit.Windowing.Common.Input;
 using Entygine.DevTools;
+using Entygine.Mathematics;
 
 namespace Entygine.Ecs.Systems
 {
@@ -92,7 +93,7 @@ namespace Entygine.Ecs.Systems
                 editorCamera.speed += speedDelta * deltaTime;
                 editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
 
-                editorCamera.focusDistance -= distDelta * deltaTime;
+                editorCamera.focusDistance -= distDelta * deltaTime * 100;
 
                 editorCamera.yaw += rotDelta.X * deltaTime * editorCamera.sensitivity;
                 editorCamera.pitch += rotDelta.Y * deltaTime * editorCamera.sensitivity;
@@ -110,6 +111,8 @@ namespace Entygine.Ecs.Systems
 
                 editorCamera.focusPoint += posDeltaRelative * editorCamera.speed;
                 transform.value = Matrix4.LookAt(editorCamera.focusPoint + dir * editorCamera.focusDistance, editorCamera.focusPoint, up);
+
+                DevGizmos.DrawPoint((Vec3f)editorCamera.focusPoint);
 
                 chunk.SetComponent(index, transform);
                 chunk.SetComponent(index, editorCamera);

@@ -3,13 +3,14 @@ using OpenToolkit.Windowing.Desktop;
 
 namespace Entygine
 {
-    public static class EntygineApp
+    internal static class EntygineApp
     {
-        public static void StartEngine()
+        internal static void StartEngine()
         {
             GameWindowSettings gameWindowSettings = new GameWindowSettings();
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
 
+            //gameWindowSettings.IsMultiThreaded = true;
             gameWindowSettings.UpdateFrequency = 60.0d;
             nativeWindowSettings.Title = "Entygine";
             nativeWindowSettings.Size = new OpenToolkit.Mathematics.Vector2i(800, 600);

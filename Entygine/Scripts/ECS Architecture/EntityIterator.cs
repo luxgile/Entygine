@@ -27,6 +27,7 @@ namespace Entygine.Ecs
         private static void PerformChunkIteration(EntityWorld world, IQueryChunkIterator chunkIterator, EntityQuery query, bool checkVersion, uint version)
         {
             StructArray<EntityChunk> chunks = world.EntityManager.GetChunks();
+            bool generalWrite = query.IsGeneralWrite();
             for (int i = 0; i < chunks.Count; i++)
             {
                 ref EntityChunk chunk = ref chunks[i];
@@ -37,8 +38,8 @@ namespace Entygine.Ecs
 
                     chunkIterator.Iteration(ref chunk);
 
-                    //TODO: Update chunk version only if write
-                    chunk.UpdateVersion(world.EntityManager.Version);
+                    if (generalWrite || query.NeedsUpdate(ref chunk))
+                        chunk.UpdateVersion(world.EntityManager.Version);
                 }
             }
         }
@@ -58,12 +59,10 @@ namespace Entygine.Ecs
                             continue;
 
                         entityIterator.Iteration(ref chunk, c);
-
-                        //TODO: Update chunk version only if write
-                        //VERSION IS NOT UPDATED CORRECTLY
-                        if (generalWrite || query.NeedsUpdate(ref chunk))
-                            chunk.UpdateVersion(world.EntityManager.Version);
                     }
+
+                    if (generalWrite || query.NeedsUpdate(ref chunk))
+                        chunk.UpdateVersion(world.EntityManager.Version);
                 }
             }
         }

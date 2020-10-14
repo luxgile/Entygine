@@ -274,6 +274,14 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        public static void DrawArray(PrimitiveType mode, int first, int count)
+        {
+            GL.DrawArrays(mode, first, count);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
         public static void DrawElements(PrimitiveType mode, int count, DrawElementsType type, int indices)
         {
             GL.DrawElements(mode, count, type, indices);
@@ -338,6 +346,14 @@ namespace Entygine.Rendering
         public static void Enable(EnableCap cap)
         {
             GL.Enable(cap);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        public static void PointSize(float pixelSize)
+        {
+            GL.PointSize(pixelSize);
 
             if (enableErrorCheck)
                 LogErrors();
