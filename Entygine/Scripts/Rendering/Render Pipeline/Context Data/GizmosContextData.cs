@@ -6,10 +6,12 @@ namespace Entygine.Rendering.Pipeline
     {
         public Material GizmoMaterial { get; set; }
         public GizmoPointOrder PointsOrder { get; }
+        public GizmoLineOrder LinesOrder { get; }
 
         public GizmosContextData()
         {
             PointsOrder = new GizmoPointOrder();
+            LinesOrder = new GizmoLineOrder();
             Shader gizmoShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\gizmo.vert"), AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\gizmo.frag"));
             GizmoMaterial = new Material(gizmoShader, null);
             GizmoMaterial.LoadMaterial();
@@ -18,6 +20,7 @@ namespace Entygine.Rendering.Pipeline
         public void Clear()
         {
             PointsOrder.Clear();
+            LinesOrder.Clear();
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Entygine.Rendering.Pipeline
                 gizmosContextData.GizmoMaterial.UseMaterial();
 
                 gizmosContextData.PointsOrder.PerformDraw();
+                gizmosContextData.LinesOrder.PerformDraw();
             });
         }
     }

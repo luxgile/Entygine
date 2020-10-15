@@ -112,7 +112,8 @@ namespace Entygine.Ecs.Systems
                 editorCamera.focusPoint += posDeltaRelative * editorCamera.speed;
                 transform.value = Matrix4.LookAt(editorCamera.focusPoint + dir * editorCamera.focusDistance, editorCamera.focusPoint, up);
 
-                DevGizmos.DrawPoint((Vec3f)editorCamera.focusPoint);
+                //DevGizmos.DrawPoint((Vec3f)editorCamera.focusPoint);
+                DevGizmos.DrawLine((Vec3f)editorCamera.focusPoint, (Vec3f)editorCamera.focusPoint + Vec3f.Right);
 
                 chunk.SetComponent(index, transform);
                 chunk.SetComponent(index, editorCamera);
