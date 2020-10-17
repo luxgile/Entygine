@@ -17,6 +17,7 @@ namespace Entygine.UI
             image1.Children.Add(deltaTimeText);
 
             UIImage image2 = new UIImage();
+            image2.Children.Add(new UIText("VAVAV \nTEST \nTEST"));
 
             UIImage image3 = new UIImage();
 

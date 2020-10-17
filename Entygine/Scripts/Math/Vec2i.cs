@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Entygine.Mathematics
 {
     [StructLayout(LayoutKind.Explicit)]
-    public struct Vec2i
+    public struct Vec2i : IEquatable<Vec2i>
     {
         [FieldOffset(0)]
         public int x;
@@ -27,5 +28,14 @@ namespace Entygine.Mathematics
         public static readonly Vec2i Up = new Vec2i(0, 1);
         public static readonly Vec2i Right = new Vec2i(1, 0);
 
+        public bool Equals([AllowNull] Vec2i other)
+        {
+            return other.x == x && other.y == y;
+        }
+
+        public override string ToString()
+        {
+            return $"({x}, {y})";
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Entygine.Rendering;
 using OpenTK.Mathematics;
+using System;
 
 namespace Entygine.UI
 {
@@ -37,23 +38,59 @@ namespace Entygine.UI
             mesh.UpdateMeshData(Material);
             Ogl.BindVertexArray(mesh.GetVertexArrayHandle());
 
-            Vector2 position = Rect.pos;
-
-            foreach (char c in Text)
+            Vector2 position = new Vector2(Rect.pos.X, Rect.pos.Y + Rect.size.Y - Font.LineHeight);
+            char prevC = char.MinValue;
+            for (int i = 0; i < Text.Length; i++)
             {
-                FontCharacter fontCharacter = Font.GetCharacter(c);
-                Rect rect = fontCharacter.GetRect() * Size;
-                rect.pos.X = position.X + rect.pos.X;
-                rect.pos.Y = position.Y - rect.pos.Y;
+                char c = Text[i];
+                switch (c)
+                {
+                    case '\n':
+                    LineBreak(ref position);
+                    break;
 
-                position.X += (fontCharacter.Advance >> 6) * Size;
+                    default:
+                    DrawCharacter(mesh, c, prevC, ref position, i > 0);
+                    break;
+                }
 
-                Matrix4 model = rect.GetModelMatrix();
-
-                Ogl.BindTexture(OpenTK.Graphics.OpenGL4.TextureTarget.Texture2D, fontCharacter.TextureID);
-                Material.SetMatrix("model", model);
-                Ogl.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, mesh.GetIndiceCount(), OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt, 0);
+                prevC = c; 
             }
+        }
+
+        private void LineBreak(ref Vector2 position)
+        {
+            position.X = Rect.pos.X;
+            position.Y -= Font.LineHeight;
+        }
+
+        private void DrawCharacter(Mesh mesh, char c, char prevC, ref Vector2 position, bool useKerning)
+        {
+            FontCharacter fontCharacter = Font.GetCharacter(c);
+            Rect rect = fontCharacter.GetRect() * Size;
+
+            //Calculate character rect
+            rect.pos.X = position.X + rect.pos.X;
+            rect.pos.Y = position.Y - rect.pos.Y;
+
+            //Advance
+            position.X += (fontCharacter.Advance >> 6) * Size;
+
+            //Kerning
+            if (useKerning)
+            {
+                float kerning = Font.GetKerning(prevC, c).x >> 6;
+                position.X -= kerning;
+                rect.pos.X -= kerning;
+            }
+
+            prevC = c;
+
+            //Drawing character
+            Matrix4 model = rect.GetModelMatrix();
+            Ogl.BindTexture(OpenTK.Graphics.OpenGL4.TextureTarget.Texture2D, fontCharacter.TextureID);
+            Material.SetMatrix("model", model);
+            Ogl.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, mesh.GetIndiceCount(), OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt, 0);
         }
     }
 }
