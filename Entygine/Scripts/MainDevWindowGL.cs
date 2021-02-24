@@ -1,17 +1,20 @@
 ﻿using Entygine.Ecs;
 using Entygine.Ecs.Components;
 using Entygine.Rendering;
-using OpenToolkit.Mathematics;
-using OpenToolkit.Graphics.OpenGL4;
-using OpenToolkit.Windowing.Common;
-using OpenToolkit.Windowing.Desktop;
-using OpenToolkit.Windowing.Common.Input;
+using OpenTK.Mathematics;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using Entygine.DevTools;
 using Entygine.Cycles;
 using Entygine.Rendering.Pipeline;
 using Entygine.UI;
 using Entygine.Physics;
 using Entygine.Mathematics;
+<<<<<<< HEAD
+=======
+using SharpFont;
+>>>>>>> origin/feature/UI
 
 namespace Entygine
 {
@@ -90,22 +93,35 @@ namespace Entygine
             Material materialResource = new Material(shaderResource, texture);
             SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
 
+<<<<<<< HEAD
             EntityArchetype meshArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform), typeof(C_Position));
 
             Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
             world.EntityManager.SetComponent(planeEntity, new C_Position() { value = new Vec3f(0, 0, 0) });
             //world.EntityManager.SetComponent(planeEntity, new C_PhysicsBody() { body = new PhysicBody() { isStatic = true } });
+=======
+            EntityArchetype meshPhysicsArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform), typeof(C_Position));
+
+            Entity planeEntity = world.EntityManager.CreateEntity(meshPhysicsArchetype);
+            world.EntityManager.SetComponent(planeEntity, new C_Position() { value = new Vec3f(0, 0, 0) });
+>>>>>>> origin/feature/UI
             Mesh planeMesh = MeshPrimitives.CreatePlaneXZ(50);
             Material planeMaterial = new Material(shaderResource, Texture2D.CreateWhiteTexture(64, 64));
             world.EntityManager.SetSharedComponent(planeEntity, new SC_RenderMesh(planeMesh, planeMaterial));
 
+<<<<<<< HEAD
             Entity planeEntity2 = world.EntityManager.CreateEntity(meshArchetype);
             world.EntityManager.SetComponent(planeEntity2, new C_Position() { value = new Vec3f(0, 5, -10) });
             //world.EntityManager.SetComponent(planeEntity2, new C_PhysicsBody() { body = new PhysicBody() { isStatic = true } });
+=======
+            Entity planeEntity2 = world.EntityManager.CreateEntity(meshPhysicsArchetype);
+            world.EntityManager.SetComponent(planeEntity2, new C_Position() { value = new Vec3f(0, 5, -10) });
+>>>>>>> origin/feature/UI
             Mesh planeMesh2 = MeshPrimitives.CreatePlaneXY(10);
             Material planeMaterial2 = new Material(shaderResource, texture);
             world.EntityManager.SetSharedComponent(planeEntity2, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
+<<<<<<< HEAD
             Entity boxEntity = world.EntityManager.CreateEntity(meshArchetype);
             world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vec3f(0, 2, 0) });
             //world.EntityManager.SetComponent(boxEntity, new C_PhysicsBody() { body = new PhysicBody() });
@@ -119,15 +135,24 @@ namespace Entygine
             Entity boxEntity3 = world.EntityManager.CreateEntity(meshArchetype);
             world.EntityManager.SetComponent(boxEntity3, new C_Position() { value = new Vec3f(-2, 2, 0) });
             //world.EntityManager.SetComponent(boxEntity3, new C_PhysicsBody() { body = new PhysicBody() });
+=======
+            Entity boxEntity = world.EntityManager.CreateEntity(meshPhysicsArchetype);
+            world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vec3f(0, 2, 0) });
+            world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
+
+            Entity boxEntity2 = world.EntityManager.CreateEntity(meshPhysicsArchetype);
+            world.EntityManager.SetComponent(boxEntity2, new C_Position() { value = new Vec3f(2, 2, 0) });
+            world.EntityManager.SetSharedComponent(boxEntity2, renderMesh);
+
+            Entity boxEntity3 = world.EntityManager.CreateEntity(meshPhysicsArchetype);
+            world.EntityManager.SetComponent(boxEntity3, new C_Position() { value = new Vec3f(-2, 2, 0) });
+>>>>>>> origin/feature/UI
             world.EntityManager.SetSharedComponent(boxEntity3, renderMesh);
 
             EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
             Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
             world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
-            //world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreateOrthographicCamera(800 / 600f, 50f, 0.1f, 100f) });
 
-            //Vector3 cameraPos = new Vector3(0, 10, 10);
-            //world.EntityManager.SetComponent(cameraEditorEntity, new C_Transform() { value = Matrix4.LookAt(cameraPos, Vector3.Zero, Vector3.UnitY) });
             world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera()
             { speed = 10f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115, sensitivity = 20 });
         }
@@ -172,12 +197,14 @@ namespace Entygine
         {
             base.OnUpdateFrame(e);
 
+            FrameContext.Current = new FrameData(FrameContext.Current.count + 1, (float)e.Time);
+
             coreWorker.PerformLogicCycle((float)e.Time);
 
-            if (KeyboardState.IsKeyDown(Key.Space))
+            if (KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Space))
                 EntityWorld.Active.DEBUG_LOG_INFO();
 
-            if (KeyboardState.IsKeyDown(Key.Escape))
+            if (KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
                 Close();
         }
 

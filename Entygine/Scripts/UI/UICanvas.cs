@@ -1,5 +1,4 @@
-﻿using OpenToolkit.Mathematics;
-using System;
+﻿using OpenTK.Mathematics;
 using System.Collections.Generic;
 
 namespace Entygine.UI
@@ -8,12 +7,23 @@ namespace Entygine.UI
     {
         public UIElement Root { get; set; }
 
+        public UIText deltaTimeText;
+
         public UICanvas()
         {
             Root = new UIStackPanel();
-            Root.Children.Add(new UIImage());
-            Root.Children.Add(new UIImage());
-            Root.Children.Add(new UIImage());
+            deltaTimeText = new UIText();
+            UIImage image1 = new UIImage();
+            image1.Children.Add(deltaTimeText);
+
+            UIImage image2 = new UIImage();
+            image2.Children.Add(new UIText("VAVAV \nTEST \nTEST"));
+
+            UIImage image3 = new UIImage();
+
+            Root.Children.Add(image1);
+            Root.Children.Add(image2);
+            Root.Children.Add(image3);
         }
 
         public List<UI_IRenderable> GetRenderables()

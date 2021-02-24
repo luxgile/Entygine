@@ -1,6 +1,10 @@
 ﻿//using Entygine.Cycles;
 //using Entygine.Ecs;
+<<<<<<< HEAD
 //using OpenToolkit.Mathematics;
+=======
+//using OpenTK.Mathematics;
+>>>>>>> origin/feature/UI
 
 //namespace Entygine.Physics.Ecs
 //{

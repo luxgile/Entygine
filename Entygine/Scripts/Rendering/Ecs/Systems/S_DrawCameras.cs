@@ -2,7 +2,7 @@
 using Entygine.Ecs.Components;
 using Entygine.Rendering;
 using Entygine.Rendering.Pipeline;
-using OpenToolkit.Mathematics;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 

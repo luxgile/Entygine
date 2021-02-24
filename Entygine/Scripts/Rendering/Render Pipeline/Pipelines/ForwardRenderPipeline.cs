@@ -1,4 +1,4 @@
-﻿using OpenToolkit.Mathematics;
+﻿using OpenTK.Mathematics;
 
 namespace Entygine.Rendering.Pipeline
 {
@@ -18,7 +18,7 @@ namespace Entygine.Rendering.Pipeline
                 context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawSkybox(camera, cameraTransform));
             }
 
-            //context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawUI());
+            context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawUI());
         }
     }
 }

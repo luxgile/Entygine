@@ -1,5 +1,5 @@
 ﻿using Entygine.Rendering.Pipeline;
-using OpenToolkit.Graphics.GL;
+using OpenTK.Graphics.GL;
 using System;
 using System.Collections.Generic;
 

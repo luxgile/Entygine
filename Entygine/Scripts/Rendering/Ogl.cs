@@ -1,7 +1,7 @@
 ﻿using Entygine.DevTools;
 using Entygine.Mathematics;
-using OpenToolkit.Graphics.OpenGL4;
-using OpenToolkit.Mathematics;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using SixLabors.ImageSharp;
 using System;
 using System.Diagnostics;
@@ -30,6 +30,17 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        public static void PixelStore(PixelStoreParameter pixelStore, int parameter)
+        {
+            GL.PixelStore(PixelStoreParameter.UnpackAlignment, parameter);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        /// <summary>
+        /// Generates a texture in the GPU
+        /// </summary>
         public static int GenTexture()
         {
             int program = GL.GenTexture();
@@ -38,6 +49,17 @@ namespace Entygine.Rendering
                 LogErrors();
 
             return program;
+        }
+
+        /// <summary>
+        /// Destroys a texture in the GPU
+        /// </summary>
+        public static void DeleteTexture(int programID)
+        {
+            GL.DeleteTexture(programID);
+
+            if (enableErrorCheck)
+                LogErrors();
         }
 
         public static void AttachShader(int program, int shader)
@@ -319,6 +341,13 @@ namespace Entygine.Rendering
                 LogErrors();
         }
 
+        public static void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalFormat, int width, int height, int border, PixelFormat format, PixelType type, IntPtr ptr)
+        {
+            GL.TexImage2D(target, level, internalFormat, width, height, border, format, type, ptr);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
         public static void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalFormat, int width, int height, int border, PixelFormat format, PixelType type, byte[] data)
         {
             GL.TexImage2D(target, level, internalFormat, width, height, border, format, type, data);

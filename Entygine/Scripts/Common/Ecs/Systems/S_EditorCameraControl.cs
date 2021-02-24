@@ -1,9 +1,14 @@
 ﻿using Entygine.Ecs.Components;
+<<<<<<< HEAD
 using OpenToolkit.Mathematics;
 using System.Collections.Generic;
 using OpenToolkit.Windowing.Common.Input;
 using Entygine.DevTools;
 using Entygine.Mathematics;
+=======
+using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+>>>>>>> origin/feature/UI
 
 namespace Entygine.Ecs.Systems
 {
@@ -31,35 +36,35 @@ namespace Entygine.Ecs.Systems
 
             //TODO: Create input system
             KeyboardState input = MainDevWindowGL.Window.KeyboardState;
-            if (input.IsKeyDown(Key.LShift))
+            if (input.IsKeyDown(Keys.LeftShift))
                 speedDelta += 0.01f;
 
-            if (input.IsKeyDown(Key.LControl))
+            if (input.IsKeyDown(Keys.LeftControl))
                 speedDelta -= 0.01f;
 
             Vector2 cursorPos = MainDevWindowGL.Window.MouseState.Position;
 
-            if (input.IsKeyDown(Key.AltLeft) && MainDevWindowGL.Window.IsMouseButtonDown(MouseButton.Button1))
+            if (input.IsKeyDown(Keys.LeftAlt) && MainDevWindowGL.Window.IsMouseButtonDown(MouseButton.Button1))
                 rotDelta = cursorPos - lastCursorPos;
 
             lastCursorPos = cursorPos;
 
-            if (input.IsKeyDown(Key.W))
+            if (input.IsKeyDown(Keys.W))
                 posDelta -= Vector3.UnitZ;
 
-            if (input.IsKeyDown(Key.S))
+            if (input.IsKeyDown(Keys.S))
                 posDelta += Vector3.UnitZ;
 
-            if (input.IsKeyDown(Key.A))
+            if (input.IsKeyDown(Keys.A))
                 posDelta -= Vector3.UnitX;
 
-            if (input.IsKeyDown(Key.D))
+            if (input.IsKeyDown(Keys.D))
                 posDelta += Vector3.UnitX;
 
-            if (input.IsKeyDown(Key.E))
+            if (input.IsKeyDown(Keys.E))
                 posDelta += Vector3.UnitY;
 
-            if (input.IsKeyDown(Key.Q))
+            if (input.IsKeyDown(Keys.Q))
                 posDelta -= Vector3.UnitY;
 
             Iterator iterator = new Iterator()
