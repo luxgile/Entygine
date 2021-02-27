@@ -1,14 +1,8 @@
 ﻿using Entygine.Ecs.Components;
-<<<<<<< HEAD
-using OpenToolkit.Mathematics;
-using System.Collections.Generic;
-using OpenToolkit.Windowing.Common.Input;
+using OpenTK.Mathematics;
 using Entygine.DevTools;
 using Entygine.Mathematics;
-=======
-using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
->>>>>>> origin/feature/UI
 
 namespace Entygine.Ecs.Systems
 {
