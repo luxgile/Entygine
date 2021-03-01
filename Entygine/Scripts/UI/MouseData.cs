@@ -7,5 +7,6 @@ namespace Entygine.UI
         public Vector2 position;
         public Vector2 positionDelta;
         public float scrollDelta;
+        public bool clicked;
     }
 }

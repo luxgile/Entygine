@@ -48,7 +48,7 @@ namespace Entygine
 
             InitPhysics();
             InitSkybox();
-            InitUI();
+            InitUI(world);
             InitLight();
             InitScene(world);
 
@@ -137,10 +137,11 @@ namespace Entygine
                 lightData.lights.Add(new DirectionalLight());
         }
 
-        private static void InitUI()
+        private static void InitUI(EntityWorld world)
         {
-            if (RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
-                canvasData.AddCanvas(new UICanvas());
+            EntityArchetype canvasArch = new EntityArchetype(typeof(C_UICanvas));
+            var entity = world.EntityManager.CreateEntity(canvasArch);
+            world.EntityManager.SetComponent(entity, new C_UICanvas() { canvas = new UICanvas() });
         }
 
         private static void InitSkybox()

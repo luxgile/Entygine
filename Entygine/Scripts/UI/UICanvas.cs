@@ -71,5 +71,10 @@ namespace Entygine.UI
                 }
             }
         }
+
+        public void TriggerMouseEvent(MouseData mouseData)
+        {
+
+        }
     }
 }

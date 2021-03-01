@@ -45,6 +45,7 @@ namespace Entygine.Rendering
             });
         }
 
+        public void ClearCanvas() => canvases.Clear();
         public void AddCanvas(UICanvas canvas) => canvases.Add(canvas);
         public List<UICanvas> GetCanvases() => canvases;
 
