@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using Entygine.DevTools;
+using OpenTK.Mathematics;
 using System.Collections.Generic;
 
 namespace Entygine.UI
@@ -8,6 +9,8 @@ namespace Entygine.UI
         public UIElement Root { get; set; }
 
         public UIText deltaTimeText;
+
+        private IRaycastable focusedElement;
 
         public UICanvas()
         {
@@ -74,7 +77,50 @@ namespace Entygine.UI
 
         public void TriggerMouseEvent(MouseData mouseData)
         {
+            if(RaycastElements(Root, out IRaycastable raycasteable))
+            {
+                if(focusedElement != raycasteable)
+                {
+                    if (focusedElement is IMouseExit exit)
+                        exit.OnMouseExit(mouseData);
 
+                    if (raycasteable is IMouseEnter enter)
+                        enter.OnMouseEnter(mouseData);
+
+                    focusedElement = raycasteable;
+                }
+            }
+            else
+            {
+                if (focusedElement != null)
+                {
+                    if (focusedElement is IMouseExit exit)
+                        exit.OnMouseExit(mouseData);
+
+                    focusedElement = null;
+                }
+            }
+
+            if (mouseData.clicked && focusedElement != null && focusedElement is IMouseClick click)
+                click.OnMouseClick(mouseData);
+
+            bool RaycastElements(UIElement element, out IRaycastable raycastable)
+            {
+                for (int i = 0; i < element.Children.Count; i++)
+                {
+                    if (RaycastElements(element.Children[i], out raycastable))
+                        return true;
+                }
+
+                if (element is IRaycastable ray && ray.Raycast(mouseData))
+                {
+                    raycastable = ray;
+                    return true;
+                }
+
+                raycastable = null;
+                return false;
+            }
         }
     }
 }

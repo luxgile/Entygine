@@ -1,4 +1,5 @@
 ﻿using Entygine.Cycles;
+using Entygine.DevTools;
 using Entygine.Ecs;
 
 namespace Entygine.UI
@@ -15,10 +16,11 @@ namespace Entygine.UI
             query.With(TypeCache.ReadType<C_UICanvas>());
 
             MouseData mouseData = new MouseData();
+            mouseData.position = MainDevWindowGL.Window.MouseState.Position;
             mouseData.positionDelta = MainDevWindowGL.Window.MouseState.Delta;
+            mouseData.clicked = MainDevWindowGL.Window.MouseState.IsButtonDown(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Button1);
 
-            
-            Iterator it = new Iterator();
+            Iterator it = new Iterator() { mouseData = mouseData };
             IterateQuery(it, query, false);
         }
 
