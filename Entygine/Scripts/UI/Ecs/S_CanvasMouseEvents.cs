@@ -20,6 +20,8 @@ namespace Entygine.UI
             mouseData.positionDelta = MainDevWindowGL.Window.MouseState.Delta;
             mouseData.clicked = MainDevWindowGL.Window.MouseState.IsButtonDown(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Button1);
 
+            mouseData.position.Y = MainDevWindowGL.Window.Size.Y - mouseData.position.Y;
+
             Iterator it = new Iterator() { mouseData = mouseData };
             IterateQuery(it, query, false);
         }

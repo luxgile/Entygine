@@ -3,7 +3,7 @@ using Entygine.Rendering;
 
 namespace Entygine.UI
 {
-    public class UIImage : UIElement, UI_IRenderable, IRaycastable
+    public class UIImage : UIElement, UI_IRenderable, IRaycastable, IMouseEnter, IMouseExit
     {
         private Color01 color;
 
@@ -30,6 +30,16 @@ namespace Entygine.UI
             GraphicsAPI.UseMeshMaterial(mesh, Material);
 
             GraphicsAPI.DrawTriangles(mesh.GetIndiceCount());
+        }
+
+        public void OnMouseEnter(MouseData mouseData)
+        {
+            color = Color01.green;
+        }
+
+        public void OnMouseExit(MouseData mouseData)
+        {
+            color = Color01.white;
         }
 
         public Rect Rect { get; set; }
