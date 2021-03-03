@@ -38,7 +38,7 @@ namespace Entygine.UI
             mesh.UpdateMeshData(Material);
             Ogl.BindVertexArray(mesh.GetVertexArrayHandle());
 
-            Vector2 position = new Vector2(Rect.pos.X, Rect.pos.Y + Rect.size.Y - Font.LineHeight);
+            Vector2 position = new Vector2(Rect.pos.X, Rect.pos.Y + Rect.size.Y - Font.LineHeight / 2);
             char prevC = char.MinValue;
             for (int i = 0; i < Text.Length; i++)
             {

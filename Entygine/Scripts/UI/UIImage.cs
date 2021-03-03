@@ -3,9 +3,8 @@ using Entygine.Rendering;
 
 namespace Entygine.UI
 {
-    public class UIImage : UIElement, UI_IRenderable, IRaycastable, IMouseEnter, IMouseExit
+    public class UIImage : UIElement, UI_IRenderable, IRaycastable
     {
-        private Color01 color;
 
         public UIImage()
         {
@@ -13,35 +12,25 @@ namespace Entygine.UI
                 , AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.frag"));
             Material = new Material(shader, Texture2D.CreateWhiteTexture(1, 1));
             Material.LoadMaterial();
-            color = new Color01(1, 1, 1, 0.1f);
         }
 
         public bool Raycast(MouseData mouse)
         {
-            return Rect.Contains(mouse);
+            return Rect.Contains(mouse.position);
         }
 
         public void DrawUI(Mesh mesh)
         {
             OpenTK.Mathematics.Matrix4 modelMatrix = Rect.GetModelMatrix();
             Material.SetMatrix("model", modelMatrix);
-            Material.SetColor("color", color);
+            Material.SetColor("color", Color);
 
             GraphicsAPI.UseMeshMaterial(mesh, Material);
 
             GraphicsAPI.DrawTriangles(mesh.GetIndiceCount());
         }
 
-        public void OnMouseEnter(MouseData mouseData)
-        {
-            color = Color01.green;
-        }
-
-        public void OnMouseExit(MouseData mouseData)
-        {
-            color = Color01.white;
-        }
-
+        public Color01 Color { get; set; }
         public Rect Rect { get; set; }
         public Material Material { get; set; }
     }

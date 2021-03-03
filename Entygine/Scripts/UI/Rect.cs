@@ -31,11 +31,10 @@ namespace Entygine.UI
             return model;
         }
 
-        public bool Contains(MouseData mouse)
+        public bool Contains(Vector2 pos)
         {
-            Vector2 mousePos = mouse.position;
-            return mousePos.X >= pos.X && mousePos.X <= pos.X + size.X
-                && mousePos.Y >= pos.Y && mousePos.Y <= pos.Y + size.Y;
+            return pos.X >= this.pos.X && pos.X <= this.pos.X + size.X
+                && pos.Y >= this.pos.Y && pos.Y <= this.pos.Y + size.Y;
         }
     }
 }

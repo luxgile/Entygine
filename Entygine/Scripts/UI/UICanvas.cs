@@ -1,4 +1,5 @@
 ﻿using Entygine.DevTools;
+using Entygine.Rendering;
 using OpenTK.Mathematics;
 using System.Collections.Generic;
 
@@ -14,19 +15,36 @@ namespace Entygine.UI
 
         public UICanvas()
         {
-            Root = new UIStackPanel();
-            deltaTimeText = new UIText();
-            UIImage image1 = new UIImage();
-            image1.Children.Add(deltaTimeText);
+            Root = new UIStackPanel()
+            {
+                Orientation = UIStackPanel.EOrientation.Horizontal,
+                Padding = new Padding() 
+                { 
+                    top = new Padding.PaddingElement(5),
+                    bottom = new Padding.PaddingElement(0.95f), 
+                    left = new Padding.PaddingElement(10), 
+                    right = new Padding.PaddingElement(10) 
+                },
+            };
 
-            UIImage image2 = new UIImage();
-            image2.Children.Add(new UIText("VAVAV \nTEST \nTEST"));
+            deltaTimeText = new UIText
+            {
+                Size = 0.3f
+            };
 
-            UIImage image3 = new UIImage();
 
-            Root.Children.Add(image1);
-            Root.Children.Add(image2);
-            Root.Children.Add(image3);
+            UIImage bgImg = new UIImage()
+            {
+                Color = Color01.white,
+            };
+
+            UIButton exitButton = new UIButton();
+            exitButton.Children.Add(new UIText("X"));
+
+            bgImg.Children.Add(deltaTimeText);
+
+            Root.Children.Add(exitButton);
+            Root.Children.Add(bgImg);
         }
 
         public List<UI_IRenderable> GetRenderables()
@@ -77,9 +95,9 @@ namespace Entygine.UI
 
         public void TriggerMouseEvent(MouseData mouseData)
         {
-            if(RaycastElements(Root, out IRaycastable raycasteable))
+            if (RaycastElements(Root, out IRaycastable raycasteable))
             {
-                if(focusedElement != raycasteable)
+                if (focusedElement != raycasteable)
                 {
                     if (focusedElement is IMouseExit exit)
                         exit.OnMouseExit(mouseData);
