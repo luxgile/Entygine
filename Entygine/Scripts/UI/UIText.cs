@@ -8,6 +8,8 @@ namespace Entygine.UI
     {
         public string Text { get; set; }
         public float Size { get; set; } = 0.5f;
+        public EVerticalAlign VerticalAlignment { get; set; } = EVerticalAlign.Top;
+        public EHorizontalAlign HorizontalAlignment { get; set; } = EHorizontalAlign.Left;
         public Font Font { get; set; }
         public Color01 Color { get; set; }
         public Rect Rect { get; set; }
@@ -38,7 +40,7 @@ namespace Entygine.UI
             mesh.UpdateMeshData(Material);
             Ogl.BindVertexArray(mesh.GetVertexArrayHandle());
 
-            Vector2 position = new Vector2(Rect.pos.X, Rect.pos.Y + Rect.size.Y - Font.LineHeight / 2);
+            Vector2 position = GetInitialPosition();
             char prevC = char.MinValue;
             for (int i = 0; i < Text.Length; i++)
             {
@@ -46,16 +48,52 @@ namespace Entygine.UI
                 switch (c)
                 {
                     case '\n':
-                    LineBreak(ref position);
-                    break;
+                        LineBreak(ref position);
+                        break;
 
                     default:
-                    DrawCharacter(mesh, c, prevC, ref position, i > 0);
-                    break;
+                        DrawCharacter(mesh, c, prevC, ref position, i > 0);
+                        break;
                 }
 
-                prevC = c; 
+                prevC = c;
             }
+        }
+
+        private Vector2 GetInitialPosition()
+        {
+            float x = 0, y = 0;
+            switch (HorizontalAlignment)
+            {
+                case EHorizontalAlign.Left:
+                    x = Rect.pos.X;
+                    break;
+
+                case EHorizontalAlign.Center:
+                    x = Rect.pos.X + Rect.size.X / 2f;
+                    break;
+
+                case EHorizontalAlign.Right:
+                    x = Rect.pos.X + Rect.size.X;
+                    break;
+            }
+
+            switch (VerticalAlignment)
+            {
+                case EVerticalAlign.Top:
+                    y = Rect.pos.Y + Rect.size.Y - Font.LineHeight / 2f;
+                    break;
+
+                case EVerticalAlign.Center:
+                    y = Rect.pos.Y + Rect.size.Y / 2f;
+                    break;
+
+                case EVerticalAlign.Bottom:
+                    y = Rect.pos.Y;
+                    break;
+            }
+
+            return new Vector2(x, y);
         }
 
         private void LineBreak(ref Vector2 position)
@@ -83,8 +121,6 @@ namespace Entygine.UI
                 position.X -= kerning;
                 rect.pos.X -= kerning;
             }
-
-            prevC = c;
 
             //Drawing character
             Matrix4 model = rect.GetModelMatrix();

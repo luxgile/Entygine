@@ -10,10 +10,11 @@ namespace Entygine
             GameWindowSettings gameWindowSettings = new GameWindowSettings();
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
 
+            //Everything works but there are some blinking at the start
             //gameWindowSettings.IsMultiThreaded = true;
             gameWindowSettings.UpdateFrequency = 60.0d;
             nativeWindowSettings.Title = "Entygine";
-            nativeWindowSettings.Size = new OpenTK.Mathematics.Vector2i(800, 600);
+            nativeWindowSettings.Size = new OpenTK.Mathematics.Vector2i(1600, 900);
 
             using MainDevWindowGL mainWindow = new MainDevWindowGL(gameWindowSettings, nativeWindowSettings);
 

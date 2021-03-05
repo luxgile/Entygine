@@ -5,6 +5,7 @@ namespace Entygine.UI
 {
     public class UIImage : UIElement, UI_IRenderable, IRaycastable
     {
+        public bool HasRaycasting { get; set; }
 
         public UIImage()
         {
@@ -16,6 +17,9 @@ namespace Entygine.UI
 
         public bool Raycast(MouseData mouse)
         {
+            if (!HasRaycasting)
+                return false;
+
             return Rect.Contains(mouse.position);
         }
 

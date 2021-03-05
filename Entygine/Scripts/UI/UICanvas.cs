@@ -1,5 +1,4 @@
-﻿using Entygine.DevTools;
-using Entygine.Rendering;
+﻿using Entygine.Rendering;
 using OpenTK.Mathematics;
 using System.Collections.Generic;
 
@@ -15,15 +14,16 @@ namespace Entygine.UI
 
         public UICanvas()
         {
-            Root = new UIStackPanel()
+            Root = new UIElement();
+            UIStackPanel stackPanel = new UIStackPanel()
             {
                 Orientation = UIStackPanel.EOrientation.Horizontal,
-                Padding = new Padding() 
-                { 
+                Padding = new Padding()
+                {
                     top = new Padding.PaddingElement(5),
-                    bottom = new Padding.PaddingElement(0.95f), 
-                    left = new Padding.PaddingElement(10), 
-                    right = new Padding.PaddingElement(10) 
+                    bottom = new Padding.PaddingElement(0.95f),
+                    left = new Padding.PaddingElement(10),
+                    right = new Padding.PaddingElement(10)
                 },
             };
 
@@ -35,16 +35,34 @@ namespace Entygine.UI
 
             UIImage bgImg = new UIImage()
             {
-                Color = Color01.white,
+                Color = Color01.gray,
             };
-
-            UIButton exitButton = new UIButton();
-            exitButton.Children.Add(new UIText("X"));
-
             bgImg.Children.Add(deltaTimeText);
 
-            Root.Children.Add(exitButton);
-            Root.Children.Add(bgImg);
+            UIButton exitButton = new UIButton()
+            {
+                Padding = new Padding() { left = new Padding.PaddingElement(0.05f), right = new Padding.PaddingElement(0.85f) },
+            };
+            exitButton.Children.Add(new UIText("X"));
+
+
+            stackPanel.Children.Add(exitButton);
+            stackPanel.Children.Add(bgImg);
+
+            Root.Children.Add(stackPanel);
+
+            //Image to test alignment:
+            UIImage img = new UIImage()
+            {
+                Color = Color01.white,
+            };
+            UIText t = new UIText("SOME TEXT")
+            {
+                VerticalAlignment = EVerticalAlign.Center,
+                HorizontalAlignment = EHorizontalAlign.Center
+            };
+            img.Children.Add(t);
+            Root.Children.Add(img);
         }
 
         public List<UI_IRenderable> GetRenderables()
