@@ -6,7 +6,8 @@ namespace Entygine.UI
 {
     public class UIText : UIElement, UI_IRenderable
     {
-        public string Text { get; set; }
+        private string text;
+        public string Text { get => text; set { text = value; textChanged = true; } }
         public float Size { get; set; } = 0.5f;
         public EVerticalAlign VerticalAlignment { get; set; } = EVerticalAlign.Top;
         public EHorizontalAlign HorizontalAlignment { get; set; } = EHorizontalAlign.Left;
@@ -15,9 +16,13 @@ namespace Entygine.UI
         public Rect Rect { get; set; }
         public Material Material { get; set; }
 
+        private bool textChanged;
+        private Rect[] charsPos;
+
         public UIText(string text) : this()
         {
             Text = text;
+            textChanged = true;
         }
         public UIText()
         {
@@ -40,90 +45,88 @@ namespace Entygine.UI
             mesh.UpdateMeshData(Material);
             Ogl.BindVertexArray(mesh.GetVertexArrayHandle());
 
-            Vector2 position = GetInitialPosition();
+            if (textChanged)
+            {
+                UpdateCharPositions();
+                textChanged = false;
+            }
+
+            for (int i = 0; i < Text.Length; i++)
+                DrawCharacter(mesh, Text[i], charsPos[i]);
+        }
+
+        private void UpdateCharPositions()
+        {
+            charsPos = new Rect[Text.Length];
+            Vector2 position = new Vector2(GetHorizontalInitialPos(), GetVerticalInitialPos());
             char prevC = char.MinValue;
             for (int i = 0; i < Text.Length; i++)
             {
+                Rect r;
+
                 char c = Text[i];
                 switch (c)
                 {
                     case '\n':
-                        LineBreak(ref position);
+                        position.X = GetHorizontalInitialPos();
+                        position.Y -= Font.LineHeight;
+
+                        r = new Rect()
+                        {
+                            pos = new Vector2(position.X, position.Y),
+                        };
                         break;
 
                     default:
-                        DrawCharacter(mesh, c, prevC, ref position, i > 0);
+                        FontCharacter fontCharacter = Font.GetCharacter(c);
+                        r = fontCharacter.GetRect() * Size;
+
+                        //Calculate character rect
+                        r.pos.X = position.X + r.pos.X;
+                        r.pos.Y = position.Y - r.pos.Y;
+
+                        //Advance
+                        position.X += (fontCharacter.Advance >> 6) * Size;
+
+                        //Kerning
+                        float kerning = Font.GetKerning(prevC, c).x >> 6;
+                        position.X -= kerning;
+                        r.pos.X -= kerning;
+
                         break;
                 }
 
+                charsPos[i] = r;
                 prevC = c;
             }
         }
 
-        private Vector2 GetInitialPosition()
+        private float GetHorizontalInitialPos()
         {
-            float x = 0, y = 0;
-            switch (HorizontalAlignment)
+            return HorizontalAlignment switch
             {
-                case EHorizontalAlign.Left:
-                    x = Rect.pos.X;
-                    break;
-
-                case EHorizontalAlign.Center:
-                    x = Rect.pos.X + Rect.size.X / 2f;
-                    break;
-
-                case EHorizontalAlign.Right:
-                    x = Rect.pos.X + Rect.size.X;
-                    break;
-            }
-
-            switch (VerticalAlignment)
-            {
-                case EVerticalAlign.Top:
-                    y = Rect.pos.Y + Rect.size.Y - Font.LineHeight / 2f;
-                    break;
-
-                case EVerticalAlign.Center:
-                    y = Rect.pos.Y + Rect.size.Y / 2f;
-                    break;
-
-                case EVerticalAlign.Bottom:
-                    y = Rect.pos.Y;
-                    break;
-            }
-
-            return new Vector2(x, y);
+                EHorizontalAlign.Center => Rect.pos.X + Rect.size.X / 2f,
+                EHorizontalAlign.Right => Rect.pos.X + Rect.size.X,
+                _ => Rect.pos.X,
+            };
         }
 
-        private void LineBreak(ref Vector2 position)
+        private float GetVerticalInitialPos()
         {
-            position.X = Rect.pos.X;
-            position.Y -= Font.LineHeight;
+            return VerticalAlignment switch
+            {
+                EVerticalAlign.Center => Rect.pos.Y + Rect.size.Y / 2f,
+                EVerticalAlign.Bottom => Rect.pos.Y,
+                _ => Rect.pos.Y + Rect.size.Y - Font.LineHeight / 2f,
+            };
         }
 
-        private void DrawCharacter(Mesh mesh, char c, char prevC, ref Vector2 position, bool useKerning)
+        private void DrawCharacter(Mesh mesh, char c, Rect position)
         {
             FontCharacter fontCharacter = Font.GetCharacter(c);
-            Rect rect = fontCharacter.GetRect() * Size;
-
-            //Calculate character rect
-            rect.pos.X = position.X + rect.pos.X;
-            rect.pos.Y = position.Y - rect.pos.Y;
-
-            //Advance
-            position.X += (fontCharacter.Advance >> 6) * Size;
-
-            //Kerning
-            if (useKerning)
-            {
-                float kerning = Font.GetKerning(prevC, c).x >> 6;
-                position.X -= kerning;
-                rect.pos.X -= kerning;
-            }
 
             //Drawing character
-            Matrix4 model = rect.GetModelMatrix();
+            Matrix4 model = position.GetModelMatrix();
             Ogl.BindTexture(OpenTK.Graphics.OpenGL4.TextureTarget.Texture2D, fontCharacter.TextureID);
             Material.SetMatrix("model", model);
             Ogl.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, mesh.GetIndiceCount(), OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt, 0);
