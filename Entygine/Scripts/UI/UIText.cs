@@ -48,6 +48,7 @@ namespace Entygine.UI
             if (textChanged)
             {
                 UpdateCharPositions();
+                PostProcessCharPositions();
                 textChanged = false;
             }
 
@@ -99,6 +100,39 @@ namespace Entygine.UI
                 charsPos[i] = r;
                 prevC = c;
             }
+        }
+
+        private void PostProcessCharPositions()
+        {
+            switch (HorizontalAlignment)
+            {
+                case EHorizontalAlign.Center:
+                    float halfWidth = GetTotalCharWidth() / 2f;
+                    for (int i = 0; i < charsPos.Length; i++)
+                        charsPos[i].pos.X -= halfWidth;
+                    break;
+             
+                case EHorizontalAlign.Right:
+                    float width = GetTotalCharWidth();
+                    for (int i = 0; i < charsPos.Length; i++)
+                        charsPos[i].pos.X -= width;
+                    break;
+            }
+        }
+
+        private float GetTotalCharWidth()
+        {
+            return charsPos[^1].pos.X - charsPos[0].pos.X;
+            //Rect prevChar = charsPos[0];
+            //float width = prevChar.size.X;
+            //for (int i = 1; i < charsPos.Length; i++)
+            //{
+            //    Rect currPos = charsPos[i];
+            //    width += currPos.size.X;
+            //    width += currPos.pos.X - prevChar.pos.X;
+            //    prevChar = currPos;
+            //}
+            //return width;
         }
 
         private float GetHorizontalInitialPos()

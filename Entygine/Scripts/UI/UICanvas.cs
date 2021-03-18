@@ -59,7 +59,7 @@ namespace Entygine.UI
             UIText t = new UIText("SOME TEXT")
             {
                 VerticalAlignment = EVerticalAlign.Center,
-                HorizontalAlignment = EHorizontalAlign.Center
+                HorizontalAlignment = EHorizontalAlign.Right
             };
             img.Children.Add(t);
             Root.Children.Add(img);
