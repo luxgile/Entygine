@@ -1,8 +1,7 @@
-﻿using Entygine.Rendering.Pipeline;
+﻿using Entygine.Mathematics;
+using Entygine.Rendering.Pipeline;
 using Entygine.UI;
 using OpenTK.Mathematics;
-using SixLabors.ImageSharp.PixelFormats;
-using System;
 using System.Collections.Generic;
 
 namespace Entygine.Rendering
@@ -14,8 +13,9 @@ namespace Entygine.Rendering
 
         public UICanvasRenderData()
         {
-            camera = CameraData.CreateOrthographicCamera(MainDevWindowGL.Window.Size.X / MainDevWindowGL.Window.Size.Y, 1, -1, 1);
-            camera.SetOrthoResolution(MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y);
+            Vec2i resolution = AppScreen.Resolution;
+            camera = CameraData.CreateOrthographicCamera(AppScreen.Aspect, 1, -1, 1);
+            camera.SetOrthoResolution(resolution.x, resolution.y);
 
             //Mesh = MeshPrimitives.CreatePlaneXY(1);
 

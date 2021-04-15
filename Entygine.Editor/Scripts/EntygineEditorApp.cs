@@ -1,4 +1,5 @@
 ﻿using Entygine.DevTools;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Desktop;
 
 namespace Entygine.Editor
@@ -10,13 +11,13 @@ namespace Entygine.Editor
             GameWindowSettings gameWindowSettings = new GameWindowSettings();
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
 
-            //Everything works but there are some blinking at the start
-            //gameWindowSettings.IsMultiThreaded = true;
             gameWindowSettings.UpdateFrequency = 60.0d;
             nativeWindowSettings.Title = "Entygine Editor";
             nativeWindowSettings.Size = new OpenTK.Mathematics.Vector2i(1600, 900);
 
             using MainEditorWindow mainWindow = new MainEditorWindow(gameWindowSettings, nativeWindowSettings);
+
+            EntygineApp.LoadEngine();
 
             DevConsole.Log("Editor started succesfully.");
 

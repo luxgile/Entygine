@@ -12,15 +12,21 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Entygine
 {
-    internal static class EntygineApp
+    public static class EntygineApp
     {
         private static WorkerCycleCore coreWorker;
+        private static bool loadedEngine;
 
         internal static void StartEngine()
         {
+
             GameWindowSettings gameWindowSettings = new GameWindowSettings();
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
 
@@ -41,8 +47,13 @@ namespace Entygine
             mainWindow.Run();
         }
 
-        internal static void LoadEngine()
+        public static void LoadEngine()
         {
+            if (loadedEngine)
+                return;
+
+            loadedEngine = true;
+
             Ogl.enableErrorCheck = true;
 
             InitConsole();

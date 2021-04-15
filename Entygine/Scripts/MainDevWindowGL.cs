@@ -16,6 +16,8 @@ namespace Entygine
         {
             base.OnResize(e);
 
+            AppScreen.Resolution = new Mathematics.Vec2i(Size.X, Size.Y);
+
             Ogl.Viewport(0, 0, Size.X, Size.Y);
         }
 
