@@ -12,10 +12,6 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace Entygine
 {
@@ -34,11 +30,11 @@ namespace Entygine
             //gameWindowSettings.IsMultiThreaded = true;
             gameWindowSettings.UpdateFrequency = 60.0d;
             nativeWindowSettings.Title = "Entygine";
-            nativeWindowSettings.Size = new OpenTK.Mathematics.Vector2i(1600, 900);
+            nativeWindowSettings.Size = new Vector2i(1600, 900);
 
             using MainDevWindowGL mainWindow = new MainDevWindowGL(gameWindowSettings, nativeWindowSettings);
 
-            DevConsole.Log("Engine started succesfully.");
+            //DevConsole.Log("Engine started succesfully.");
 
             mainWindow.Load += LoadEngine;
             mainWindow.UpdateFrame += UpdateFrame;

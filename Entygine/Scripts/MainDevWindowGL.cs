@@ -6,7 +6,6 @@ namespace Entygine
 {
     public class MainDevWindowGL : GameWindow
     {
-
         public MainDevWindowGL(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
             Window = this;

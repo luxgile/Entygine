@@ -8,8 +8,6 @@ namespace Entygine.Editor
 {
     public class MainEditorWindow : GameWindow
     {
-        private WorkerCycleCore editorWorker;
-
         public MainEditorWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
             Window = this;
@@ -31,13 +29,6 @@ namespace Entygine.Editor
         {
             base.OnUpdateFrame(e);
 
-            //FrameContext.Current = new FrameData(FrameContext.Current.count + 1, (float)e.Time);
-
-            //editorWorker.PerformLogicCycle((float)e.Time);
-
-            //if (KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Space))
-            //    EntityWorld.Active.DEBUG_LOG_INFO();
-
             if (KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
                 Close();
         }
@@ -46,7 +37,7 @@ namespace Entygine.Editor
         {
             base.OnRenderFrame(e);
 
-            //editorWorker.PerformRenderCycle((float)e.Time);
+            //ImGuiNET.ImGui.Text("FUCK");
 
             SwapBuffers();
         }

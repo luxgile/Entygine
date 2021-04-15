@@ -8,6 +8,7 @@ namespace Entygine.Editor
     {
         internal static void StartEditor()
         {
+
             GameWindowSettings gameWindowSettings = new GameWindowSettings();
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
 
@@ -19,9 +20,11 @@ namespace Entygine.Editor
 
             EntygineApp.LoadEngine();
 
+            System.Console.ReadKey();
+
             DevConsole.Log("Editor started succesfully.");
 
-            mainWindow.Run();
+            //mainWindow.Run();
         }
     }
 }
