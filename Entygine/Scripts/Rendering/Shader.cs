@@ -7,27 +7,52 @@ namespace Entygine.Rendering
 {
     public class Shader
     {
+        public string Name { get; private set; }
         public int handle;
-        public string vertexPath = "";
-        public string fragmentPath = "";
+        private string vertexProgram = "";
+        private string fragmentProgram = "";
 
         public bool IsCompiled { get; private set; }
 
         public static int ShadersLoaded { get; private set; }
 
-        public Shader(string vertexPath, string fragmentPath)
+        public Shader(string name)
         {
+            this.Name = name;
             this.handle = 0;
-            this.vertexPath = vertexPath;
-            this.fragmentPath = fragmentPath;
+        }
+
+        public static Shader CreateShaderWithPath(string vertexPath, string fragmentPath, string name)
+        {
+            Shader shader = new Shader(name);
+            shader.handle = 0;
+
+            using (StreamReader reader = new StreamReader(vertexPath, Encoding.UTF8))
+                shader.vertexProgram = reader.ReadToEnd();
+
+            using (StreamReader reader = new StreamReader(fragmentPath, Encoding.UTF8))
+                shader.fragmentProgram = reader.ReadToEnd();
+
+            return shader;
+        }
+
+        public static Shader CreateShaderWithProgram(string vertex, string frag, string name)
+        {
+            Shader shader = new Shader(name)
+            {
+                handle = 0,
+                vertexProgram = vertex,
+                fragmentProgram = frag
+            };
+            return shader;
         }
 
         public void CompileShader()
         {
-            int vertexShader = CompileShader(ShaderType.VertexShader, vertexPath);
-            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentPath);
+            int vertexShader = CompileShader(ShaderType.VertexShader, vertexProgram);
+            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentProgram);
 
-            handle = Ogl.CreateProgram();
+            handle = Ogl.CreateProgram(Name);
             Ogl.AttachShader(handle, vertexShader);
             Ogl.AttachShader(handle, fragmentShader);
             Ogl.LinkProgram(handle);
@@ -48,14 +73,14 @@ namespace Entygine.Rendering
         {
             return Ogl.GetAttribLocation(handle, attribName);
         }
-
-        private int CompileShader(ShaderType type, string path)
+        public int GetUniformLocation(string uniform)
         {
-            string shaderSource;
-            using (StreamReader reader = new StreamReader(path, Encoding.UTF8))
-                shaderSource = reader.ReadToEnd();
+            return Ogl.GetUniformLocation(handle, uniform);
+        }
 
-            int shader = Ogl.CreateShader(type);
+        private int CompileShader(ShaderType type, string shaderSource)
+        {
+            int shader = Ogl.CreateShader(type, $" {type} - {Name}");
             Ogl.ShaderSource(shader, shaderSource);
 
             Ogl.CompileShader(shader);

@@ -28,19 +28,19 @@ namespace Entygine.Rendering.Pipeline
                 if (!context.TryGetData(out LightsRenderData lightData))
                     return;
 
-                if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.I))
-                    yaw += 0.1f;
+                //if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.I))
+                //    yaw += 0.1f;
 
-                if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.O))
-                    yaw -= 0.1f;
+                //if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.O))
+                //    yaw -= 0.1f;
 
-                if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.K))
-                    pitch += 0.1f;
+                //if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.K))
+                //    pitch += 0.1f;
 
-                if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.L))
-                    pitch -= 0.1f;
+                //if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.L))
+                //    pitch -= 0.1f;
 
-                Ogl.Viewport(0, 0, MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y);
+                Ogl.Viewport(0, 0, AppScreen.Resolution.x, AppScreen.Resolution.y);
                 Ogl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
                 Light mainLight = lightData.lights[0];

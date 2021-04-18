@@ -6,7 +6,7 @@ namespace Entygine.Rendering
     public class DirectionalLight : Light
     {
         private CameraData camera;
-        private DepthTexture depthMap = new DepthTexture(TEXTURE_RES, TEXTURE_RES);
+        private DepthTexture depthMap = new DepthTexture(TEXTURE_RES, TEXTURE_RES, "Directional Light Depth");
 
         private const int TEXTURE_RES = 1024;
 

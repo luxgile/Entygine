@@ -9,9 +9,9 @@ namespace Entygine.Rendering
         private int width;
         private int height;
 
-        public DepthTexture(int width, int height)
+        public DepthTexture(int width, int height, string name)
         {
-            handle = Ogl.GenTexture();
+            handle = Ogl.GenTexture(name);
 
             Ogl.BindTexture(TextureTarget.Texture2D, handle);
             Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, width, height, 0, PixelFormat.DepthComponent, PixelType.Float, null);

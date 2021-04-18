@@ -12,7 +12,7 @@ namespace Entygine.Rendering.Pipeline
         {
             PointsOrder = new GizmoPointOrder();
             LinesOrder = new GizmoLineOrder();
-            Shader gizmoShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\gizmo.vert"), AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\gizmo.frag"));
+            Shader gizmoShader = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\gizmo.vert"), AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\gizmo.frag"), "Gizmos");
             GizmoMaterial = new Material(gizmoShader, null);
             GizmoMaterial.LoadMaterial();
         }

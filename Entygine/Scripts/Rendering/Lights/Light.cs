@@ -9,7 +9,7 @@ namespace Entygine.Rendering
 
         public Light()
         {
-            DepthMapHandleFBO = Ogl.GenFramebuffer();
+            DepthMapHandleFBO = Ogl.GenFramebuffer("Light Depth Map");
         }
 
         public abstract void BindShadowMap();

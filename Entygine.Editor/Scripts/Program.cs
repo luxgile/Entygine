@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Entygine.Editor
+﻿namespace Entygine_Editor
 {
     class Program
     {

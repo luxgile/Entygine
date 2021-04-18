@@ -10,11 +10,11 @@ namespace Entygine
 
         public static Vec2i Resolution
         {
-            get => new Vec2i(width, (int)(width * aspect));
+            get => new Vec2i(width, (int)(width * (1 / aspect)));
             set
             {
                 width = value.x;
-                aspect = value.x / value.y;
+                aspect = (float)value.x / (float)value.y;
 
                 ResolutionChanged?.Invoke(Resolution);
             }

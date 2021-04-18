@@ -9,8 +9,8 @@ namespace Entygine.UI
 
         public UIImage()
         {
-            Shader shader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.vert")
-                , AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.frag"));
+            Shader shader = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.vert")
+                , AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\uiStandard.frag"), "UI Image Shader");
             Material = new Material(shader, Texture2D.CreateWhiteTexture(1, 1));
             Material.LoadMaterial();
         }

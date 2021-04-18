@@ -17,11 +17,12 @@ namespace Entygine.Rendering
 
         private bool hasChanged;
 
-        public Texture2D(string path)
+        public Texture2D(string path, string name)
         {
-            this.handle = Ogl.GenTexture();
+            this.handle = Ogl.GenTexture(name);
 
             Ogl.BindTexture(TextureTarget.Texture2D, handle);
+            Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
             Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);
             Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
             Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureWrapMode.Repeat);
@@ -30,11 +31,12 @@ namespace Entygine.Rendering
             LoadFromPath(path);
         }
 
-        public Texture2D(int width, int height)
+        public Texture2D(int width, int height, string name)
         {
-            handle = Ogl.GenTexture();
+            handle = Ogl.GenTexture(name);
 
             Ogl.BindTexture(TextureTarget.Texture2D, handle);
+            Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
             Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);
             Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
             Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureWrapMode.Repeat);
@@ -87,6 +89,12 @@ namespace Entygine.Rendering
             hasChanged = true;
         }
 
+        public void SetRawData(IntPtr data)
+        {
+            Ogl.BindTexture(TextureTarget.Texture2D, handle);
+            Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+            Ogl.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        }
 
         public override int Width => width;
 
@@ -100,7 +108,7 @@ namespace Entygine.Rendering
 
         public static Texture2D CreateWhiteTexture(int width, int height)
         {
-            Texture2D texture = new Texture2D(width, height);
+            Texture2D texture = new Texture2D(width, height, "White Texture");
             Rgba32[] pixels = new Rgba32[width * height];
             for (int i = 0; i < pixels.Length; i++)
                 pixels[i] = new Rgba32(255, 255, 255, 255);
@@ -110,7 +118,7 @@ namespace Entygine.Rendering
 
         public static Texture2D CreatePlainTexture(int width, int height, Rgba32 color)
         {
-            Texture2D texture = new Texture2D(width, height);
+            Texture2D texture = new Texture2D(width, height, "Plain Texture");
             Rgba32[] pixels = new Rgba32[width * height];
             for (int i = 0; i < pixels.Length; i++)
                 pixels[i] = color;

@@ -24,8 +24,8 @@ namespace Entygine.DevTools
 
         public GizmoPointOrder()
         {
-            vao = Ogl.GenVertexArray();
-            vbo = Ogl.GenBuffer();
+            vao = Ogl.GenVertexArray("Gizmos - Points");
+            vbo = Ogl.GenBuffer("Gizmos - Points");
         }
 
         protected override void Draw(List<GizmoPoint> gizmoData)

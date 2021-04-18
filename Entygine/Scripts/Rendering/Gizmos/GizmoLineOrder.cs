@@ -26,8 +26,8 @@ namespace Entygine.DevTools
 
         public GizmoLineOrder()
         {
-            vao = Ogl.GenVertexArray();
-            vbo = Ogl.GenBuffer();
+            vao = Ogl.GenVertexArray("Gizmo - Lines");
+            vbo = Ogl.GenBuffer("Gizmo Lines");
         }
 
         protected override void Draw(List<GizmoLine> gizmoData)

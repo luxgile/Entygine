@@ -12,7 +12,8 @@ namespace Entygine.Rendering
 
         public LightsRenderData()
         {
-            Shader shader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\simpleDepth.vert"), AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\simpleDepth.frag"));
+            Shader shader = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\simpleDepth.vert")
+                , AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\simpleDepth.frag"), "Depth Shader");
             depthMat = new Material(shader, null);
             depthMat.LoadMaterial();
         }

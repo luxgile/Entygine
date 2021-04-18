@@ -15,6 +15,9 @@ namespace Entygine.Rendering
         public float fov;
         public float aspectRatio;
 
+        private Texture2D colorTargetTexture;
+        private DepthTexture depthTargetTexture;
+
         //Orthographic
         public float orthoSize;
 
@@ -26,7 +29,7 @@ namespace Entygine.Rendering
                 aspectRatio = ratio,
                 nearPlane = nearPlane,
                 farPlane = farPlane,
-                mode = RenderingMode.Perspective
+                mode = RenderingMode.Perspective,
             };
         }
 
@@ -41,6 +44,20 @@ namespace Entygine.Rendering
                 mode = RenderingMode.Orthographic
             };
         }
+        public static CameraData CreateOffCenterOrthographicCamera(float width, float height, float nearPlane, float farPlane)
+        {
+            return new CameraData
+            {
+                aspectRatio = width / height,
+                nearPlane = nearPlane,
+                farPlane = farPlane,
+                orthoSize = height / 2,
+                mode = RenderingMode.Orthographic,
+            };
+        }
+
+        public void SetColorTargetTexture(Texture2D tex) => colorTargetTexture = tex; 
+        public void SetDepthTargetTexture(DepthTexture tex) => depthTargetTexture = tex; 
 
         public void SetOrthoResolution(float width, float height)
         {
@@ -52,6 +69,9 @@ namespace Entygine.Rendering
         public float OrthoWidth => OrthoHeight * aspectRatio;
 
         public float RadiansFov => MathHelper.DegreesToRadians(fov);
+
+        public Texture2D ColorTargetTexture => colorTargetTexture;
+        public DepthTexture DepthTargetTexture => depthTargetTexture;
 
         public Matrix4 CalculateProjection(bool orthoCentered = false)
         {

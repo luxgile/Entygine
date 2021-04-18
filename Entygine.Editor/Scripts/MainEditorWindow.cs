@@ -1,13 +1,18 @@
-﻿using Entygine.Cycles;
+﻿using Entygine;
+using Entygine.Cycles;
 using Entygine.Ecs;
 using Entygine.Rendering;
+using Entygine_Editor.ImGUI;
+using ImGuiNET;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
-namespace Entygine.Editor
+namespace Entygine_Editor
 {
     public class MainEditorWindow : GameWindow
     {
+
         public MainEditorWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
             Window = this;
@@ -17,12 +22,15 @@ namespace Entygine.Editor
         {
             base.OnResize(e);
 
+            AppScreen.Resolution = new Entygine.Mathematics.Vec2i(Size.X, Size.Y);
+
             Ogl.Viewport(0, 0, Size.X, Size.Y);
         }
 
         protected override void OnLoad()
         {
             base.OnLoad();
+
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -36,8 +44,6 @@ namespace Entygine.Editor
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
-            //ImGuiNET.ImGui.Text("FUCK");
 
             SwapBuffers();
         }

@@ -1,4 +1,6 @@
-﻿namespace Entygine
+﻿using Entygine;
+
+namespace Entygine_Client
 {
     class Program
     {

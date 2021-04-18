@@ -1,5 +1,6 @@
 ﻿using Entygine.Cycles;
 using Entygine.Ecs.Components;
+using Entygine.Mathematics;
 using Entygine.Rendering;
 using Entygine.Rendering.Pipeline;
 using OpenTK.Mathematics;
@@ -32,7 +33,16 @@ namespace Entygine.Ecs.Systems
                 Matrix4[] cameraTransforms = new Matrix4[chunk.Count];
                 for (int c = 0; c < chunk.Count; c++)
                 {
-                    cameraDatas[c] = cameras.Get<C_Camera>(c).cameraData;
+                    C_Camera cam = cameras.Get<C_Camera>(c);
+                    if(cam.cameraData.ColorTargetTexture == null)
+                    {
+                        Vec2i res = AppScreen.Resolution;
+                        cam.cameraData.SetColorTargetTexture(new Texture2D(res.x, res.y, "Camera Color FBO"));
+                        cam.cameraData.SetDepthTargetTexture(new DepthTexture(res.x, res.y, "Camera Depth"));
+                        chunk.SetComponent(c, cam);
+                    }
+
+                    cameraDatas[c] = cam.cameraData;
                     cameraTransforms[c] = transforms.Get<C_Transform>(c).value;
                 }
 

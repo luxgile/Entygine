@@ -20,6 +20,13 @@ namespace Entygine
             Ogl.Viewport(0, 0, Size.X, Size.Y);
         }
 
+        protected override void OnRenderFrame(FrameEventArgs args)
+        {
+            base.OnRenderFrame(args);
+
+            SwapBuffers();
+        }
+
         public static MainDevWindowGL Window { get; private set; }
     }
 }

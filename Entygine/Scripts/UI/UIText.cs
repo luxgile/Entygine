@@ -26,8 +26,8 @@ namespace Entygine.UI
         }
         public UIText()
         {
-            Shader shader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\text.vert")
-                , AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\text.frag"));
+            Shader shader = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\text.vert")
+                , AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\text.frag"), "Text Shader");
             Material = new Material(shader, Texture2D.CreateWhiteTexture(1, 1));
             Material.LoadMaterial();
 

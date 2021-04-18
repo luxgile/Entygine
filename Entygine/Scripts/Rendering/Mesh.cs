@@ -25,9 +25,9 @@ namespace Entygine.Rendering
 
         public Mesh() 
         {
-            vertexArrayHandle = Ogl.GenVertexArray();
-            vertexBuffer = Ogl.GenBuffer();
-            trisBuffer = Ogl.GenBuffer();
+            vertexArrayHandle = Ogl.GenVertexArray("Mesh");
+            vertexBuffer = Ogl.GenBuffer("Mesh - Vertex");
+            trisBuffer = Ogl.GenBuffer("Mesh - Tris");
 
             layouts = new[]
             {

@@ -19,6 +19,27 @@ namespace Entygine.Rendering
                 DevConsole.Log(error + "\n" + new StackTrace());
         }
 
+        private static void LabelObject(ObjectLabelIdentifier id, int obj, string name)
+        {
+            GL.ObjectLabel(id, obj, name.Length, name);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        #region VAO
+        public static int GenVertexArray(string name)
+        {
+            int vertexArray = GL.GenVertexArray();
+
+            if (enableErrorCheck)
+                LogErrors();
+
+            LabelObject(ObjectLabelIdentifier.VertexArray, vertexArray, $"VAO: {name}");
+
+            return vertexArray;
+        }
+
         private static int bindedVertexArray = 0;
         public static void BindVertexArray(int handle)
         {
@@ -29,6 +50,22 @@ namespace Entygine.Rendering
             if (enableErrorCheck)
                 LogErrors();
         }
+
+        public static void VertexArrayVertexBuffer(int obj, int index, int buffer, IntPtr offset, int stride)
+        {
+            GL.VertexArrayVertexBuffer(obj, index, buffer, offset, stride);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void VertexArrayElementBuffer(int obj, int buffer)
+        {
+            GL.VertexArrayElementBuffer(obj, buffer);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        #endregion
 
         public static void PixelStore(PixelStoreParameter pixelStore, int parameter)
         {
@@ -41,12 +78,14 @@ namespace Entygine.Rendering
         /// <summary>
         /// Generates a texture in the GPU
         /// </summary>
-        public static int GenTexture()
+        public static int GenTexture(string name)
         {
             int program = GL.GenTexture();
 
             if (enableErrorCheck)
                 LogErrors();
+
+            LabelObject(ObjectLabelIdentifier.Texture, program, $"Texture: {name}");
 
             return program;
         }
@@ -80,12 +119,14 @@ namespace Entygine.Rendering
             return log;
         }
 
-        public static int GenFramebuffer()
+        public static int GenFramebuffer(string name)
         {
             int framebuffer = GL.GenFramebuffer();
 
             if (enableErrorCheck)
                 LogErrors();
+
+            LabelObject(ObjectLabelIdentifier.Framebuffer, framebuffer, $"Framebuffer: {name}");
 
             return framebuffer;
         }
@@ -96,6 +137,11 @@ namespace Entygine.Rendering
 
             if (enableErrorCheck)
                 LogErrors();
+        }
+
+        public static FramebufferErrorCode CheckFramebufferStatus(FramebufferTarget target)
+        {
+            return GL.CheckFramebufferStatus(target);
         }
 
         public static void FramebufferTexture2D(FramebufferTarget target, FramebufferAttachment attachment, TextureTarget texTarget, int handle, int level)
@@ -177,22 +223,26 @@ namespace Entygine.Rendering
             return attLoc;
         }
 
-        public static int CreateProgram()
+        public static int CreateProgram(string name)
         {
             int program = GL.CreateProgram();
 
             if (enableErrorCheck)
                 LogErrors();
 
+            LabelObject(ObjectLabelIdentifier.Program, program, $"Program {name}");
+
             return program;
         }
 
-        public static int CreateShader(ShaderType type)
+        public static int CreateShader(ShaderType type, string name)
         {
             int shader = GL.CreateShader(type);
 
             if (enableErrorCheck)
                 LogErrors();
+
+            LabelObject(ObjectLabelIdentifier.Shader, shader, $"Shader: {name}");
 
             return shader;
         }
@@ -260,24 +310,31 @@ namespace Entygine.Rendering
             return location;
         }
 
-        public static int GenVertexArray()
-        {
-            int vertexArray = GL.GenVertexArray();
-
-            if (enableErrorCheck)
-                LogErrors();
-
-            return vertexArray;
-        }
-
-        public static int GenBuffer()
+        public static int GenBuffer(string name)
         {
             int buffer = GL.GenBuffer();
 
             if (enableErrorCheck)
                 LogErrors();
 
+            LabelObject(ObjectLabelIdentifier.Buffer, buffer, $"Buffer {name}");
+
             return buffer;
+        }
+
+        public static void NamedBufferData(int obj, int size, IntPtr data, BufferUsageHint hint)
+        {
+            GL.NamedBufferData(obj, size, data, hint);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void NamedBufferSubData(int obj, IntPtr offset, int size, IntPtr data)
+        {
+            GL.NamedBufferSubData(obj, offset, size, data);
+
+            if (enableErrorCheck)
+                LogErrors();
         }
 
         public static void ActiveTexture(TextureUnit texture)
@@ -469,6 +526,13 @@ namespace Entygine.Rendering
             if (enableErrorCheck)
                 LogErrors();
         }
+        public static void BufferData(BufferTarget target, int size, IntPtr data, BufferUsageHint usage)
+        {
+            GL.BufferData(target, size, data, usage);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
         public static void BufferData<T0>(BufferTarget target, int size, T0[] data, BufferUsageHint usage) where T0 : struct
         {
             GL.BufferData(target, size, data, usage);
@@ -476,10 +540,38 @@ namespace Entygine.Rendering
             if (enableErrorCheck)
                 LogErrors();
         }
-
-        public static void EnableVertexAttribArray(int location)
+        public static void BufferSubData(BufferTarget target, IntPtr offset, int size, IntPtr data)
         {
-            GL.EnableVertexAttribArray(location);
+            GL.BufferSubData(target, offset, size, data);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+
+        public static void EnableVertexArrayAttrib(int obj, int index)
+        {
+            GL.EnableVertexArrayAttrib(obj, index);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void EnableVertexAttribArray(int index)
+        {
+            GL.EnableVertexAttribArray(index);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void VertexArrayAttribBinding(int obj, int attribIndex, int bufferIndex)
+        {
+            GL.VertexArrayAttribBinding(obj, attribIndex, bufferIndex);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void VertexArrayAttribFormat(int obj, int attIndex, int size, VertexAttribType type, bool normalized, int relativeOffset)
+        {
+            GL.VertexArrayAttribFormat(obj, attIndex, size, type, normalized, relativeOffset);
 
             if (enableErrorCheck)
                 LogErrors();

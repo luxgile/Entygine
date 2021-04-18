@@ -84,7 +84,7 @@ namespace Entygine.Rendering
 
         private int LoadBitmapOnChar(int width, int height, IntPtr buffer)
         {
-            int textureID = Ogl.GenTexture();
+            int textureID = Ogl.GenTexture("Char");
             Ogl.BindTexture(TextureTarget.Texture2D, textureID);
             Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R8, width, height
                 , 0, PixelFormat.Red, PixelType.UnsignedByte, buffer);

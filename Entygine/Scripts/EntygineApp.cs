@@ -95,10 +95,10 @@ namespace Entygine
             void InitScene(EntityWorld world)
             {
                 Mesh meshResource = MeshPrimitives.CreateCube(1);
-                Shader shaderResource = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
-                                                    AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.frag"));
+                Shader shaderResource = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
+                                                    AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.frag"), "Standard Shader");
 
-                Texture2D texture = new Texture2D(AssetBrowser.Utilities.LocalToAbsolutePath(@"Textures\Box.png"));
+                Texture2D texture = new Texture2D(AssetBrowser.Utilities.LocalToAbsolutePath(@"Textures\Box.png"), "Box");
                 Material materialResource = new Material(shaderResource, texture);
                 SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
 
@@ -168,8 +168,8 @@ namespace Entygine
                 AssetBrowser.Utilities.LocalToAbsolutePath(@"Skybox\back.png"),
                             });
 
-                Shader skyboxShader = new Shader(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.vert"),
-                                                    AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"));
+                Shader skyboxShader = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.vert"),
+                                                    AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\skybox.frag"), "Skybox");
                 Skybox skybox = new Skybox(new Material(skyboxShader, skyboxCubemap));
                 RenderPipelineCore.SetSkybox(skybox);
             }
@@ -181,24 +181,22 @@ namespace Entygine
             }
         }
 
-        private static void UpdateFrame(FrameEventArgs e)
+        public static void UpdateFrame(FrameEventArgs e)
         {
             FrameContext.Current = new FrameData(FrameContext.Current.count + 1, (float)e.Time);
 
             coreWorker.PerformLogicCycle((float)e.Time);
 
-            if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(Keys.Space))
-                EntityWorld.Active.DEBUG_LOG_INFO();
+            //if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(Keys.Space))
+            //    EntityWorld.Active.DEBUG_LOG_INFO();
 
-            if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
-                MainDevWindowGL.Window.Close();
+            //if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
+            //    MainDevWindowGL.Window.Close();
         }
 
-        private static void RenderFrame(FrameEventArgs e)
+        public static void RenderFrame(FrameEventArgs e)
         {
             coreWorker.PerformRenderCycle((float)e.Time);
-
-            MainDevWindowGL.Window.SwapBuffers();
         }
     }
 }
