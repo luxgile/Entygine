@@ -9,12 +9,14 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace Entygine_Editor
 {
     internal static class EntygineEditorApp
     {
+        private static ConsoleWindow consoleWindow = new ConsoleWindow();
         private static MainEditorWindow mainWindow;
         private static EntyImGui imgui;
         private static int frameBuffer;
@@ -42,6 +44,8 @@ namespace Entygine_Editor
         private static void LoadEditor()
         {
             imgui = new EntyImGui(mainWindow.Size.X, mainWindow.Size.Y);
+
+            DevConsole.AddLogger(consoleWindow);
 
             EntygineApp.LoadEngine();
 
@@ -76,7 +80,8 @@ namespace Entygine_Editor
 
             Ogl.Viewport(0, 0, AppScreen.Resolution.x, AppScreen.Resolution.y);
             imgui.WindowResized(AppScreen.Resolution.x, AppScreen.Resolution.y);
-            ImGui.ShowDemoWindow();
+
+            consoleWindow.Draw();
 
             EntityIterator.PerformIteration(EntityWorld.Active, new RenderCamera(), new EntityQuery().Any(TypeCache.ReadType<C_Camera>()));
 
@@ -95,6 +100,31 @@ namespace Entygine_Editor
                 chunk.TryGetComponent(index, out C_Camera camera);
                 ImGui.Begin("Render");
                 ImGui.Image((IntPtr)camera.cameraData.ColorTargetTexture.handle, new Vector2(800, 600), new Vector2(0, 0), new Vector2(1, -1));
+                ImGui.End();
+            }
+        }
+
+        private class ConsoleWindow : IConsoleLogger
+        {
+            List<string> logs = new List<string>();
+
+            public void Log(object log)
+            {
+                logs.Add(log.ToString());
+            }
+
+            public void Clear()
+            {
+                logs.Clear();
+            }
+
+            internal void Draw()
+            {
+                ImGui.Begin("Console");
+                for (int i = 0; i < logs.Count; i++)
+                {
+                    ImGui.Text(logs[i]);
+                }
                 ImGui.End();
             }
         }
