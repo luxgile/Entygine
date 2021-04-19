@@ -28,16 +28,21 @@ namespace Entygine.Rendering.Pipeline
                 context.CommandBuffer.QueueCommand(new RenderCommand("Bind color FBO", (ref RenderContext context) =>
                 {
                     Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer_color);
-                    Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, camera.ColorTargetTexture.handle, 0);
                     Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, camera.DepthTargetTexture.Handle, 0);
+                    Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, camera.ColorTargetTexture.handle, 0);
                     FramebufferErrorCode status = Ogl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
                     if (status != FramebufferErrorCode.FramebufferComplete)
                         DevTools.DevConsole.Log(status);
+
+                    Ogl.Enable(EnableCap.DepthTest);
+                    Ogl.Enable(EnableCap.CullFace);
+                    Ogl.Enable(EnableCap.ProgramPointSize);
+                    Ogl.PointSize(10f);
                 }));
 
                 context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawGeometry(camera, cameraTransform));
                 context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawGizmos(camera, cameraTransform));
-                //context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawSkybox(camera, cameraTransform));
+                context.CommandBuffer.QueueCommand(RenderCommandsLibrary.DrawSkybox(camera, cameraTransform));
 
                 context.CommandBuffer.QueueCommand(new RenderCommand("Unbind FBO", (ref RenderContext context) =>
                 {

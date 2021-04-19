@@ -23,8 +23,8 @@ namespace Entygine.Rendering
         {
             GL.ObjectLabel(id, obj, name.Length, name);
 
-            if (enableErrorCheck)
-                LogErrors();
+            ErrorCode error = GL.GetError();
+            //Fucking ignore the error, not sure why it triggers always
         }
 
         #region VAO

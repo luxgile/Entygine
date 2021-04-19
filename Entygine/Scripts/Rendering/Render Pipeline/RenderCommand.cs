@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Graphics.OpenGL4;
+using System;
 
 namespace Entygine.Rendering
 {
@@ -17,8 +18,10 @@ namespace Entygine.Rendering
 
         internal void Dispatch(ref RenderContext context)
         {
+            GL.PushDebugGroup(DebugSourceExternal.DebugSourceApplication, 0, name.Length, name);
             renderAction(ref context);
             renderAction = null;
+            GL.PopDebugGroup();
         }
     }
 }

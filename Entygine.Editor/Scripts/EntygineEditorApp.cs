@@ -9,6 +9,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System;
+using System.Numerics;
 
 namespace Entygine_Editor
 {
@@ -93,7 +94,7 @@ namespace Entygine_Editor
             {
                 chunk.TryGetComponent(index, out C_Camera camera);
                 ImGui.Begin("Render");
-                ImGui.Image((IntPtr)camera.cameraData.ColorTargetTexture.handle, new System.Numerics.Vector2(800, 600));
+                ImGui.Image((IntPtr)camera.cameraData.ColorTargetTexture.handle, new Vector2(800, 600), new Vector2(0, 0), new Vector2(1, -1));
                 ImGui.End();
             }
         }

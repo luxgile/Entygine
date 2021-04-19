@@ -90,6 +90,7 @@ namespace Entygine.Rendering.Pipeline
                 if (!context.TryGetData(out GeometryRenderData geometryData))
                     return;
 
+                Ogl.Enable(EnableCap.DepthTest);
                 Ogl.Disable(EnableCap.Blend);
                 List<Light> lights = lightData.lights;
                 for (int i = 0; i < lights.Count; i++)

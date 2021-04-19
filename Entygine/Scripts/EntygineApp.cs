@@ -2,6 +2,7 @@
 using Entygine.DevTools;
 using Entygine.Ecs;
 using Entygine.Ecs.Components;
+using Entygine.Ecs.Systems;
 using Entygine.Mathematics;
 using Entygine.Physics;
 using Entygine.Rendering;
@@ -19,6 +20,7 @@ namespace Entygine
     {
         private static WorkerCycleCore coreWorker;
         private static bool loadedEngine;
+        public static double EngineTime { get; private set; }
 
         internal static void StartEngine()
         {
@@ -103,6 +105,7 @@ namespace Entygine
                 SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
 
                 EntityArchetype meshArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform), typeof(C_Position));
+                EntityArchetype boxArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform), typeof(C_Position), typeof(C_BoxTag));
 
                 Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
                 world.EntityManager.SetComponent(planeEntity, new C_Position() { value = new Vec3f(0, 0, 0) });
@@ -119,17 +122,17 @@ namespace Entygine
                 Material planeMaterial2 = new Material(shaderResource, texture);
                 world.EntityManager.SetSharedComponent(planeEntity2, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
-                Entity boxEntity = world.EntityManager.CreateEntity(meshArchetype);
+                Entity boxEntity = world.EntityManager.CreateEntity(boxArchetype);
                 world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vec3f(0, 2, 0) });
                 //world.EntityManager.SetComponent(boxEntity, new C_PhysicsBody() { body = new PhysicBody() });
                 world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
 
-                Entity boxEntity2 = world.EntityManager.CreateEntity(meshArchetype);
+                Entity boxEntity2 = world.EntityManager.CreateEntity(boxArchetype);
                 world.EntityManager.SetComponent(boxEntity2, new C_Position() { value = new Vec3f(2, 2, 0) });
                 //world.EntityManager.SetComponent(boxEntity2, new C_PhysicsBody() { body = new PhysicBody() });
                 world.EntityManager.SetSharedComponent(boxEntity2, renderMesh);
 
-                Entity boxEntity3 = world.EntityManager.CreateEntity(meshArchetype);
+                Entity boxEntity3 = world.EntityManager.CreateEntity(boxArchetype);
                 world.EntityManager.SetComponent(boxEntity3, new C_Position() { value = new Vec3f(-2, 2, 0) });
                 //world.EntityManager.SetComponent(boxEntity3, new C_PhysicsBody() { body = new PhysicBody() });
 
@@ -186,6 +189,8 @@ namespace Entygine
             FrameContext.Current = new FrameData(FrameContext.Current.count + 1, (float)e.Time);
 
             coreWorker.PerformLogicCycle((float)e.Time);
+
+            EngineTime += e.Time;
 
             //if (MainDevWindowGL.Window.KeyboardState.IsKeyDown(Keys.Space))
             //    EntityWorld.Active.DEBUG_LOG_INFO();
