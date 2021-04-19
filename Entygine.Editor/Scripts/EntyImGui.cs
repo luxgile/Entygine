@@ -42,6 +42,9 @@ namespace Entygine_Editor.ImGUI
             IntPtr context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
             var io = ImGui.GetIO();
+            io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+            io.ConfigWindowsMoveFromTitleBarOnly = true;
+            io.ConfigWindowsResizeFromEdges = true;
             io.Fonts.AddFontDefault();
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 

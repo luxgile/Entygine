@@ -28,10 +28,13 @@ namespace Entygine_Editor
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
 
             gameWindowSettings.UpdateFrequency = 60.0d;
+            
             nativeWindowSettings.Title = "Entygine Editor";
             nativeWindowSettings.Size = new OpenTK.Mathematics.Vector2i(1600, 900);
 
             mainWindow = new MainEditorWindow(gameWindowSettings, nativeWindowSettings);
+            mainWindow.WindowState = WindowState.Maximized;
+            mainWindow.CenterWindow();
 
             mainWindow.Load += LoadEditor;
             mainWindow.UpdateFrame += UpdateEditor;
@@ -44,6 +47,8 @@ namespace Entygine_Editor
         private static void LoadEditor()
         {
             imgui = new EntyImGui(mainWindow.Size.X, mainWindow.Size.Y);
+            var style = ImGui.GetStyle();
+            style.WindowRounding = 0;
 
             DevConsole.AddLogger(consoleWindow);
 
@@ -98,7 +103,7 @@ namespace Entygine_Editor
             public void Iteration(ref EntityChunk chunk, int index)
             {
                 chunk.TryGetComponent(index, out C_Camera camera);
-                ImGui.Begin("Render");
+                ImGui.Begin("Render", ImGuiWindowFlags.NoCollapse);
                 ImGui.Image((IntPtr)camera.cameraData.ColorTargetTexture.handle, new Vector2(800, 600), new Vector2(0, 0), new Vector2(1, -1));
                 ImGui.End();
             }
@@ -107,7 +112,7 @@ namespace Entygine_Editor
         private class ConsoleWindow : IConsoleLogger
         {
             List<string> logs = new List<string>();
-
+            bool showstyle;
             public void Log(object log)
             {
                 logs.Add(log.ToString());
@@ -120,7 +125,30 @@ namespace Entygine_Editor
 
             internal void Draw()
             {
-                ImGui.Begin("Console");
+                ImGui.DockSpaceOverViewport();
+                ImGui.BeginMainMenuBar();
+                if (ImGui.BeginMenu("Windows"))
+                {
+                    if (ImGui.MenuItem("Style Editor"))
+                        showstyle = !showstyle;
+
+                    ImGui.EndMenu();
+                }
+                ImGui.EndMainMenuBar();
+
+                if (showstyle)
+                    ImGui.ShowStyleEditor();
+
+                ImGui.Begin("Assets");
+                ImGui.End();
+
+                ImGui.Begin("World");
+                ImGui.End();
+
+                ImGui.Begin("Details");
+                ImGui.End();
+
+                ImGui.Begin("Console", ImGuiWindowFlags.NoCollapse);
                 for (int i = 0; i < logs.Count; i++)
                 {
                     ImGui.Text(logs[i]);

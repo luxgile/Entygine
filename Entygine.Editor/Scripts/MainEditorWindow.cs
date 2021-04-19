@@ -30,7 +30,6 @@ namespace Entygine_Editor
         protected override void OnLoad()
         {
             base.OnLoad();
-
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
