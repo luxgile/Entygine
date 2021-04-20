@@ -28,7 +28,7 @@ namespace Entygine
                 if (!string.IsNullOrEmpty(projectPath))
                     Utilities.projectPath = projectPath;
                 else
-                    DevConsole.Log("No project path found. Please write the path to 'Assets' folder in the project in this path: " + GetDataPath() + @"\project_data.txt");
+                    DevConsole.Log(LogType.Error, "No project path found. Please write the path to 'Assets' folder in the project in this path: " + GetDataPath() + @"\project_data.txt");
             }
 
             public static string LocalToAbsolutePath(string localPath) => projectPath + localPath;

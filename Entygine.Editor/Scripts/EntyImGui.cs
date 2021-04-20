@@ -230,7 +230,7 @@ namespace Entygine_Editor.ImGUI
                     GL.NamedBufferData(vertexBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
                     vertexBufferSize = newSize;
 
-                    DevConsole.Log($"Resized dear imgui vertex buffer to new size {vertexBufferSize}");
+                    DevConsole.Log(LogType.Verbose, $"Resized dear imgui vertex buffer to new size {vertexBufferSize}");
                 }
 
                 int indexSize = cmd_list.IdxBuffer.Size * sizeof(ushort);
@@ -240,7 +240,7 @@ namespace Entygine_Editor.ImGUI
                     GL.NamedBufferData(indexBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
                     indexBufferSize = newSize;
 
-                    DevConsole.Log($"Resized dear imgui index buffer to new size {indexBufferSize}");
+                    DevConsole.Log(LogType.Verbose, $"Resized dear imgui index buffer to new size {indexBufferSize}");
                 }
             }
 

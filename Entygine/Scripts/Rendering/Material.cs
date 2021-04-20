@@ -55,7 +55,7 @@ namespace Entygine.Rendering
             if (Ogl.IsProgram(shader.handle))
                 Ogl.UseProgram(shader.handle);
             else
-                DevConsole.Log($"Shader handle is not considered a program ({shader.handle})");
+                DevConsole.Log(LogType.Error, $"Shader handle is not considered a program ({shader.handle})");
 
             mainTexture?.UseTexture(TextureUnit.Texture0);
             depthMap?.UseTexture(TextureUnit.Texture1);
@@ -87,7 +87,7 @@ namespace Entygine.Rendering
             }
             else
             {
-                DevConsole.Log($"{name} wasn't found as matrix in shader.");
+                DevConsole.Log(LogType.Warning, $"{name} wasn't found as matrix in shader.");
             }
         }
 
@@ -100,7 +100,7 @@ namespace Entygine.Rendering
             }
             else
             {
-                DevConsole.Log($"{name} wasn't found as int in shader.");
+                DevConsole.Log(LogType.Warning, $"{name} wasn't found as int in shader.");
             }
         }
 
@@ -113,7 +113,7 @@ namespace Entygine.Rendering
             }
             else
             {
-                DevConsole.Log($"{name} wasn't found as Vector3 in shader.");
+                DevConsole.Log(LogType.Warning, $"{name} wasn't found as Vector3 in shader.");
             }
         }
 

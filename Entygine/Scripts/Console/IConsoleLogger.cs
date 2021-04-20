@@ -2,7 +2,7 @@
 {
     public interface IConsoleLogger
     {
-        void Log(object log);
+        void Log(LogData log);
         void Clear();
     }
 }

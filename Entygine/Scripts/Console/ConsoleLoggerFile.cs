@@ -31,7 +31,7 @@ namespace Entygine.DevTools
             }
         }
 
-        public void Log(object log)
+        public void Log(LogData log)
         {
             try
             {

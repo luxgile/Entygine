@@ -59,7 +59,7 @@ namespace Entygine.Ecs
                 if (Activator.CreateInstance(systemType) is BaseSystem system)
                     SetupSystem(system, world);
                 else
-                    DevConsole.Log("Error initializing system " + systemType.Name);
+                    DevConsole.Log(LogType.Error, "Error initializing system " + systemType.Name);
             }
 
             return this;
@@ -127,7 +127,7 @@ namespace Entygine.Ecs
 
                 if(loopDetectionHash.Contains(system))
                 {
-                    DevConsole.Log("Loop found sorting systems.");
+                    DevConsole.Log(LogType.Warning, "Loop found sorting systems.");
                     return;
                 }
 
@@ -159,7 +159,7 @@ namespace Entygine.Ecs
 
                 if (loopDetectionHash.Contains(system))
                 {
-                    DevConsole.Log("Loop found sorting systems.");
+                    DevConsole.Log(LogType.Warning, "Loop found sorting systems.");
                     return;
                 }
 

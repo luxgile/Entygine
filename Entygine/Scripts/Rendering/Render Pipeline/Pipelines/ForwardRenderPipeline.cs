@@ -32,7 +32,7 @@ namespace Entygine.Rendering.Pipeline
                     Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, camera.ColorTargetTexture.handle, 0);
                     FramebufferErrorCode status = Ogl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
                     if (status != FramebufferErrorCode.FramebufferComplete)
-                        DevTools.DevConsole.Log(status);
+                        DevTools.DevConsole.Log(DevTools.LogType.Error, status);
 
                     Ogl.Enable(EnableCap.DepthTest);
                     Ogl.Enable(EnableCap.CullFace);

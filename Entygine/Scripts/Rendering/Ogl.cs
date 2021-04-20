@@ -16,7 +16,7 @@ namespace Entygine.Rendering
         {
             ErrorCode error = GL.GetError();
             if (error != ErrorCode.NoError)
-                DevConsole.Log(error + "\n" + new StackTrace());
+                DevConsole.Log(LogType.Error, error + "\n" + new StackTrace());
         }
 
         private static void LabelObject(ObjectLabelIdentifier id, int obj, string name)

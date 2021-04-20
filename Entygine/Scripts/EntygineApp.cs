@@ -56,7 +56,7 @@ namespace Entygine
 
             InitConsole();
 
-            DevConsole.Log("Creating Entity World...");
+            DevConsole.Log(LogType.Info, "Creating Entity World...");
 
             coreWorker = new WorkerCycleCore();
             EntityWorld world = InitEcs();
@@ -69,7 +69,7 @@ namespace Entygine
             InitLight();
             InitScene(world);
 
-            DevConsole.Log("Entity world created.");
+            DevConsole.Log(LogType.Info, "Entity world created.");
 
             Ogl.ClearColor(0.1f, 0.1f, 0.2f, 1.0f);
             Ogl.Enable(EnableCap.DepthTest);

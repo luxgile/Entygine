@@ -7,7 +7,6 @@ namespace Entygine.DevTools
     public static class DevConsole
     {
         private static List<IConsoleLogger> loggers = new List<IConsoleLogger>();
-        private static StringBuilder sb = new StringBuilder();
 
         public static void AddLogger(IConsoleLogger logger)
         {
@@ -20,19 +19,16 @@ namespace Entygine.DevTools
             loggers.Remove(logger);
         }
 
-        public static void Log(object log)
+        public static void Log(LogType type, object log) => Log(new LogData(type, log));
+        public static void Log(LogData logData)
         {
-            sb.Clear();
-            sb.Append($"[{System.DateTime.Now}] ");
-            sb.Append($"{log} \n");
-
             for (int i = 0; i < loggers.Count; i++)
             {
                 try
                 {
-                    loggers[i].Log(sb);
+                    loggers[i].Log(logData);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
@@ -53,5 +49,35 @@ namespace Entygine.DevTools
                 }
             }
         }
+    }
+
+    public enum LogType
+    {
+        VeryVerbose,
+        Verbose,
+        Info,
+        Warning,
+        Error,
+    }
+
+    public struct LogData
+    {
+        public LogType type;
+        public object log;
+
+        public LogData(LogType type, object log) : this()
+        {
+            this.type = type;
+            this.log = log ?? throw new ArgumentNullException(nameof(log));
+            Date = DateTime.Now;
+        }
+
+        public DateTime Date { get; private set; }
+
+        public override string ToString()
+        {
+            return $"[{Date}] - {type}: {log}";
+        }
+
     }
 }

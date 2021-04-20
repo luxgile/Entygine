@@ -11,7 +11,7 @@ namespace Entygine.Ecs
             switch (iterator)
             {
                 default:
-                    DevConsole.Log("Iterator not found.");
+                    DevConsole.Log(LogType.Error, "Iterator not found.");
                     return;
 
                 case IQueryChunkIterator chunkIterator:

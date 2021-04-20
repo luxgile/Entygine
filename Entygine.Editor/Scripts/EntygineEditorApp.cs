@@ -67,9 +67,9 @@ namespace Entygine_Editor
             Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, texture, 0);
             Ogl.DrawBuffer(DrawBufferMode.ColorAttachment0);
             Ogl.ReadBuffer(ReadBufferMode.ColorAttachment0);
-            DevConsole.Log(GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer));
+            DevConsole.Log(LogType.Verbose, GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer));
 
-            DevConsole.Log("Editor started succesfully.");
+            DevConsole.Log(LogType.Info, "Editor started succesfully.");
         }
 
         private static void RenderEditor(FrameEventArgs e)
@@ -113,7 +113,7 @@ namespace Entygine_Editor
         {
             List<string> logs = new List<string>();
             bool showstyle;
-            public void Log(object log)
+            public void Log(LogData log)
             {
                 logs.Add(log.ToString());
             }
@@ -127,6 +127,21 @@ namespace Entygine_Editor
             {
                 ImGui.DockSpaceOverViewport();
                 ImGui.BeginMainMenuBar();
+                if (ImGui.BeginMenu("File"))
+                {
+                    if (ImGui.BeginMenu("New"))
+                    {
+                        if (ImGui.MenuItem("Project"))
+                        {
+                            Platform.OpenFolderBroswer(out string path);
+                            DevConsole.Log(LogType.Info, "Create project bro on " + path);
+                        }
+
+                        ImGui.EndMenu();
+                    }
+
+                    ImGui.EndMenu();
+                }
                 if (ImGui.BeginMenu("Windows"))
                 {
                     if (ImGui.MenuItem("Style Editor"))
