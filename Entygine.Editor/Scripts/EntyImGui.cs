@@ -12,7 +12,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Mathematics;
 using Entygine.DevTools;
 
-namespace Entygine_Editor.ImGUI
+namespace Entygine_Editor
 {
     public class EntyImGui : IDisposable
     {

@@ -3,7 +3,6 @@ using Entygine.DevTools;
 using Entygine.Ecs;
 using Entygine.Ecs.Components;
 using Entygine.Rendering;
-using Entygine_Editor.ImGUI;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
@@ -28,7 +27,7 @@ namespace Entygine_Editor
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
 
             gameWindowSettings.UpdateFrequency = 60.0d;
-            
+
             nativeWindowSettings.Title = "Entygine Editor";
             nativeWindowSettings.Size = new OpenTK.Mathematics.Vector2i(1600, 900);
 
@@ -129,13 +128,13 @@ namespace Entygine_Editor
                 ImGui.BeginMainMenuBar();
                 if (ImGui.BeginMenu("File"))
                 {
-                    if (ImGui.BeginMenu("New"))
+                    if (ImGui.BeginMenu("Project"))
                     {
-                        if (ImGui.MenuItem("Project"))
-                        {
-                            Platform.OpenFolderBroswer(out string path);
-                            DevConsole.Log(LogType.Info, "Create project bro on " + path);
-                        }
+                        if (ImGui.MenuItem("New") && Platform.OpenFolderBroswer(out string path))
+                            EditorProject.CreateProject(path, "Template Project");
+
+                        if (ImGui.MenuItem("Open") && Platform.OpenFolderBroswer(out path))
+                            EditorProject.OpenProject(path);
 
                         ImGui.EndMenu();
                     }

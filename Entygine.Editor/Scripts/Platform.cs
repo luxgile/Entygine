@@ -1,4 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using System.Windows.Forms;
 
 namespace Entygine_Editor
 {
@@ -6,12 +6,12 @@ namespace Entygine_Editor
     {
         public static bool OpenFolderBroswer(out string path)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            //dialog.InitialDirectory = "C:\\Users";
-            dialog.IsFolderPicker = true;
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            using var dialog = new FolderBrowserDialog();
+            //dialog.show
+            var result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                path = dialog.FileName;
+                path = dialog.SelectedPath;
                 return true;
             }
 
