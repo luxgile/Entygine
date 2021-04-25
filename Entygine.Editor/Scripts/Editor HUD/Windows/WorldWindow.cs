@@ -15,8 +15,6 @@ namespace Entygine_Editor
             for (int i = 0; i < chunks.Count; i++)
             {
                 ref EntityChunk chunk = ref chunks[i];
-                //ImGui.Text(chunk.Archetype.ToString());
-                //ImGui.SameLine();
                 bool open = ImGui.TreeNode($"[{i}] Chunk: {chunk.Count}/{chunk.Capacity}");
                 if (ImGui.IsItemHovered())
                     ImGui.SetTooltip(chunk.Archetype.ToString());

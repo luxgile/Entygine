@@ -34,13 +34,37 @@ namespace Entygine.Ecs.Systems
                 for (int c = 0; c < chunk.Count; c++)
                 {
                     C_Camera cam = cameras.Get<C_Camera>(c);
-                    if(cam.cameraData.ColorTargetTexture == null)
+                    if(cam.cameraData.Framebuffer == null)
                     {
                         Vec2i res = AppScreen.Resolution;
-                        cam.cameraData.SetColorTargetTexture(new Texture2D(res.x, res.y, "Camera Color FBO"));
-                        cam.cameraData.SetDepthTargetTexture(new DepthTexture(res.x, res.y, "Camera Depth"));
+                        var fb = new Framebuffer(res, "Camera FBO");
+                        fb.AddColorBuffer();
+                        fb.AddDepthBuffer();
+                        cam.cameraData.SetFramebuffer(fb);
+
+
+                        var ffb = new Framebuffer(res, "Camera Final FBO");
+                        ffb.AddColorBuffer();
+                        cam.cameraData.SetFinalFramebuffer(ffb);
                         chunk.SetComponent(c, cam);
                     }
+                    else if(cam.cameraData.Framebuffer.Size != AppScreen.Resolution)
+                    {
+                        cam.cameraData.Framebuffer.ChangeSize(AppScreen.Resolution);
+                        cam.cameraData.FinalFramebuffer.ChangeSize(AppScreen.Resolution);
+                    }
+                    //if(cam.cameraData.ColorTargetTexture == null)
+                    //{
+                    //    Vec2i res = AppScreen.Resolution;
+                    //    cam.cameraData.SetColorTargetTexture(new Texture2D(res.x, res.y, "Camera Color FBO"));
+                    //    cam.cameraData.SetDepthTargetTexture(new DepthTexture(res.x, res.y, "Camera Depth"));
+                    //    chunk.SetComponent(c, cam);
+                    //}
+                    //else if (cam.cameraData.ColorTargetTexture.Size != AppScreen.Resolution)
+                    //{
+                    //    cam.cameraData.ColorTargetTexture.SetSize(AppScreen.Resolution);
+                    //    cam.cameraData.DepthTargetTexture.SetSize(AppScreen.Resolution);
+                    //}
 
                     cameraDatas[c] = cam.cameraData;
                     cameraTransforms[c] = transforms.Get<C_Transform>(c).value;

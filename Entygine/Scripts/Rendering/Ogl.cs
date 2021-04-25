@@ -90,6 +90,17 @@ namespace Entygine.Rendering
             return program;
         }
 
+        public static int GenRenderBuffer(string name)
+        {
+            int buffer = GL.GenRenderbuffer();
+
+            if (enableErrorCheck)
+                LogErrors();
+
+            LabelObject(ObjectLabelIdentifier.Renderbuffer, buffer, $"Renderbuffer: {name}");
+            return buffer;
+        }
+
         /// <summary>
         /// Destroys a texture in the GPU
         /// </summary>
@@ -119,6 +130,7 @@ namespace Entygine.Rendering
             return log;
         }
 
+        #region Framebuffers
         public static int GenFramebuffer(string name)
         {
             int framebuffer = GL.GenFramebuffer();
@@ -151,6 +163,15 @@ namespace Entygine.Rendering
             if (enableErrorCheck)
                 LogErrors();
         }
+
+        public static void BlitFramebuffer(int x, int y, int width, int height, int x2, int y2, int width2, int height2, ClearBufferMask mask, BlitFramebufferFilter filter)
+        {
+            GL.BlitFramebuffer(x, y, height, width, x2, y2, width2, height2, mask, filter);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        #endregion
 
         public static void DrawBuffer(DrawBufferMode mode)
         {
@@ -408,6 +429,13 @@ namespace Entygine.Rendering
         public static void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalFormat, int width, int height, int border, PixelFormat format, PixelType type, byte[] data)
         {
             GL.TexImage2D(target, level, internalFormat, width, height, border, format, type, data);
+
+            if (enableErrorCheck)
+                LogErrors();
+        }
+        public static void TexImage2DMultisample(TextureTargetMultisample target, int samples, PixelInternalFormat internalFormat, int width, int height, bool fixedSampleLocations)
+        {
+            GL.TexImage2DMultisample(target, samples, internalFormat, width, height, fixedSampleLocations);
 
             if (enableErrorCheck)
                 LogErrors();

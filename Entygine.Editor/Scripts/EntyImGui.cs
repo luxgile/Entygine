@@ -162,6 +162,7 @@ namespace Entygine_Editor
             io.MouseDown[0] = mouse[MouseButton.Left];
             io.MouseDown[1] = mouse[MouseButton.Right];
             io.MouseDown[2] = mouse[MouseButton.Middle];
+            io.MouseWheel = mouse.ScrollDelta.Y;
 
             io.MousePos = new System.Numerics.Vector2(mouse.X, mouse.Y);
 

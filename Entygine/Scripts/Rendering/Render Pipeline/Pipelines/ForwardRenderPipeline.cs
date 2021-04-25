@@ -27,16 +27,18 @@ namespace Entygine.Rendering.Pipeline
 
                 context.CommandBuffer.QueueCommand(new RenderCommand("Bind color FBO", (ref RenderContext context) =>
                 {
-                    Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer_color);
-                    Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, camera.DepthTargetTexture.Handle, 0);
-                    Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, camera.ColorTargetTexture.handle, 0);
-                    FramebufferErrorCode status = Ogl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-                    if (status != FramebufferErrorCode.FramebufferComplete)
-                        DevTools.DevConsole.Log(DevTools.LogType.Error, status);
+                    camera.Framebuffer.Bind();
+                    //Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer_color);
+                    //Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, camera.DepthTargetTexture.Handle, 0);
+                    //Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, camera.ColorTargetTexture.handle, 0);
+                    //FramebufferErrorCode status = Ogl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+                    //if (status != FramebufferErrorCode.FramebufferComplete)
+                    //    DevTools.DevConsole.Log(DevTools.LogType.Error, status);
 
                     Ogl.Enable(EnableCap.DepthTest);
                     Ogl.Enable(EnableCap.CullFace);
                     Ogl.Enable(EnableCap.ProgramPointSize);
+                    Ogl.Enable(EnableCap.Multisample);
                     Ogl.PointSize(10f);
                 }));
 
@@ -46,6 +48,8 @@ namespace Entygine.Rendering.Pipeline
 
                 context.CommandBuffer.QueueCommand(new RenderCommand("Unbind FBO", (ref RenderContext context) =>
                 {
+                    //TODO: Blit fucking up at some point wtf
+                    Framebuffer.Blit(camera.Framebuffer, camera.FinalFramebuffer);
                     Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 }));
 

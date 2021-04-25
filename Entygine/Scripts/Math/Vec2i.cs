@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Entygine.Mathematics
@@ -27,6 +28,11 @@ namespace Entygine.Mathematics
         public static readonly Vec2i Zero = new Vec2i(0, 0);
         public static readonly Vec2i Up = new Vec2i(0, 1);
         public static readonly Vec2i Right = new Vec2i(1, 0);
+
+        public static explicit operator Vec2i(Vector2 v) => new Vec2i((int)v.X, (int)v.Y);
+
+        public static bool operator ==(Vec2i lhs, Vec2i rhs) => lhs.x == rhs.x && lhs.y == rhs.y;
+        public static bool operator !=(Vec2i lhs, Vec2i rhs) => lhs.x != rhs.x || lhs.y != rhs.y;
 
         public bool Equals([AllowNull] Vec2i other)
         {

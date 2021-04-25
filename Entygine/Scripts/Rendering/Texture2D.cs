@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using Entygine.Mathematics;
+using OpenTK.Graphics.OpenGL4;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -93,6 +94,16 @@ namespace Entygine.Rendering
         {
             Ogl.BindTexture(TextureTarget.Texture2D, handle);
             Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+            Ogl.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        }
+
+        public void SetSize(Vec2i size)
+        {
+            width = size.x;
+            height = size.y;
+
+            Ogl.BindTexture(TextureTarget.Texture2D, handle);
+            Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, packedData);
             Ogl.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
 

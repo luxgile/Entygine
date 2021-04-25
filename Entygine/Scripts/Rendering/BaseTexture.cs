@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using Entygine.Mathematics;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Entygine.Rendering
 {
@@ -30,5 +31,6 @@ namespace Entygine.Rendering
 
         protected abstract void CalculatePackedData();
         public bool IsValid => Handle != 0;
+        public Vec2i Size => new Vec2i(Width, Height);
     }
 }

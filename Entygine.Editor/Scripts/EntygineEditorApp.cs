@@ -68,8 +68,8 @@ namespace Entygine_Editor
 
             EntygineApp.RenderFrame(e);
 
-            Ogl.Viewport(0, 0, AppScreen.Resolution.x, AppScreen.Resolution.y);
-            imgui.WindowResized(AppScreen.Resolution.x, AppScreen.Resolution.y);
+            Ogl.Viewport(0, 0, mainWindow.Size.X, mainWindow.Size.Y);
+            imgui.WindowResized(mainWindow.Size.X, mainWindow.Size.Y);
 
             mainEditorDrawer.Draw();
 

@@ -1,5 +1,6 @@
-﻿using ImGuiNET;
-using static ImGuiNET.ImGui;
+﻿using Entygine.Mathematics;
+using ImGuiNET;
+using System.Numerics;
 
 namespace Entygine_Editor
 {
@@ -9,13 +10,17 @@ namespace Entygine_Editor
 
         public override bool Draw()
         {
-            bool open = Begin(Title, Flags);
+            OnPreDraw();
+            bool open = ImGui.Begin(Title, Flags);
             if (open)
                 OnDraw();
-            End();
+            ImGui.End();
+            OnPostDraw();
             return open;
         }
+        protected virtual void OnPreDraw() { }
         protected virtual void OnDraw() { }
+        protected virtual void OnPostDraw() { }
 
         public abstract string Title { get; }
     }

@@ -15,8 +15,11 @@ namespace Entygine.Rendering
         public float fov;
         public float aspectRatio;
 
-        private Texture2D colorTargetTexture;
-        private DepthTexture depthTargetTexture;
+        private Framebuffer finalFramebuffer;
+        private Framebuffer framebuffer;
+
+        //private Texture2D colorTargetTexture;
+        //private DepthTexture depthTargetTexture;
 
         //Orthographic
         public float orthoSize;
@@ -56,8 +59,10 @@ namespace Entygine.Rendering
             };
         }
 
-        public void SetColorTargetTexture(Texture2D tex) => colorTargetTexture = tex; 
-        public void SetDepthTargetTexture(DepthTexture tex) => depthTargetTexture = tex; 
+        public void SetFramebuffer(Framebuffer framebuffer) => this.framebuffer = framebuffer;
+        public void SetFinalFramebuffer(Framebuffer framebuffer) => this.finalFramebuffer = framebuffer;
+        //public void SetColorTargetTexture(Texture2D tex) => colorTargetTexture = tex; 
+        //public void SetDepthTargetTexture(DepthTexture tex) => depthTargetTexture = tex; 
 
         public void SetOrthoResolution(float width, float height)
         {
@@ -70,8 +75,10 @@ namespace Entygine.Rendering
 
         public float RadiansFov => MathHelper.DegreesToRadians(fov);
 
-        public Texture2D ColorTargetTexture => colorTargetTexture;
-        public DepthTexture DepthTargetTexture => depthTargetTexture;
+        public Framebuffer Framebuffer => framebuffer;
+        public Framebuffer FinalFramebuffer => finalFramebuffer;
+        //public Texture2D ColorTargetTexture => colorTargetTexture;
+        //public DepthTexture DepthTargetTexture => depthTargetTexture;
 
         public Matrix4 CalculateProjection(bool orthoCentered = false)
         {
