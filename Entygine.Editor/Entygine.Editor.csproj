@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.78.0" />
     <PackageReference Include="OpenTK" Version="4.6.3" />
     <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
@@ -18,9 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="ImGui.NET">
+      <HintPath>Dependencies\ImGui.NET.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework">
       <HintPath>C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\PresentationFramework.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="copy &quot;$(ProjectDir)Dependencies\cimgui.dll&quot; &quot;$(TargetDir)&quot;" />
+  </Target>
 
 </Project>

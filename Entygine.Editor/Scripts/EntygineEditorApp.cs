@@ -15,11 +15,9 @@ namespace Entygine_Editor
 {
     internal static class EntygineEditorApp
     {
-        private static ConsoleWindow consoleWindow = new ConsoleWindow();
         private static MainEditorWindow mainWindow;
+        private static EditorDrawer mainEditorDrawer = new EditorDrawer();
         private static EntyImGui imgui;
-        private static int frameBuffer;
-        private static int texture;
 
         internal static void StartEditor()
         {
@@ -49,24 +47,14 @@ namespace Entygine_Editor
             var style = ImGui.GetStyle();
             style.WindowRounding = 0;
 
-            DevConsole.AddLogger(consoleWindow);
+            mainEditorDrawer.AttachDrawer(new MainMenuBarDrawer());
+            mainEditorDrawer.AttachDrawer(new AssetsWindow());
+            mainEditorDrawer.AttachDrawer(new ClientWindow());
+            mainEditorDrawer.AttachDrawer(new ConsoleWindow());
+            mainEditorDrawer.AttachDrawer(new WorldWindow());
+            mainEditorDrawer.AttachDrawer(new DetailsWindow());
 
             EntygineApp.LoadEngine();
-
-            frameBuffer = Ogl.GenFramebuffer("Editor");
-
-            texture = Ogl.GenTexture("Editor Texture");
-            Ogl.BindTexture(TextureTarget.Texture2D, texture);
-
-            Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, 512, 512, 0, PixelFormat.Rgb, PixelType.UnsignedByte, null);
-            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);
-            Ogl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
-
-            Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, frameBuffer);
-            Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, texture, 0);
-            Ogl.DrawBuffer(DrawBufferMode.ColorAttachment0);
-            Ogl.ReadBuffer(ReadBufferMode.ColorAttachment0);
-            DevConsole.Log(LogType.Verbose, GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer));
 
             DevConsole.Log(LogType.Info, "Editor started succesfully.");
         }
@@ -78,16 +66,12 @@ namespace Entygine_Editor
             Ogl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             Ogl.ClearColor(0.1f, 0.1f, 0.1f, 255);
 
-            Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, frameBuffer);
             EntygineApp.RenderFrame(e);
-            Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
             Ogl.Viewport(0, 0, AppScreen.Resolution.x, AppScreen.Resolution.y);
             imgui.WindowResized(AppScreen.Resolution.x, AppScreen.Resolution.y);
 
-            consoleWindow.Draw();
-
-            EntityIterator.PerformIteration(EntityWorld.Active, new RenderCamera(), new EntityQuery().Any(TypeCache.ReadType<C_Camera>()));
+            mainEditorDrawer.Draw();
 
             imgui.Render();
         }
@@ -95,80 +79,6 @@ namespace Entygine_Editor
         private static void UpdateEditor(FrameEventArgs e)
         {
             EntygineApp.UpdateFrame(e);
-        }
-
-        private struct RenderCamera : IQueryEntityIterator
-        {
-            public void Iteration(ref EntityChunk chunk, int index)
-            {
-                chunk.TryGetComponent(index, out C_Camera camera);
-                ImGui.Begin("Render", ImGuiWindowFlags.NoCollapse);
-                ImGui.Image((IntPtr)camera.cameraData.ColorTargetTexture.handle, new Vector2(800, 600), new Vector2(0, 0), new Vector2(1, -1));
-                ImGui.End();
-            }
-        }
-
-        private class ConsoleWindow : IConsoleLogger
-        {
-            List<string> logs = new List<string>();
-            bool showstyle;
-            public void Log(LogData log)
-            {
-                logs.Add(log.ToString());
-            }
-
-            public void Clear()
-            {
-                logs.Clear();
-            }
-
-            internal void Draw()
-            {
-                ImGui.DockSpaceOverViewport();
-                ImGui.BeginMainMenuBar();
-                if (ImGui.BeginMenu("File"))
-                {
-                    if (ImGui.BeginMenu("Project"))
-                    {
-                        if (ImGui.MenuItem("New") && Platform.OpenFolderBroswer(out string path))
-                            EditorProject.CreateProject(path, "Template Project");
-
-                        if (ImGui.MenuItem("Open") && Platform.OpenFolderBroswer(out path))
-                            EditorProject.OpenProject(path);
-
-                        ImGui.EndMenu();
-                    }
-
-                    ImGui.EndMenu();
-                }
-                if (ImGui.BeginMenu("Windows"))
-                {
-                    if (ImGui.MenuItem("Style Editor"))
-                        showstyle = !showstyle;
-
-                    ImGui.EndMenu();
-                }
-                ImGui.EndMainMenuBar();
-
-                if (showstyle)
-                    ImGui.ShowStyleEditor();
-
-                ImGui.Begin("Assets");
-                ImGui.End();
-
-                ImGui.Begin("World");
-                ImGui.End();
-
-                ImGui.Begin("Details");
-                ImGui.End();
-
-                ImGui.Begin("Console", ImGuiWindowFlags.NoCollapse);
-                for (int i = 0; i < logs.Count; i++)
-                {
-                    ImGui.Text(logs[i]);
-                }
-                ImGui.End();
-            }
         }
     }
 }
