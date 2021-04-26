@@ -166,7 +166,7 @@ namespace Entygine.Rendering
 
         public static void BlitFramebuffer(int x, int y, int width, int height, int x2, int y2, int width2, int height2, ClearBufferMask mask, BlitFramebufferFilter filter)
         {
-            GL.BlitFramebuffer(x, y, height, width, x2, y2, width2, height2, mask, filter);
+            GL.BlitFramebuffer(x, y, width, height, x2, y2, width2, height2, mask, filter);
 
             if (enableErrorCheck)
                 LogErrors();

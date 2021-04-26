@@ -9,7 +9,9 @@ namespace Entygine.Rendering
         private string name;
         private int handle;
         public Vec2i Size { get; private set; }
+        private bool multisampledColor;
         private int colorBuffer = -1;
+        private bool multisampledDepth;
         private int depthBuffer = -1;
 
         public Framebuffer(Vec2i size, string name)
@@ -19,7 +21,7 @@ namespace Entygine.Rendering
             Size = size;
         }
 
-        public void AddColorBuffer()
+        public void AddColorBuffer(bool multisampling)
         {
             if (colorBuffer != -1)
             {
@@ -27,12 +29,18 @@ namespace Entygine.Rendering
                 return;
             }
 
+            multisampledColor = multisampling;
+            TextureTarget textureTarget = multisampling ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D;
             colorBuffer = Ogl.GenTexture($"{name} - Color");
-            Ogl.BindTexture(TextureTarget.Texture2DMultisample, colorBuffer);
-            Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.Rgb, Size.x, Size.y, true);
+            
+            Ogl.BindTexture(textureTarget, colorBuffer);
+            if (multisampling)
+                Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.Rgb, Size.x, Size.y, true);
+            else
+                Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Size.x, Size.y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, null);
 
             Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, handle);
-            Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2DMultisample, colorBuffer, 0);
+            Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, textureTarget, colorBuffer, 0);
 
             var error = Ogl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (error != FramebufferErrorCode.FramebufferComplete)
@@ -41,7 +49,7 @@ namespace Entygine.Rendering
             Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
-        public void AddDepthBuffer()
+        public void AddDepthBuffer(bool multisampling)
         {
             if (depthBuffer != -1)
             {
@@ -49,12 +57,19 @@ namespace Entygine.Rendering
                 return;
             }
 
+            multisampledDepth = multisampling;
+            TextureTarget textureTarget = multisampling ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D;
             depthBuffer = Ogl.GenTexture($"{name} - Depth");
-            Ogl.BindTexture(TextureTarget.Texture2DMultisample, depthBuffer);
-            Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.DepthComponent, Size.x, Size.y, true);
+
+            Ogl.BindTexture(textureTarget, depthBuffer);
+
+            if (multisampling)
+                Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.DepthComponent, Size.x, Size.y, true);
+            else
+                Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, Size.x, Size.y, 0, PixelFormat.DepthComponent, PixelType.Float, null);
 
             Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, handle);
-            Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2DMultisample, depthBuffer, 0);
+            Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, textureTarget, depthBuffer, 0);
 
             var error = Ogl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (error != FramebufferErrorCode.FramebufferComplete)
@@ -67,16 +82,24 @@ namespace Entygine.Rendering
         {
             Size = size;
 
-            if(depthBuffer != -1)
+            if (colorBuffer != -1)
             {
-                Ogl.BindTexture(TextureTarget.Texture2DMultisample, depthBuffer);
-                Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.DepthComponent, Size.x, Size.y, true);
+                TextureTarget textureTarget = multisampledColor ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D;
+                Ogl.BindTexture(textureTarget, colorBuffer);
+                if (multisampledColor)
+                    Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.Rgb, Size.x, Size.y, true);
+                else
+                    Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Size.x, Size.y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, null);
             }
 
-            if(colorBuffer != -1)
+            if (depthBuffer != -1)
             {
-                Ogl.BindTexture(TextureTarget.Texture2DMultisample, colorBuffer);
-                Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.Rgb, Size.x, Size.y, true);
+                TextureTarget textureTarget = multisampledDepth ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D;
+                Ogl.BindTexture(textureTarget, depthBuffer);
+                if (multisampledDepth)
+                    Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.DepthComponent, Size.x, Size.y, true);
+                else
+                    Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, Size.x, Size.y, 0, PixelFormat.DepthComponent, PixelType.Float, null);
             }
         }
 

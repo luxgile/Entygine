@@ -78,7 +78,7 @@ namespace Entygine_Editor
                 chunk.TryGetComponent(index, out C_Camera camera);
                 Vector2 floatingSize = (ImGui.GetContentRegionAvail() - imageSize) / 2f;
                 ImGui.SetCursorPos(ImGui.GetCursorPos() + floatingSize);
-                ImGui.Image((IntPtr)camera.cameraData.Framebuffer.ColorBuffer, imageSize, new Vector2(0, 0), new Vector2(1, -1));
+                ImGui.Image((IntPtr)camera.cameraData.FinalFramebuffer.ColorBuffer, imageSize, new Vector2(0, 0), new Vector2(1, -1));
             }
         }
     }

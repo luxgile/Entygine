@@ -38,13 +38,13 @@ namespace Entygine.Ecs.Systems
                     {
                         Vec2i res = AppScreen.Resolution;
                         var fb = new Framebuffer(res, "Camera FBO");
-                        fb.AddColorBuffer();
-                        fb.AddDepthBuffer();
+                        fb.AddColorBuffer(true);
+                        fb.AddDepthBuffer(true);
                         cam.cameraData.SetFramebuffer(fb);
 
 
                         var ffb = new Framebuffer(res, "Camera Final FBO");
-                        ffb.AddColorBuffer();
+                        ffb.AddColorBuffer(false);
                         cam.cameraData.SetFinalFramebuffer(ffb);
                         chunk.SetComponent(c, cam);
                     }
