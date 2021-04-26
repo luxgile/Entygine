@@ -32,12 +32,20 @@ namespace Entygine.Rendering
             multisampledColor = multisampling;
             TextureTarget textureTarget = multisampling ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D;
             colorBuffer = Ogl.GenTexture($"{name} - Color");
-            
+
             Ogl.BindTexture(textureTarget, colorBuffer);
             if (multisampling)
                 Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.Rgb, Size.x, Size.y, true);
             else
+            {
                 Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Size.x, Size.y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, null);
+
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureMinFilter, TextureMinFilter.Linear);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureWrapS, TextureWrapMode.Repeat);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureWrapT, TextureWrapMode.Repeat);
+            }
+
 
             Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, handle);
             Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, textureTarget, colorBuffer, 0);
@@ -66,7 +74,15 @@ namespace Entygine.Rendering
             if (multisampling)
                 Ogl.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, 4, PixelInternalFormat.DepthComponent, Size.x, Size.y, true);
             else
+            {
                 Ogl.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, Size.x, Size.y, 0, PixelFormat.DepthComponent, PixelType.Float, null);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureMinFilter, TextureMinFilter.Nearest);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureMagFilter, TextureMagFilter.Nearest);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureWrapS, TextureWrapMode.ClampToBorder);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureWrapT, TextureWrapMode.ClampToBorder);
+                Ogl.TexParameter(textureTarget, TextureParameterName.TextureBorderColor, new float[] { 1, 1, 1, 1 });
+            }
+
 
             Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, handle);
             Ogl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, textureTarget, depthBuffer, 0);
@@ -118,11 +134,11 @@ namespace Entygine.Rendering
         public int ColorBuffer => colorBuffer;
         public int DepthBuffer => depthBuffer;
 
-        public static void Blit(Framebuffer read, Framebuffer write)
+        public static void Blit(Framebuffer read, Framebuffer write, ClearBufferMask mask)
         {
             Ogl.BindFramebuffer(FramebufferTarget.ReadFramebuffer, read.handle);
             Ogl.BindFramebuffer(FramebufferTarget.DrawFramebuffer, write.handle);
-            Ogl.BlitFramebuffer(0, 0, read.Size.x, read.Size.y, 0, 0, write.Size.x, write.Size.y, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
+            Ogl.BlitFramebuffer(0, 0, read.Size.x, read.Size.y, 0, 0, write.Size.x, write.Size.y, mask, BlitFramebufferFilter.Nearest);
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Entygine.Rendering.Pipeline
                     RenderMesh pair = renderGroup.MeshRender;
                     List<Matrix4> positions = renderGroup.Transforms;
 
-                    pair.mat.SetDepthMap(mainLight.Depthmap);
+                    pair.mat.SetDepthMap(new DepthTexture(mainLight.Framebuffer.DepthBuffer));
                     GraphicsAPI.UseMeshMaterial(pair.mesh, pair.mat);
 
 
@@ -101,8 +101,6 @@ namespace Entygine.Rendering.Pipeline
                 }
                 Ogl.Enable(EnableCap.Blend);
 
-                Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-
                 void CalculateShadowMap(Light light)
                 {
                     light.BindShadowMap();
@@ -131,6 +129,8 @@ namespace Entygine.Rendering.Pipeline
 
                         GraphicsAPI.FreeMeshMaterial(pair.mesh, lightData.depthMat);
                     }
+
+                    light.UnbindShadowMap();
                 }
             });
         }

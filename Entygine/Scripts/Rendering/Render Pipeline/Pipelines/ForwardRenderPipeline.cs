@@ -49,7 +49,7 @@ namespace Entygine.Rendering.Pipeline
                 context.CommandBuffer.QueueCommand(new RenderCommand("Unbind FBO", (ref RenderContext context) =>
                 {
                     //TODO: Blit fucking up at some point wtf
-                    Framebuffer.Blit(camera.Framebuffer, camera.FinalFramebuffer);
+                    Framebuffer.Blit(camera.Framebuffer, camera.FinalFramebuffer, ClearBufferMask.ColorBufferBit);
                     Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 }));
 

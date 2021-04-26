@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Entygine.Editor</name>
+    </assembly>
+    <members>
+        <member name="M:Entygine_Editor.EntyImGui.Dispose">
+            <summary>
+            Frees all graphics resources used by the renderer.
+            </summary>
+        </member>
+    </members>
+</doc>

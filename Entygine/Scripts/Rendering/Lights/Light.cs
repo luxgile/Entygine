@@ -4,15 +4,10 @@ namespace Entygine.Rendering
 {
     public abstract class Light
     {
-        public abstract DepthTexture Depthmap { get; }
-        protected int DepthMapHandleFBO { get; }
-
-        public Light()
-        {
-            DepthMapHandleFBO = Ogl.GenFramebuffer("Light Depth Map");
-        }
+        public abstract Framebuffer Framebuffer { get; }
 
         public abstract void BindShadowMap();
+        public abstract void UnbindShadowMap();
         public abstract Matrix4 GetProjection();
     }
 }

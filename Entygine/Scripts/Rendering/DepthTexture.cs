@@ -11,6 +11,11 @@ namespace Entygine.Rendering
         private int width;
         private int height;
 
+        public DepthTexture(int handle)
+        {
+            this.handle = handle;
+        }
+
         public DepthTexture(int width, int height, string name)
         {
             handle = Ogl.GenTexture(name);
