@@ -2,6 +2,7 @@
 using Entygine.DevTools;
 using Entygine.Ecs;
 using Entygine.Ecs.Components;
+using Entygine.Input;
 using Entygine.Rendering;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
@@ -78,6 +79,7 @@ namespace Entygine_Editor
 
         private static void UpdateEditor(FrameEventArgs e)
         {
+            AppInput.SetFrameInput(new InputState(mainWindow.KeyboardState, mainWindow.MouseState));
             EntygineApp.UpdateFrame(e);
         }
     }

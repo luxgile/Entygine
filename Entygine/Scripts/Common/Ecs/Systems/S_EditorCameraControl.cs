@@ -3,6 +3,7 @@ using OpenTK.Mathematics;
 using Entygine.DevTools;
 using Entygine.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Entygine.Input;
 
 namespace Entygine.Ecs.Systems
 {
@@ -29,37 +30,40 @@ namespace Entygine.Ecs.Systems
             Vector2 rotDelta = Vector2.Zero;
 
             //TODO: Create input system
-            //KeyboardState input = MainDevWindowGL.Window.KeyboardState;
-            //if (input.IsKeyDown(Keys.LeftShift))
-            //    speedDelta += 0.01f;
+            KeyboardState keyboard = AppInput.CurrentInput.keyboard;
+            if (keyboard.IsKeyDown(Keys.LeftShift))
+                speedDelta += 0.01f;
 
-            //if (input.IsKeyDown(Keys.LeftControl))
-            //    speedDelta -= 0.01f;
+            if (keyboard.IsKeyDown(Keys.LeftControl))
+                speedDelta -= 0.01f;
 
-            //Vector2 cursorPos = MainDevWindowGL.Window.MouseState.Position;
+            MouseState mouse = AppInput.CurrentInput.mouse;
+            Vector2 cursorPos = mouse.Position;
 
-            //if (input.IsKeyDown(Keys.LeftAlt) && MainDevWindowGL.Window.IsMouseButtonDown(MouseButton.Button1))
-            //    rotDelta = cursorPos - lastCursorPos;
+            scrollDelta = mouse.ScrollDelta.Y;
 
-            //lastCursorPos = cursorPos;
+            if (keyboard.IsKeyDown(Keys.LeftAlt) && mouse.IsButtonDown(MouseButton.Button1))
+                rotDelta = cursorPos - lastCursorPos;
 
-            //if (input.IsKeyDown(Keys.W))
-            //    posDelta -= Vector3.UnitZ;
+            lastCursorPos = cursorPos;
 
-            //if (input.IsKeyDown(Keys.S))
-            //    posDelta += Vector3.UnitZ;
+            if (keyboard.IsKeyDown(Keys.W))
+                posDelta -= Vector3.UnitZ;
 
-            //if (input.IsKeyDown(Keys.A))
-            //    posDelta -= Vector3.UnitX;
+            if (keyboard.IsKeyDown(Keys.S))
+                posDelta += Vector3.UnitZ;
 
-            //if (input.IsKeyDown(Keys.D))
-            //    posDelta += Vector3.UnitX;
+            if (keyboard.IsKeyDown(Keys.A))
+                posDelta -= Vector3.UnitX;
 
-            //if (input.IsKeyDown(Keys.E))
-            //    posDelta += Vector3.UnitY;
+            if (keyboard.IsKeyDown(Keys.D))
+                posDelta += Vector3.UnitX;
 
-            //if (input.IsKeyDown(Keys.Q))
-            //    posDelta -= Vector3.UnitY;
+            if (keyboard.IsKeyDown(Keys.E))
+                posDelta += Vector3.UnitY;
+
+            if (keyboard.IsKeyDown(Keys.Q))
+                posDelta -= Vector3.UnitY;
 
             Iterator iterator = new Iterator()
             {

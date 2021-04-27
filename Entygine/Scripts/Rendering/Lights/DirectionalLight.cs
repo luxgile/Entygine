@@ -6,15 +6,17 @@ namespace Entygine.Rendering
     public class DirectionalLight : Light
     {
         private CameraData camera;
-        private Framebuffer multisampledFBO;
+        //private Framebuffer multisampledFBO;
         private Framebuffer finalFBO;
         private const int TEXTURE_RES = 1024;
 
         public DirectionalLight() : base()
         {
             camera = CameraData.CreateOrthographicCamera(1, 20f, 0.1f, 100);
-            multisampledFBO = new Framebuffer(new Mathematics.Vec2i(TEXTURE_RES, TEXTURE_RES), "Directional MSAA FBO");
-            multisampledFBO.AddDepthBuffer(true);
+
+            //multisampledFBO = new Framebuffer(new Mathematics.Vec2i(TEXTURE_RES, TEXTURE_RES), "Directional MSAA FBO");
+            //multisampledFBO.AddDepthBuffer(true);
+
             finalFBO = new Framebuffer(new Mathematics.Vec2i(TEXTURE_RES, TEXTURE_RES), "Directional Light FBO");
             finalFBO.AddDepthBuffer(false);
         }
@@ -22,12 +24,12 @@ namespace Entygine.Rendering
         public override void BindShadowMap()
         {
             Ogl.Viewport(0, 0, TEXTURE_RES, TEXTURE_RES);
-            Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, multisampledFBO.Handle);
+            Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, finalFBO.Handle);
         }
 
         public override void UnbindShadowMap()
         {
-            Framebuffer.Blit(multisampledFBO, finalFBO, ClearBufferMask.DepthBufferBit);
+            //Framebuffer.Blit(multisampledFBO, finalFBO, ClearBufferMask.DepthBufferBit);
             Ogl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
