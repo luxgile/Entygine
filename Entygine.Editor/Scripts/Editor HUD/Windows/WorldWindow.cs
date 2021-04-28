@@ -29,12 +29,21 @@ namespace Entygine_Editor
 
                         for (int e = 0; e < chunk.Count; e++)
                         {
+                            Entity entity = chunk.GetEntity(e);
+
                             ImGui.TableNextRow();
                             ImGui.TableNextColumn();
-                            ImGui.Text(chunk.GetEntity(e).id.ToString());
+
+                            bool isSelected = ObjectSelections.CurrentObj?.Equals(entity) ?? false;
+                            if(ImGui.Selectable($"##{e}", isSelected, ImGuiSelectableFlags.SpanAllColumns))
+                            {
+                                ObjectSelections.SelectObject(entity);
+                            }
+                            ImGui.SameLine();
+                            ImGui.Text(entity.id.ToString());
 
                             ImGui.TableNextColumn();
-                            ImGui.Text(chunk.GetEntity(e).version.ToString());
+                            ImGui.Text(entity.version.ToString());
                         }
                         ImGui.Separator();
                         ImGui.EndTable();

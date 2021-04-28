@@ -8,7 +8,7 @@ namespace Entygine_Editor
     {
         public ImGuiWindowFlags Flags { get; set; }
 
-        public override bool Draw()
+        public sealed override bool Draw()
         {
             OnPreDraw();
             bool open = ImGui.Begin(Title, Flags);
