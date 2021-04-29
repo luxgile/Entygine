@@ -45,7 +45,6 @@ namespace Entygine_Editor
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.ConfigWindowsMoveFromTitleBarOnly = true;
             io.ConfigWindowsResizeFromEdges = true;
-            io.Fonts.AddFontDefault();
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
             CreateDeviceResources();

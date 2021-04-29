@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Entygine.DevTools
@@ -19,8 +20,8 @@ namespace Entygine.DevTools
             loggers.Remove(logger);
         }
 
-        public static void Log(LogType type, object log) => Log(new LogData(type, log));
-        public static void Log(LogData logData)
+        public static void Log(LogType type, object log) => Log(new LogData(type, log, new StackTrace(true)));
+        private static void Log(LogData logData)
         {
             for (int i = 0; i < loggers.Count; i++)
             {
@@ -64,9 +65,11 @@ namespace Entygine.DevTools
     {
         public LogType type;
         public object log;
+        public StackTrace trace;
 
-        public LogData(LogType type, object log) : this()
+        public LogData(LogType type, object log, StackTrace trace) : this()
         {
+            this.trace = trace;
             this.type = type;
             this.log = log ?? throw new ArgumentNullException(nameof(log));
             Date = DateTime.Now;
