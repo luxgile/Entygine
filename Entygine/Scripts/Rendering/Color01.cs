@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using System.Numerics;
 
 namespace Entygine.Rendering
 {
@@ -22,10 +23,13 @@ namespace Entygine.Rendering
             return new Color4(color.r, color.g, color.b, color.a);
         }
 
+        public static explicit operator System.Numerics.Vector4(Color01 v) => new System.Numerics.Vector4(v.r, v.g, v.b, v.a);
+
         public static readonly Color01 white = new Color01(1, 1, 1, 1);
         public static readonly Color01 black = new Color01(0, 0, 0, 1);
         public static readonly Color01 gray = new Color01(0.5f, 0.5f, 0.5f, 1);
         public static readonly Color01 red = new Color01(1, 0, 0, 1);
+        public static readonly Color01 yellow = new Color01(1, 1, 0, 1);
         public static readonly Color01 green = new Color01(0, 1, 0, 1);
         public static readonly Color01 blue = new Color01(0, 0, 1, 1);
     }
