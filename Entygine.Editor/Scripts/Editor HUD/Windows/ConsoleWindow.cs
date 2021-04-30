@@ -19,8 +19,9 @@ namespace Entygine_Editor
         public ConsoleWindow()
         {
             DevConsole.AddLogger(this);
-            Flags |= ImGuiWindowFlags.HorizontalScrollbar;
+            Flags |= ImGuiWindowFlags.HorizontalScrollbar | ImGuiWindowFlags.MenuBar;
         }
+
         //protected override void OnPreDraw()
         //{
         //    ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
@@ -49,21 +50,33 @@ namespace Entygine_Editor
                 case LogType.VeryVerbose:
                 case LogType.Verbose:
                 case LogType.Info:
-                    color = new Color01(0.3f, 0.3f, 0.3f, 0.7f);
-                    return true;
+                color = new Color01(0.3f, 0.3f, 0.3f, 0.7f);
+                return true;
 
                 case LogType.Warning:
-                    color = new Color01(0.3f, 0.3f, 0f, 0.7f);
-                    return true;
+                color = new Color01(0.3f, 0.3f, 0f, 0.7f);
+                return true;
 
                 case LogType.Error:
-                    color = new Color01(0.3f, 0f, 0f, 0.7f);
-                    return true;
+                color = new Color01(0.3f, 0f, 0f, 0.7f);
+                return true;
             }
         }
 
         protected override void OnDraw()
         {
+            if (ImGui.BeginMenuBar())
+            {
+                if (ImGui.BeginMenu("View"))
+                {
+                    if (ImGui.MenuItem("Clear"))
+                        Clear();
+
+                    ImGui.EndMenu();
+                }
+                ImGui.EndMenuBar();
+            }
+
             if (indexSelected.Count > 0)
                 currentTab = DrawTabs();
 
@@ -118,7 +131,7 @@ namespace Entygine_Editor
                 ImGui.TableNextColumn();
                 if (ImGui.Selectable("##" + i, false, ImGuiSelectableFlags.SpanAllColumns | ImGuiSelectableFlags.AllowDoubleClick) && ImGui.IsMouseDoubleClicked(0))
                 {
-                    if(inIndex != -1)
+                    if (inIndex != -1)
                     {
                         string path = line[inIndex..^0];
                         path = path.Remove(0, 3);
@@ -154,7 +167,7 @@ namespace Entygine_Editor
             ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.None, 70);
             ImGui.TableSetupColumn("Log", ImGuiTableColumnFlags.WidthStretch);
             ImGui.TableHeadersRow();
-            for (int i = 0; i < logs.Count; i++)
+            for (int i = logs.Count - 1; i >= 0; i--)
             {
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();

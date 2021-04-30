@@ -16,7 +16,8 @@ namespace Entygine_Editor.IDE
                     continue;
 
                 dte.MainWindow.Visible = true;
-                dte.ExecuteCommand("File.OpenFile", path);
+                path = path.Replace("\\", "/").Trim();
+                dte.ItemOperations.OpenFile(path);
                 dte.ExecuteCommand("Edit.GoTo", line.ToString());
                 break;
             }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -10,7 +10,7 @@
     <WarningLevel>3</WarningLevel>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>C:\Users\GuillermoAbajo\Documents\Entygine\Entygine.Editor\Entygine.Editor.xml</DocumentationFile>
+    <DocumentationFile>D:\Development\VS 2019\Entygine\Entygine.Editor\Entygine.Editor.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EnvDTE" Version="16.9.31023.347" />
+    <PackageReference Include="EnvDTE" Version="17.0.0-preview-1-31216-036" />
     <PackageReference Include="OpenTK" Version="4.6.3" />
     <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
