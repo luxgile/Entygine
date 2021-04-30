@@ -41,11 +41,11 @@ namespace Entygine_Editor
 
             IntPtr context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
+
             var io = ImGui.GetIO();
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.ConfigWindowsMoveFromTitleBarOnly = true;
             io.ConfigWindowsResizeFromEdges = true;
-            io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
             CreateDeviceResources();
             SetKeyMappings();

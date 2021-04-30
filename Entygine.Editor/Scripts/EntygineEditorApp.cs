@@ -1,16 +1,11 @@
 ﻿using Entygine;
 using Entygine.DevTools;
-using Entygine.Ecs;
-using Entygine.Ecs.Components;
 using Entygine.Input;
 using Entygine.Rendering;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
 
 namespace Entygine_Editor
 {
@@ -47,6 +42,7 @@ namespace Entygine_Editor
             imgui = new EntyImGui(mainWindow.Size.X, mainWindow.Size.Y);
             var style = ImGui.GetStyle();
             style.WindowRounding = 0;
+            style.AntiAliasedLines = true;
 
             mainEditorDrawer.AttachDrawer(new MainMenuBarDrawer());
             mainEditorDrawer.AttachDrawer(new AssetsWindow());

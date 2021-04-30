@@ -1,10 +1,7 @@
 ﻿using Entygine.DevTools;
-using Entygine.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using SixLabors.ImageSharp;
 using System;
-using System.Diagnostics;
 
 namespace Entygine.Rendering
 {
@@ -16,7 +13,7 @@ namespace Entygine.Rendering
         {
             ErrorCode error = GL.GetError();
             if (error != ErrorCode.NoError)
-                DevConsole.Log(LogType.Error, error + "\n" + new StackTrace());
+                DevConsole.Log(LogType.Error, error);
         }
 
         private static void LabelObject(ObjectLabelIdentifier id, int obj, string name)

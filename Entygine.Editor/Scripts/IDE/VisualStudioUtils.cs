@@ -1,5 +1,4 @@
 ﻿using EnvDTE;
-using EnvDTE80;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

@@ -7,7 +7,9 @@
         public void SetContext(object obj)
         {
             Context = obj;
+            OnContextSet();
         }
+        protected virtual void OnContextSet() { }
 
         public sealed override bool Draw()
         {

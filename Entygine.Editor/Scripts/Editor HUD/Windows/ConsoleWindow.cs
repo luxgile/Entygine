@@ -49,16 +49,16 @@ namespace Entygine_Editor
                 case LogType.VeryVerbose:
                 case LogType.Verbose:
                 case LogType.Info:
-                color = new Color01(0.3f, 0.3f, 0.3f, 0.7f);
-                return true;
+                    color = new Color01(0.3f, 0.3f, 0.3f, 0.7f);
+                    return true;
 
                 case LogType.Warning:
-                color = new Color01(0.3f, 0.3f, 0f, 0.7f);
-                return true;
+                    color = new Color01(0.3f, 0.3f, 0f, 0.7f);
+                    return true;
 
                 case LogType.Error:
-                color = new Color01(0.3f, 0f, 0f, 0.7f);
-                return true;
+                    color = new Color01(0.3f, 0f, 0f, 0.7f);
+                    return true;
             }
         }
 
@@ -118,10 +118,14 @@ namespace Entygine_Editor
                 ImGui.TableNextColumn();
                 if (ImGui.Selectable("##" + i, false, ImGuiSelectableFlags.SpanAllColumns | ImGuiSelectableFlags.AllowDoubleClick) && ImGui.IsMouseDoubleClicked(0))
                 {
-                    string path = line[inIndex..^1];
-                    path = path.Remove(0, 3);
-                    string a = path[0..path.IndexOf(".cs:")] + ".cs";
-                    VisualStudioUtils.OpenVS(a, 0);
+                    if(inIndex != -1)
+                    {
+                        string path = line[inIndex..^0];
+                        path = path.Remove(0, 3);
+                        string a = path[0..path.IndexOf(".cs:")] + ".cs";
+                        string lineCount = path[(path.IndexOf("line ") + 5)..^0];
+                        VisualStudioUtils.OpenVS(a, int.Parse(lineCount));
+                    }
                 }
 
                 ImGui.SameLine();
@@ -131,7 +135,10 @@ namespace Entygine_Editor
                 if (line.Contains('\\'))
                     ImGui.Text(line.Split('\\')[^1]);
                 else
-                    ImGui.Text("---");
+                {
+                    ImGui.TableSetBgColor(ImGuiTableBgTarget.CellBg, ImGui.ColorConvertFloat4ToU32((Vector4)new Color01(0.3f, 0.3f, 0f, 0.7f)));
+                    ImGui.Text("External code");
+                }
 
                 ImGui.TableNextColumn();
                 ImGui.TextWrapped(method);
