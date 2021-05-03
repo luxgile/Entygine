@@ -1,4 +1,6 @@
-﻿namespace Entygine.Ecs
+﻿using System;
+
+namespace Entygine.Ecs
 {
     public class BaseSystem
     {
@@ -35,13 +37,15 @@
         protected virtual void OnPerformFrame(float dt) { }
         protected virtual void OnSystemDestroyed() { }
 
-        protected void IterateQuery(IQueryIterator iterator, EntityQuery query, bool onlyDirty = true)
+        protected void IterateQuery(IQueryIterator iterator, EntityQuerySettings query, bool onlyDirty = true)
         {
             if (onlyDirty)
                 EntityIterator.PerformIteration(World, iterator, query, LastVersionWorked);
             else
                 EntityIterator.PerformIteration(World, iterator, query);
         }
+
+        //protected void IterateQuery(Action<object> iterator, )
 
         public EntityWorld World => world;
         public uint LastVersionWorked => lastVersionWorked;

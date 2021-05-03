@@ -5,7 +5,7 @@ namespace Entygine.Ecs.Systems
 {
     public class S_QueueRenderTransforms : BaseSystem
     {
-        private EntityQuery query = new EntityQuery();
+        private EntityQuerySettings query = new EntityQuerySettings();
 
         protected override void OnPerformFrame(float dt)
         {

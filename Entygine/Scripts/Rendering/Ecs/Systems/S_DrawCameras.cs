@@ -12,7 +12,7 @@ namespace Entygine.Ecs.Systems
     [SystemGroup(typeof(MainPhases.DefaultPhaseId), PhaseType.Render)]
     public class S_DrawCameras : BaseSystem
     {
-        private EntityQuery query = new EntityQuery();
+        private EntityQuerySettings query = new EntityQuerySettings();
 
         protected override void OnPerformFrame(float dt)
         {

@@ -7,24 +7,22 @@ namespace Entygine.Ecs
     public interface IQueryEntityIterator : IQueryIterator { void Iteration(ref EntityChunk chunk, int index); }
     public interface IQueryChunkIterator : IQueryIterator { void Iteration(ref EntityChunk chunk); }
 
-    public class EntityQuery
+    public class EntityQuerySettings
     {
         private TypeCache[] withTypes;
         private TypeCache[] anyTypes;
 
-        public EntityQuery With(params TypeCache[] types)
+        public EntityQuerySettings With(params TypeCache[] types)
         {
             this.withTypes = types;
             return this;
         }
 
-        public EntityQuery Any(params TypeCache[] types)
+        public EntityQuerySettings Any(params TypeCache[] types)
         {
             this.anyTypes = types;
             return this;
         }
-
-        //TODO: Iteration problably should be somewhere else.
 
         public bool Matches(EntityArchetype archetype)
         {

@@ -22,6 +22,7 @@ namespace Entygine_Editor
 
         public ProjectsMeta ProjMeta { get; private set; } = new ProjectsMeta();
 
+        
         private static void ValidateEditorSettings()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Entygine_Editor";
@@ -30,7 +31,7 @@ namespace Entygine_Editor
         }
 
         /// <summary>
-        /// Saves the Current editor settings
+        /// Saves the <see cref="Current"/> editor settings
         /// </summary>
         internal static void SaveEditorSettings()
         {

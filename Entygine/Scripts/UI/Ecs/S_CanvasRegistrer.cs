@@ -8,7 +8,7 @@ namespace Entygine.UI
     [SystemGroup(typeof(MainPhases.EarlyPhaseId), PhaseType.Logic)]
     public class S_CanvasRegistrer : BaseSystem
     {
-        private EntityQuery query = new EntityQuery();
+        private EntityQuerySettings query = new EntityQuerySettings();
 
         protected override void OnPerformFrame(float dt)
         {

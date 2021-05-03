@@ -6,7 +6,7 @@ namespace Entygine.Ecs
     [SystemGroup(typeof(MainPhases.LatePhaseId))]
     public class S_TransformConverter : BaseSystem
     {
-        private EntityQuery query = new EntityQuery();
+        private EntityQuerySettings query = new EntityQuerySettings();
 
         protected override void OnPerformFrame(float dt)
         {

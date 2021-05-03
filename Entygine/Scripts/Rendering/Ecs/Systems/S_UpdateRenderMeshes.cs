@@ -6,7 +6,7 @@ namespace Entygine.Ecs.Systems
     [BeforeSystem(typeof(S_QueueRenderTransforms))]
     public class S_UpdateRenderMeshes : BaseSystem
     {
-        private EntityQuery query = new EntityQuery();
+        private EntityQuerySettings query = new EntityQuerySettings();
 
         protected override void OnPerformFrame(float dt)
         {

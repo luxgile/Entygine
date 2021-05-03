@@ -11,7 +11,7 @@
         </member>
         <member name="M:Entygine_Editor.EngineEditorSettings.SaveEditorSettings">
             <summary>
-            Saves the Current editor settings
+            Saves the <see cref="P:Entygine_Editor.EngineEditorSettings.Current"/> editor settings
             </summary>
         </member>
         <member name="M:Entygine_Editor.EngineEditorSettings.LoadEditorSettings">

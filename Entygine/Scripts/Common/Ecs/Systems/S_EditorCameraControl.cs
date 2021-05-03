@@ -9,7 +9,7 @@ namespace Entygine.Ecs.Systems
 {
     public class S_EditorCameraControl : BaseSystem
     {
-        private EntityQuery query = new EntityQuery();
+        private EntityQuerySettings query = new EntityQuerySettings();
 
         private float scrollDelta;
         private Vector2 lastCursorPos;
