@@ -6,14 +6,18 @@ using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using System;
 
 namespace Entygine_Editor
 {
     internal static class EntygineEditorApp
     {
         private static MainEditorWindow mainWindow;
+        private static InitProjectWindow initWindowDrawer = new InitProjectWindow();
         private static EditorDrawer mainEditorDrawer = new EditorDrawer();
         private static EntyImGui imgui;
+
+        private static bool isLoaded;
 
         internal static void StartEditor()
         {
@@ -30,6 +34,7 @@ namespace Entygine_Editor
             mainWindow.CenterWindow();
 
             mainWindow.Load += LoadEditor;
+            mainWindow.Unload += UnloadEditor;
             mainWindow.UpdateFrame += UpdateEditor;
             mainWindow.RenderFrame += RenderEditor;
 
@@ -39,6 +44,9 @@ namespace Entygine_Editor
 
         private static void LoadEditor()
         {
+            if (isLoaded)
+                return;
+
             imgui = new EntyImGui(mainWindow.Size.X, mainWindow.Size.Y);
             var style = ImGui.GetStyle();
             style.WindowRounding = 0;
@@ -51,9 +59,34 @@ namespace Entygine_Editor
             mainEditorDrawer.AttachDrawer(new WorldWindow());
             mainEditorDrawer.AttachDrawer(new DetailsWindow());
 
+            EngineEditorSettings.LoadEditorSettings();
+
+            //string pathToLastProject = EngineEditorSettings.Current.ProjMeta?.LastProjectOpened;
+            //if (string.IsNullOrEmpty(pathToLastProject) || !EditorProject.IsProject(pathToLastProject))
+            //{
+            //    if (!Platform.OpenFolderBroswer(out pathToLastProject))
+            //        mainWindow.Close();
+            //}
+
+            //EditorProject.OpenProject(pathToLastProject);
+            //EngineEditorSettings.Current.ProjMeta.LastProjectOpened = pathToLastProject;
+            //DevConsole.Log(LogType.Info, "Loaded project at: " + pathToLastProject);
+
             EntygineApp.LoadEngine();
 
             DevConsole.Log(LogType.Info, "Editor started succesfully.");
+
+            isLoaded = true;
+        }
+
+        private static void UnloadEditor()
+        {
+            if (!isLoaded)
+                return;
+
+            EngineEditorSettings.SaveEditorSettings();
+
+            isLoaded = false;
         }
 
         private static void RenderEditor(FrameEventArgs e)
@@ -63,12 +96,19 @@ namespace Entygine_Editor
             Ogl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             Ogl.ClearColor(0.1f, 0.1f, 0.1f, 255);
 
-            EntygineApp.RenderFrame(e);
+            if (EditorProject.IsProjectOpen)
+            {
+                EntygineApp.RenderFrame(e);
 
-            Ogl.Viewport(0, 0, mainWindow.Size.X, mainWindow.Size.Y);
-            imgui.WindowResized(mainWindow.Size.X, mainWindow.Size.Y);
+                Ogl.Viewport(0, 0, mainWindow.Size.X, mainWindow.Size.Y);
+                imgui.WindowResized(mainWindow.Size.X, mainWindow.Size.Y);
 
-            mainEditorDrawer.Draw();
+                mainEditorDrawer.Draw();
+            }
+            else
+            {
+                initWindowDrawer.Draw();
+            }
 
             imgui.Render();
         }
