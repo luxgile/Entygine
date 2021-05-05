@@ -7,18 +7,18 @@ namespace Entygine.Ecs
     public interface IQueryEntityIterator : IQueryIterator { void Iteration(ref EntityChunk chunk, int index); }
     public interface IQueryChunkIterator : IQueryIterator { void Iteration(ref EntityChunk chunk); }
 
-    public class EntityQuerySettings
+    public class QuerySettings
     {
         private TypeCache[] withTypes;
         private TypeCache[] anyTypes;
 
-        public EntityQuerySettings With(params TypeCache[] types)
+        public QuerySettings With(params TypeCache[] types)
         {
             this.withTypes = types;
             return this;
         }
 
-        public EntityQuerySettings Any(params TypeCache[] types)
+        public QuerySettings Any(params TypeCache[] types)
         {
             this.anyTypes = types;
             return this;

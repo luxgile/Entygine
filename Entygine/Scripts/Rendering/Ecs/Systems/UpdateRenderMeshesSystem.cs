@@ -4,24 +4,15 @@ using Entygine.Rendering.Pipeline;
 namespace Entygine.Ecs.Systems
 {
     [BeforeSystem(typeof(S_QueueRenderTransforms))]
-    public class S_UpdateRenderMeshes : BaseSystem
+    public class UpdateRenderMeshesSystem : QuerySystem
     {
-        private EntityQuerySettings query = new EntityQuerySettings();
+        private QuerySettings settings = new QuerySettings().With(TypeCache.WriteType(typeof(SC_RenderMesh)));
 
-        protected override void OnPerformFrame(float dt)
+        protected override QueryScope SetupQuery()
         {
-            base.OnPerformFrame(dt);
-
-            query.With(TypeCache.WriteType(typeof(SC_RenderMesh)));
-            IterateQuery(new Iterator(), query);
-        }
-
-        private struct Iterator : IQueryChunkIterator
-        {
-            public void Iteration(ref EntityChunk chunk)
+            return new ChunkQueryScope(settings, (context) =>
             {
-                if (!chunk.TryGetSharedComponent(out SC_RenderMesh renderMesh))
-                    return;
+                context.Read(out SC_RenderMesh renderMesh);
 
                 if (!RenderPipelineCore.TryGetContext(out Rendering.GeometryRenderData geometryData))
                     return;
@@ -31,7 +22,14 @@ namespace Entygine.Ecs.Systems
                 else
                     group.MeshRender = renderMesh.value;
 
-                chunk.SetSharedComponent(renderMesh);
+                context.Write(renderMesh);
+            });
+        }
+
+        private struct Iterator : IQueryChunkIterator
+        {
+            public void Iteration(ref EntityChunk chunk)
+            {
             }
         }
     }

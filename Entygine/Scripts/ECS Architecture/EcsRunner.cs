@@ -66,7 +66,7 @@ namespace Entygine.Ecs
 
             static IEnumerable<Type> GetAllSystemTypes()
             {
-                return typeof(EcsRunner).Assembly.GetTypes().Where(x => x.BaseType == typeof(BaseSystem));
+                return typeof(EcsRunner).Assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(BaseSystem)) && !x.IsAbstract);
             }
         }
 

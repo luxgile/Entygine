@@ -4,9 +4,9 @@ namespace Entygine.Ecs
 {
     public class EntityIterator
     {
-        public static void PerformIteration(EntityWorld world, IQueryIterator iterator, EntityQuerySettings query) => Perform(world, iterator, query, false, 0);
-        public static void PerformIteration(EntityWorld world, IQueryIterator iterator, EntityQuerySettings query, uint version) => Perform(world, iterator, query, true, version);
-        private static void Perform(EntityWorld world, IQueryIterator iterator, EntityQuerySettings query, bool checkVersion, uint version)
+        public static void PerformIteration(EntityWorld world, IQueryIterator iterator, QuerySettings query) => Perform(world, iterator, query, false, 0);
+        public static void PerformIteration(EntityWorld world, IQueryIterator iterator, QuerySettings query, uint version) => Perform(world, iterator, query, true, version);
+        private static void Perform(EntityWorld world, IQueryIterator iterator, QuerySettings query, bool checkVersion, uint version)
         {
             switch (iterator)
             {
@@ -24,7 +24,7 @@ namespace Entygine.Ecs
             }
         }
 
-        private static void PerformChunkIteration(EntityWorld world, IQueryChunkIterator chunkIterator, EntityQuerySettings query, bool checkVersion, uint version)
+        private static void PerformChunkIteration(EntityWorld world, IQueryChunkIterator chunkIterator, QuerySettings query, bool checkVersion, uint version)
         {
             StructArray<EntityChunk> chunks = world.EntityManager.GetChunks();
             bool generalWrite = query.IsGeneralWrite();
@@ -44,7 +44,7 @@ namespace Entygine.Ecs
             }
         }
 
-        private static void PerformEntityIteration(EntityWorld world, IQueryEntityIterator entityIterator, EntityQuerySettings query, bool checkVersion, uint version)
+        private static void PerformEntityIteration(EntityWorld world, IQueryEntityIterator entityIterator, QuerySettings query, bool checkVersion, uint version)
         {
             StructArray<EntityChunk> chunks = world.EntityManager.GetChunks();
             bool generalWrite = query.IsGeneralWrite();

@@ -54,7 +54,7 @@ namespace Entygine_Editor
                 AppScreen.Resolution = (Vec2i)currSize;
             prevSize = currSize;
 
-            EntityIterator.PerformIteration(EntityWorld.Active, new RenderCamera() { imageSize = currSize }, new EntityQuerySettings().Any(TypeCache.ReadType<C_Camera>()));
+            EntityIterator.PerformIteration(EntityWorld.Active, new RenderCamera() { imageSize = currSize }, new QuerySettings().Any(TypeCache.ReadType<C_Camera>()));
         }
 
         private Vector2 GetAspectArea(Vector2 avail)

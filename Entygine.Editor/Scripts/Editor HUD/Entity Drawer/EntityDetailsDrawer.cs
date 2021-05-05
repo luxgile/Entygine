@@ -24,7 +24,7 @@ namespace Entygine_Editor
             ImGui.SameLine();
             ImGui.Text($"Version: {Context.version}");
             ImGui.Separator();
-            EntityIterator.PerformIteration(EntityWorld.Active, new DrawComponentsFromEntity() { entity = Context, drawers = drawers }, new EntityQuerySettings());
+            EntityIterator.PerformIteration(EntityWorld.Active, new DrawComponentsFromEntity() { entity = Context, drawers = drawers }, new QuerySettings());
         }
 
         private struct DrawComponentsFromEntity : IQueryEntityIterator
