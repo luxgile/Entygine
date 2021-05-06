@@ -4,6 +4,7 @@ namespace Entygine.Ecs
 {
     public class EntityIterator
     {
+        [System.Obsolete("Use QueryScope instead", true)]
         public static void PerformIteration(EntityWorld world, IQueryIterator iterator, QuerySettings query) => Perform(world, iterator, query, false, 0);
         public static void PerformIteration(EntityWorld world, IQueryIterator iterator, QuerySettings query, uint version) => Perform(world, iterator, query, true, version);
         private static void Perform(EntityWorld world, IQueryIterator iterator, QuerySettings query, bool checkVersion, uint version)
