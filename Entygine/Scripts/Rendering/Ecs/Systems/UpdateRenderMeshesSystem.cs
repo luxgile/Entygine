@@ -3,10 +3,10 @@ using Entygine.Rendering.Pipeline;
 
 namespace Entygine.Ecs.Systems
 {
-    [BeforeSystem(typeof(S_QueueRenderTransforms))]
+    [BeforeSystem(typeof(QueueRenderTransformsSystem))]
     public class UpdateRenderMeshesSystem : QuerySystem
     {
-        private QuerySettings settings = new QuerySettings().With(TypeCache.WriteType(typeof(SC_RenderMesh)));
+        private readonly QuerySettings settings = new QuerySettings().With(TypeCache.WriteType(typeof(SC_RenderMesh)));
 
         protected override QueryScope SetupQuery()
         {
@@ -24,13 +24,6 @@ namespace Entygine.Ecs.Systems
 
                 context.Write(renderMesh);
             });
-        }
-
-        private struct Iterator : IQueryChunkIterator
-        {
-            public void Iteration(ref EntityChunk chunk)
-            {
-            }
         }
     }
 }

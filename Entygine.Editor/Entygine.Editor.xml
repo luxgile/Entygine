@@ -24,9 +24,24 @@
             Frees all graphics resources used by the renderer.
             </summary>
         </member>
+        <member name="M:Entygine_Editor.EditorProject.CreateProject(System.String,System.String)">
+            <summary>
+            Creates project in given path. Target path must be empty.
+            </summary>
+        </member>
         <member name="M:Entygine_Editor.EditorProject.ValidateProjectFolders(System.String)">
             <summary>
             Ensures that obligatory folders inside a project exist
+            </summary>
+        </member>
+        <member name="M:Entygine_Editor.EditorProject.IsProject(System.String)">
+            <summary>
+            Checks if there is a project in the given path
+            </summary>
+        </member>
+        <member name="M:Entygine_Editor.EditorProject.OpenProject(System.String)">
+            <summary>
+            Opens the project in the given path.
             </summary>
         </member>
     </members>

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Entygine_Editor
 {
@@ -17,6 +18,11 @@ namespace Entygine_Editor
 
             path = null;
             return false;
+        }
+
+        public static void OpenExplorerFolder(string path)
+        {
+            Process.Start("explorer.exe", path);
         }
     }
 }

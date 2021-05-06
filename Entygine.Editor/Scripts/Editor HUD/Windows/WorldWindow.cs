@@ -1,7 +1,7 @@
 ﻿using Entygine;
+using Entygine.Cycles;
 using Entygine.Ecs;
 using ImGuiNET;
-using System;
 
 namespace Entygine_Editor
 {
@@ -9,25 +9,53 @@ namespace Entygine_Editor
     {
         public override string Title => "World";
         private int selectedView;
+        private int tab = 0;
         private string[] views = new string[] { "Raw", "Chunks", "Hierarchy" };
 
         protected override void OnDraw()
         {
-            ImGui.Combo("Mode", ref selectedView, views, views.Length);
-            ImGui.Separator();
-            switch (selectedView)
+            ImGui.BeginTabBar("Tabs");
+
+            if (ImGui.TabItemButton("Entities"))
+                tab = 0;
+
+            if (ImGui.TabItemButton("System"))
+                tab = 1;
+
+            ImGui.EndTabBar();
+
+            if (tab == 0)
             {
-                case 0:
-                DrawRaw();
-                break;
+                ImGui.Combo("Mode", ref selectedView, views, views.Length);
+                ImGui.Separator();
+                switch (selectedView)
+                {
+                    case 0:
+                    DrawRaw();
+                    break;
 
-                case 1:
-                DrawChunks();
-                break;
+                    case 1:
+                    DrawChunks();
+                    break;
 
-                case 2:
-                DrawHierarchy();
-                break;
+                    case 2:
+                    DrawHierarchy();
+                    break;
+                }
+            }
+            else
+            {
+                DrawSystems();
+            }
+        }
+
+        private void DrawSystems()
+        {
+            var systems = EntityWorld.Active.Runner.GetSystems<MainPhases.DefaultPhaseId>();
+            for (int i = 0; i < systems.Length; i++)
+            {
+                BaseSystem currSystem = systems[i];
+                ImGui.Text(currSystem.GetType().Name);
             }
         }
 

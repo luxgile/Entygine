@@ -18,6 +18,9 @@ namespace Entygine_Editor
                     if (ImGui.MenuItem("Open") && Platform.OpenFolderBroswer(out path))
                         EditorProject.OpenProject(path);
 
+                    if (ImGui.MenuItem("Open in Explorer"))
+                        Platform.OpenExplorerFolder(EditorProject.CurrentProjectPath);
+
                     ImGui.EndMenu();
                 }
 

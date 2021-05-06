@@ -16,11 +16,13 @@ namespace Entygine.Ecs
                 context.Read(out C_Position positionComponent);
                 Vector3 pos = (Vector3)positionComponent.value;
 
-                context.Read(out C_Rotation rotationComponent);
-                Quaternion rot = rotationComponent.value;
+                Quaternion rot = Quaternion.Identity;
+                if (context.Read(out C_Rotation rotationComponent))
+                    rot = rotationComponent.value;
 
-                context.Read(out C_UniformScale scaleComponent);
-                Vector3 scale = Vector3.One * scaleComponent.value;
+                Vector3 scale = Vector3.One;
+                if (context.Read(out C_UniformScale scaleComponent))
+                    scale *= scaleComponent.value;
 
                 Matrix4 transform = Matrix4.Identity;
                 transform *= Matrix4.CreateScale(scale);

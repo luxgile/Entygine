@@ -9,10 +9,22 @@ namespace Entygine.Ecs
 {
     public class EcsRunner
     {
-        private List<BaseSystem> earlySystems = new List<BaseSystem>();
-        private List<BaseSystem> defaultSystems = new List<BaseSystem>();
-        private List<BaseSystem> lateSystems = new List<BaseSystem>();
-        private List<BaseSystem> renderSystems = new List<BaseSystem>();
+        private List<BaseSystem> earlySystems = new();
+        private List<BaseSystem> defaultSystems = new();
+        private List<BaseSystem> lateSystems = new();
+        private List<BaseSystem> renderSystems = new();
+
+        public BaseSystem[] GetSystems<T0>() where T0 : IPhaseId
+        {
+            Type t0 = typeof(T0);
+            if (t0 == typeof(MainPhases.EarlyPhaseId))
+                return earlySystems.ToArray();
+            if (t0 == typeof(MainPhases.DefaultPhaseId))
+                return defaultSystems.ToArray();
+            if (t0 == typeof(MainPhases.LatePhaseId))
+                return lateSystems.ToArray();
+            return null;
+        }
 
         public EcsRunner AssignToWorker(WorkerCycleCore workerCore)
         {
