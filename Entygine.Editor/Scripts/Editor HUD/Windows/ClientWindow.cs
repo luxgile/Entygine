@@ -12,6 +12,9 @@ namespace Entygine_Editor
     {
         public override string Title => "Client";
 
+        private QuerySettings settings = new QuerySettings().Any(TypeCache.ReadType<C_Camera>());
+        private EntityQueryScope queryScope;
+
         private bool keepAspect = true;
 
         private Vector2 prevSize;
@@ -20,6 +23,14 @@ namespace Entygine_Editor
         public ClientWindow()
         {
             Flags |= ImGuiWindowFlags.MenuBar;
+
+            queryScope = new EntityQueryScope(settings, (context) =>
+            {
+                context.Read(out C_Camera camera);
+                Vector2 floatingSize = (ImGui.GetContentRegionAvail() - currSize) / 2f;
+                ImGui.SetCursorPos(ImGui.GetCursorPos() + floatingSize);
+                ImGui.Image((IntPtr)camera.cameraData.FinalFramebuffer.ColorBuffer, currSize, new Vector2(0, 0), new Vector2(1, -1));
+            });
         }
 
         protected override void OnPreDraw()
@@ -53,8 +64,6 @@ namespace Entygine_Editor
             if (prevSize != currSize)
                 AppScreen.Resolution = (Vec2i)currSize;
             prevSize = currSize;
-
-            EntityIterator.PerformIteration(EntityWorld.Active, new RenderCamera() { imageSize = currSize }, new QuerySettings().Any(TypeCache.ReadType<C_Camera>()));
         }
 
         private Vector2 GetAspectArea(Vector2 avail)
@@ -68,18 +77,6 @@ namespace Entygine_Editor
                 area.Y = area.X * (1 / aspect);
             }
             return area;
-        }
-
-        private struct RenderCamera : IQueryEntityIterator
-        {
-            public Vector2 imageSize;
-            public void Iteration(ref EntityChunk chunk, int index)
-            {
-                chunk.TryGetComponent(index, out C_Camera camera);
-                Vector2 floatingSize = (ImGui.GetContentRegionAvail() - imageSize) / 2f;
-                ImGui.SetCursorPos(ImGui.GetCursorPos() + floatingSize);
-                ImGui.Image((IntPtr)camera.cameraData.FinalFramebuffer.ColorBuffer, imageSize, new Vector2(0, 0), new Vector2(1, -1));
-            }
         }
     }
 }

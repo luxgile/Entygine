@@ -35,14 +35,6 @@
         protected virtual void OnPerformFrame(float dt) { }
         protected virtual void OnSystemDestroyed() { }
 
-        protected void IterateQuery(IQueryIterator iterator, QuerySettings query, bool onlyDirty = true)
-        {
-            if (onlyDirty)
-                EntityIterator.PerformIteration(World, iterator, query, LastVersionWorked);
-            else
-                EntityIterator.PerformIteration(World, iterator, query);
-        }
-
         public EntityWorld World => world;
         public uint LastVersionWorked => lastVersionWorked;
     }

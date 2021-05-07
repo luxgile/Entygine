@@ -64,5 +64,7 @@ namespace Entygine.Ecs
             }
             return false;
         }
+
+        public static readonly QuerySettings Empty = new QuerySettings();
     }
 }

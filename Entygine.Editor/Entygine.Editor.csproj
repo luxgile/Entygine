@@ -10,7 +10,7 @@
     <WarningLevel>3</WarningLevel>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>D:\Development\VS 2019\Entygine\Entygine.Editor\Entygine.Editor.xml</DocumentationFile>
+    <DocumentationFile>Entygine.Editor.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

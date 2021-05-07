@@ -171,13 +171,16 @@ namespace Entygine.Ecs
             throw new Exception("Entity not found.");
         }
 
-        public void GetComponentsFromEntity(Entity entity, out List<IComponent> components)
+        public void GetComponentsFromEntity(Entity entity, out IComponent[] components)
         {
-            components = new List<IComponent>();
-
             int entityIndex = GetEntityIndex(entity);
+            GetComponentsFromIndex(entityIndex, out components);
+        }
+        public void GetComponentsFromIndex(int index, out IComponent[] components)
+        {
+            components = new IComponent[componentCollections.Length];
             for (int c = 0; c < componentCollections.Length; c++)
-                components.Add(componentCollections[c][entityIndex]);
+                components[c] = (componentCollections[c][index]);
         }
 
         public void SetComponent<T0>(int index, T0 component) where T0 : IComponent

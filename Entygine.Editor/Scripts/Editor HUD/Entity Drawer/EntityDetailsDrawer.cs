@@ -7,37 +7,22 @@ namespace Entygine_Editor
     public class EntityDetailsDrawer : DetailsDrawer<Entity>
     {
         private ComponentDrawerCollection drawers = new ComponentDrawerCollection();
+        private Entity selectedEntity;
+        private EntityQueryScope queryScope;
 
         public EntityDetailsDrawer()
         {
             drawers.FindDrawers();
-        }
 
-        public override int MatchesObject(object obj)
-        {
-            return obj is Entity ? 0 : -1;
-        }
-
-        protected override void OnDraw()
-        {
-            ImGui.Text($"ID: {Context.id}");
-            ImGui.SameLine();
-            ImGui.Text($"Version: {Context.version}");
-            ImGui.Separator();
-            EntityIterator.PerformIteration(EntityWorld.Active, new DrawComponentsFromEntity() { entity = Context, drawers = drawers }, new QuerySettings());
-        }
-
-        private struct DrawComponentsFromEntity : IQueryEntityIterator
-        {
-            public Entity entity;
-            public ComponentDrawerCollection drawers;
-            public void Iteration(ref EntityChunk chunk, int index)
+            queryScope = new(QuerySettings.Empty, (context) =>
             {
-                if (!chunk.GetEntity(index).Equals(entity))
+                context.GetEntity(out Entity entity);
+                if (!entity.Equals(selectedEntity))
                     return;
 
-                chunk.GetComponentsFromEntity(entity, out List<IComponent> components);
-                for (int i = 0; i < components.Count; i++)
+                context.ReadAll(out IComponent[] components);
+
+                for (int i = 0; i < components.Length; i++)
                 {
                     var currComp = components[i];
                     if (ImGui.CollapsingHeader(currComp.GetType().Name, ImGuiTreeNodeFlags.DefaultOpen))
@@ -47,7 +32,23 @@ namespace Entygine_Editor
                         drawer.Draw();
                     }
                 }
-            }
+            });
+        }
+
+        public override int MatchesObject(object obj)
+        {
+            return obj is Entity ? 0 : -1;
+        }
+
+        protected override void OnDraw()
+        {
+            selectedEntity = Context;
+            ImGui.Text($"ID: {selectedEntity.id}");
+            ImGui.SameLine();
+            ImGui.Text($"Version: {selectedEntity.version}");
+            ImGui.Separator();
+            queryScope.Perform();
+            //EntityIterator.PerformIteration(EntityWorld.Active, new DrawComponentsFromEntity() { entity = Context, drawers = drawers }, new QuerySettings());
         }
     }
 }

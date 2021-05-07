@@ -43,10 +43,22 @@
             this.Index = index;
         }
 
+        public void GetEntity(out Entity entity)
+        {
+            ref EntityChunk ec = ref World.EntityManager.GetChunk(Chunk);
+            entity = ec.GetEntity(Index);
+        }
+
         public bool Read<T0>(out T0 comp) where T0 : IComponent
         {
             ref EntityChunk ec = ref World.EntityManager.GetChunk(Chunk);
             return ec.TryGetComponent(Index, out comp);
+        }
+
+        public void ReadAll(out IComponent[] components)
+        {
+            ref EntityChunk ec = ref World.EntityManager.GetChunk(Chunk);
+            ec.GetComponentsFromIndex(Index, out components);
         }
 
         public void Write<T0>(T0 comp) where T0 : IComponent

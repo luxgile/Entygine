@@ -81,19 +81,19 @@ namespace Entygine.Ecs
                 if(!chunk.IsFull && chunk.HasArchetype(fromChunk.Archetype) && (chunk.HasSharedComponents(sharedsToFind)))
                 {
                     //Valid chunk found. Move entity to it.
-                    fromChunk.GetComponentsFromEntity(entity, out List<IComponent> components);
+                    fromChunk.GetComponentsFromEntity(entity, out IComponent[] components);
                     fromChunk.DestroyEntity(entity);
 
                     chunk.AddEntity(entity);
                     chunk.SetSharedComponent(component);
-                    chunk.SetComponents(entity, components.ToArray());
+                    chunk.SetComponents(entity, components);
                     return;
                 }
             }
 
             {
                 //Create a new chunk with the given archetype and new shared component
-                fromChunk.GetComponentsFromEntity(entity, out List<IComponent> components);
+                fromChunk.GetComponentsFromEntity(entity, out IComponent[] components);
                 fromChunk.DestroyEntity(entity);
 
                 int newChunkIndex = CreateChunk(fromChunk.Archetype);
@@ -101,7 +101,7 @@ namespace Entygine.Ecs
                 newChunk.AddEntity(entity);
                 newChunk.SetSharedComponents(fromChunk.GetSharedComponents());
                 newChunk.SetSharedComponent(component);
-                newChunk.SetComponents(entity, components.ToArray());
+                newChunk.SetComponents(entity, components);
             }
         }
 
