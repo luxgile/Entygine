@@ -64,6 +64,8 @@ namespace Entygine_Editor
             if (prevSize != currSize)
                 AppScreen.Resolution = (Vec2i)currSize;
             prevSize = currSize;
+
+            queryScope.Perform();
         }
 
         private Vector2 GetAspectArea(Vector2 avail)

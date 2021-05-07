@@ -17,7 +17,8 @@ namespace Entygine_Editor
         private void OnSelectionChanged(object obj)
         {
             currentDrawer = collection.QueryDrawer(obj);
-            currentDrawer.SetContext(obj);
+            if (currentDrawer != null)
+                currentDrawer.SetContext(obj);
         }
 
         protected override void OnDraw()

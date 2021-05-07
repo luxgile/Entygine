@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Entygine.Ecs
 {
+    //TODO: Change this shit to a class, it only makes everything more complicated.
+    asadasdasdsa
     public struct EntityChunk
     {
         private const int CHUNK_SIZE = 16000;
@@ -317,6 +319,18 @@ namespace Entygine.Ecs
                 else
                     throw new Exception("Shared component not found in chunk.");
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is EntityChunk chunk 
+                && chunk.Archetype.Equals(Archetype)
+                && chunk.Count == Count;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Count, Archetype);
         }
 
         public bool IsFull => Count == Capacity;

@@ -8,7 +8,7 @@ namespace Entygine_Editor
     public class WorldWindow : WindowDrawer
     {
         public override string Title => "World";
-        private int selectedView;
+        private int selectedView = 1;
         private int tab = 0;
         private string[] views = new string[] { "Raw", "Chunks", "Hierarchy" };
 
@@ -68,45 +68,75 @@ namespace Entygine_Editor
         {
             EntityWorld world = EntityWorld.Active;
             StructArray<EntityChunk> chunks = world.EntityManager.GetChunks();
-            for (int i = 0; i < chunks.Count; i++)
+            ImGuiTableFlags tFlags = ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit;
+            if (ImGui.BeginTable("Entities", 3, tFlags))
             {
-                ref EntityChunk chunk = ref chunks[i];
-                bool open = ImGui.TreeNode($"[{i}] Chunk: {chunk.Count}/{chunk.Capacity}");
-                if (ImGui.IsItemHovered())
-                    ImGui.SetTooltip(chunk.Archetype.ToString());
-                if (open)
-                {
-                    ImGuiTableFlags tFlags = ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable;
-                    if (ImGui.BeginTable("Entities", 2, tFlags))
-                    {
-                        ImGui.TableSetupColumn("Id");
-                        ImGui.TableSetupColumn("Version");
-                        ImGui.TableHeadersRow();
+                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch);
+                ImGui.TableSetupColumn("Id");
+                ImGui.TableSetupColumn("Version");
+                ImGui.TableHeadersRow();
 
+                ImGui.PushID("Chunks_");
+                for (int i = 0; i < chunks.Count; i++)
+                {
+                    ref EntityChunk chunk = ref chunks[i];
+                    bool isSelected = ObjectSelections.CurrentObj?.Equals(chunk) ?? false;
+
+                    ImGui.TableNextRow();
+                    ImGui.TableNextColumn();
+
+                    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
+                    if (isSelected)
+                        flags |= ImGuiTreeNodeFlags.Selected;
+
+                    bool open = ImGui.TreeNodeEx($"Chunk: {chunk.Count}/{chunk.Capacity}", flags);
+                    if (ImGui.IsItemClicked())
+                        ObjectSelections.SelectObject(chunk);
+
+                    ImGui.TableNextColumn();
+                    ImGui.Text("-");
+
+                    ImGui.TableNextColumn();
+                    ImGui.Text(chunk.ChunkVersion.ToString());
+
+
+                    //if (ImGui.IsItemHovered())
+                    //    ImGui.SetTooltip(chunk.Archetype.ToString());
+
+                    if (open)
+                    {
+                        ImGui.PushID("Entities_");
                         for (int e = 0; e < chunk.Count; e++)
                         {
                             Entity entity = chunk.GetEntity(e);
 
                             ImGui.TableNextRow();
                             ImGui.TableNextColumn();
+                            
 
-                            bool isSelected = ObjectSelections.CurrentObj?.Equals(entity) ?? false;
-                            if (ImGui.Selectable($"##{e}", isSelected, ImGuiSelectableFlags.SpanAllColumns))
-                            {
+                            isSelected = ObjectSelections.CurrentObj?.Equals(entity) ?? false;
+                            flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.Bullet;
+                            if (isSelected)
+                                flags |= ImGuiTreeNodeFlags.Selected;
+
+                            ImGui.TreeNodeEx("Entity", flags);
+                            if (ImGui.IsItemClicked())
                                 ObjectSelections.SelectObject(entity);
-                            }
-                            ImGui.SameLine();
+
+                            ImGui.TableNextColumn();
                             ImGui.Text(entity.id.ToString());
 
                             ImGui.TableNextColumn();
                             ImGui.Text(entity.version.ToString());
                         }
-                        ImGui.Separator();
-                        ImGui.EndTable();
+                        ImGui.PopID();
+                        ImGui.TreePop();
                     }
-                    ImGui.TreePop();
                 }
+                ImGui.PopID();
+                ImGui.EndTable();
             }
+
         }
 
         private void DrawRaw()
