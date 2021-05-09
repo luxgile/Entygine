@@ -5,8 +5,7 @@ namespace Entygine.Ecs
 {
     public class TypeCache : IEquatable<TypeCache>
     {
-        private static Dictionary<Guid, TypeCache> collection = new Dictionary<Guid, TypeCache>();
-        private Guid hash;
+        private static Dictionary<Type, TypeCache> collection = new Dictionary<Type, TypeCache>();
 
         public static TypeCache WriteType(Type type) => GetTypeCache(type, false);
         public static TypeCache WriteType<T>() => GetTypeCache(typeof(T), false);
@@ -14,13 +13,12 @@ namespace Entygine.Ecs
         public static TypeCache ReadType<T>() => GetTypeCache(typeof(T), true);
         public static TypeCache GetTypeCache(Type type, bool readOnly)
         {
-            Guid hash = type.GUID;
-            if (collection.TryGetValue(hash, out TypeCache cache))
+            if (collection.TryGetValue(type, out TypeCache cache))
                 cache.IsReadOnly = readOnly;
             else
             {
-                cache = new TypeCache() { Type = type, hash = hash, IsReadOnly = readOnly };
-                collection.Add(hash, cache);
+                cache = new TypeCache() { Type = type, IsReadOnly = readOnly };
+                collection.Add(type, cache);
             }
 
             return cache;
@@ -28,12 +26,12 @@ namespace Entygine.Ecs
 
         public bool Equals(TypeCache other)
         {
-            return other.hash == hash;
+            return other.Type == Type;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(hash);
+            return HashCode.Combine(Type);
         }
 
         public bool IsReadOnly { get; private set; }

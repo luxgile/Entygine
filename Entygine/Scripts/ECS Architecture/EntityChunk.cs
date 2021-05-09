@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Entygine.Ecs
 {
     //TODO: Change this shit to a class, it only makes everything more complicated.
-    asadasdasdsa
-    public struct EntityChunk
+    public class EntityChunk
     {
         private const int CHUNK_SIZE = 16000;
 
@@ -38,11 +36,6 @@ namespace Entygine.Ecs
 
                 sharedComponents = new ISharedComponent[sTypes.Length];
             }
-        }
-
-        public bool ArchetypeMatch(EntityChunk chunk)
-        {
-            return HasArchetype(Archetype) && HasSharedComponents(sharedComponents);
         }
 
         public Entity CreateEntity(uint id)

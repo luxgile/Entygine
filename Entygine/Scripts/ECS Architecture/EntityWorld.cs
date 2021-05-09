@@ -31,24 +31,6 @@ namespace Entygine.Ecs
             activeWorld = world;
         }
 
-        public void DEBUG_LOG_INFO()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Entity Manager: \n");
-            StructArray<EntityChunk> chunks = entityManager.GetChunks();
-            sb.Append("Chunks Count: " + chunks.Count + "\n");
-            sb.Append($"----------------------------------- \n");
-            for (int i = 0; i < chunks.Count; i++)
-            {
-                EntityChunk chunk = chunks[i];
-                sb.Append($"Entities: {chunk.Count} / Version: {chunk.ChunkVersion} \n");
-                sb.Append($"Archetype: {chunk.Archetype} \n");
-                sb.Append($"----------------------------------- \n");
-            }
-            sb.Append("\n");
-            Console.WriteLine(sb);
-        }
-
         public EntityManager EntityManager => entityManager;
         public EcsRunner Runner => ecsRunner;
         public static EntityWorld Active => activeWorld;

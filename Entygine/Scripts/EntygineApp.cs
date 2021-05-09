@@ -122,21 +122,15 @@ namespace Entygine
                 Material planeMaterial2 = new Material(shaderResource, texture);
                 world.EntityManager.SetSharedComponent(planeEntity2, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
-                Entity boxEntity = world.EntityManager.CreateEntity(boxArchetype);
-                world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vec3f(0, 2, 0) });
-                //world.EntityManager.SetComponent(boxEntity, new C_PhysicsBody() { body = new PhysicBody() });
-                world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
-
-                Entity boxEntity2 = world.EntityManager.CreateEntity(boxArchetype);
-                world.EntityManager.SetComponent(boxEntity2, new C_Position() { value = new Vec3f(2, 2, 0) });
-                //world.EntityManager.SetComponent(boxEntity2, new C_PhysicsBody() { body = new PhysicBody() });
-                world.EntityManager.SetSharedComponent(boxEntity2, renderMesh);
-
-                Entity boxEntity3 = world.EntityManager.CreateEntity(boxArchetype);
-                world.EntityManager.SetComponent(boxEntity3, new C_Position() { value = new Vec3f(-2, 2, 0) });
-                //world.EntityManager.SetComponent(boxEntity3, new C_PhysicsBody() { body = new PhysicBody() });
-
-                world.EntityManager.SetSharedComponent(boxEntity3, renderMesh);
+                for (int x = 0; x < 5; x++)
+                {
+                    for (int z = 0; z < 5; z++)
+                    {
+                        Entity boxEntity = world.EntityManager.CreateEntity(boxArchetype);
+                        world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vec3f(x + x, 2, z + z) });
+                        world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
+                    }
+                }
 
                 EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
                 Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);

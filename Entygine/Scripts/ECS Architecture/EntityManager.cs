@@ -6,20 +6,20 @@ namespace Entygine.Ecs
     public class EntityManager
     {
         private uint version;
-        private StructArray<EntityChunk> chunks;
+        private List<EntityChunk> chunks;
 
         public EntityManager()
         {
-            chunks = new StructArray<EntityChunk>();
+            chunks = new List<EntityChunk>();
         }
 
-        public ref EntityChunk GetChunk(int index) => ref chunks[index];
+        public EntityChunk GetChunk(int index) => chunks[index];
 
         public void SetComponent<T0>(Entity entity, T0 component) where T0 : IComponent
         {
             for (int i = 0; i < chunks.Count; i++)
             {
-                ref EntityChunk chunk = ref chunks[i];
+                EntityChunk chunk = chunks[i];
                 for (int e = 0; e < chunk.Count; e++)
                 {
                     Entity currEntity = chunk.GetEntity(e);
@@ -41,7 +41,7 @@ namespace Entygine.Ecs
             for (int i = 0; i < chunks.Count; i++)
             {
                 int index = i;
-                ref EntityChunk chunk = ref chunks[index];
+                EntityChunk chunk = chunks[index];
                 if (chunk.HasEntity(entity))
                 {
                     //Already has the component.
@@ -64,7 +64,7 @@ namespace Entygine.Ecs
             if(chunkFound == -1)
                 throw new Exception("Entity not found.");
 
-            ref EntityChunk fromChunk = ref chunks[chunkFound];
+            EntityChunk fromChunk = chunks[chunkFound];
             ISharedComponent[] sharedsToCopy = fromChunk.GetSharedComponents();
             ISharedComponent[] sharedsToFind = new ISharedComponent[sharedsToCopy.Length];
             Array.Copy(sharedsToCopy, sharedsToFind, sharedsToCopy.Length);
@@ -77,7 +77,7 @@ namespace Entygine.Ecs
             for (int i = 0; i < chunks.Count; i++)
             {
                 int index = i;
-                ref EntityChunk chunk = ref chunks[index];
+                EntityChunk chunk = chunks[index];
                 if(!chunk.IsFull && chunk.HasArchetype(fromChunk.Archetype) && (chunk.HasSharedComponents(sharedsToFind)))
                 {
                     //Valid chunk found. Move entity to it.
@@ -97,7 +97,7 @@ namespace Entygine.Ecs
                 fromChunk.DestroyEntity(entity);
 
                 int newChunkIndex = CreateChunk(fromChunk.Archetype);
-                ref EntityChunk newChunk = ref chunks[newChunkIndex];
+                EntityChunk newChunk = chunks[newChunkIndex];
                 newChunk.AddEntity(entity);
                 newChunk.SetSharedComponents(fromChunk.GetSharedComponents());
                 newChunk.SetSharedComponent(component);
@@ -117,7 +117,7 @@ namespace Entygine.Ecs
         {
             uint id = (uint)GetEntityCount() + 1;
             int chunkIndex = GetAvaliableChunk(archetype);
-            ref EntityChunk chunk = ref chunks[chunkIndex];
+            EntityChunk chunk = chunks[chunkIndex];
             chunk.UpdateVersion(version);
             Entity entity = chunk.CreateEntity(id);
             return entity;
@@ -147,7 +147,7 @@ namespace Entygine.Ecs
             List<int> chunksFound = new List<int>();
             for (int i = 0; i < chunks.Count; i++)
             {
-                ref EntityChunk currChunk = ref chunks[i];
+                EntityChunk currChunk = chunks[i];
                 if (currChunk.HasArchetype(archetype))
                     chunksFound.Add(i);
             }
@@ -181,7 +181,7 @@ namespace Entygine.Ecs
             return index;
         }
 
-        public StructArray<EntityChunk> GetChunks() => chunks;
+        public List<EntityChunk> GetChunks() => chunks;
 
         public uint Version { get => version; internal set => version = value; }
     }

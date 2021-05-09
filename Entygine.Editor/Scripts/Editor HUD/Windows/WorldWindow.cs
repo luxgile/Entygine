@@ -2,6 +2,7 @@
 using Entygine.Cycles;
 using Entygine.Ecs;
 using ImGuiNET;
+using System.Collections.Generic;
 
 namespace Entygine_Editor
 {
@@ -67,7 +68,7 @@ namespace Entygine_Editor
         private void DrawChunks()
         {
             EntityWorld world = EntityWorld.Active;
-            StructArray<EntityChunk> chunks = world.EntityManager.GetChunks();
+            List<EntityChunk> chunks = world.EntityManager.GetChunks();
             ImGuiTableFlags tFlags = ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit;
             if (ImGui.BeginTable("Entities", 3, tFlags))
             {
@@ -79,7 +80,7 @@ namespace Entygine_Editor
                 ImGui.PushID("Chunks_");
                 for (int i = 0; i < chunks.Count; i++)
                 {
-                    ref EntityChunk chunk = ref chunks[i];
+                    EntityChunk chunk = chunks[i];
                     bool isSelected = ObjectSelections.CurrentObj?.Equals(chunk) ?? false;
 
                     ImGui.TableNextRow();
@@ -142,7 +143,7 @@ namespace Entygine_Editor
         private void DrawRaw()
         {
             EntityWorld world = EntityWorld.Active;
-            StructArray<EntityChunk> chunks = world.EntityManager.GetChunks();
+            List<EntityChunk> chunks = world.EntityManager.GetChunks();
             ImGuiTableFlags tFlags = ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable;
             if (ImGui.BeginTable("Entities", 2, tFlags))
             {
@@ -151,7 +152,7 @@ namespace Entygine_Editor
                 ImGui.TableHeadersRow();
                 for (int i = 0; i < chunks.Count; i++)
                 {
-                    ref EntityChunk chunk = ref chunks[i];
+                    EntityChunk chunk = chunks[i];
 
                     for (int e = 0; e < chunk.Count; e++)
                     {
