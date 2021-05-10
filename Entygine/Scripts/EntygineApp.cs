@@ -122,9 +122,9 @@ namespace Entygine
                 Material planeMaterial2 = new Material(shaderResource, texture);
                 world.EntityManager.SetSharedComponent(planeEntity2, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
-                for (int x = 0; x < 5; x++)
+                for (int x = 0; x < 30; x++)
                 {
-                    for (int z = 0; z < 5; z++)
+                    for (int z = 0; z < 30; z++)
                     {
                         Entity boxEntity = world.EntityManager.CreateEntity(boxArchetype);
                         world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vec3f(x + x, 2, z + z) });
@@ -132,7 +132,7 @@ namespace Entygine
                     }
                 }
 
-                EntityArchetype editorCameraArchetype = new EntityArchetype(typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
+                EntityArchetype editorCameraArchetype = new (typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
                 Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
                 world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
 

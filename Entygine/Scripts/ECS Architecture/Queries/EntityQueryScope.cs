@@ -18,6 +18,9 @@ namespace Entygine.Ecs
 
         public override void Perform()
         {
+            if (world == null)
+                world = EntityWorld.Active;
+
             bool generalWrite = Settings.IsGeneralWrite();
             List<EntityChunk> chunks = world.EntityManager.GetChunks();
             for (int i = 0; i < chunks.Count; i++)

@@ -8,6 +8,9 @@
     public struct FrameData
     {
         public int count;
+        /// <summary>
+        /// Time elapsed since previous frame
+        /// </summary>
         public float delta;
 
         public FrameData(int count, float delta)

@@ -66,6 +66,11 @@ namespace Entygine_Editor
             prevSize = currSize;
 
             queryScope.Perform();
+
+            ImGui.SetNextWindowPos(new Vector2(10, 100));
+            ImGui.BeginChildFrame(2345234, new Vector2(300, 300));
+            ImGui.Text($"{FrameContext.Current.delta * 1000}ms - {1 / FrameContext.Current.delta:F1}fps");
+            ImGui.EndChildFrame();
         }
 
         private Vector2 GetAspectArea(Vector2 avail)

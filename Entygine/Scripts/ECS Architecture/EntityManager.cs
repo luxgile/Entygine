@@ -134,7 +134,7 @@ namespace Entygine.Ecs
             else
             {
                 //We assume the rest of chunks are full since to create a new one requires the last one to be full.
-                int lastChunk = chunksFound[chunksFound.Count - 1];
+                int lastChunk = chunksFound[^1];
                 if (chunks[lastChunk].IsFull)
                     return CreateChunk(archetype);
                 else
@@ -158,21 +158,23 @@ namespace Entygine.Ecs
         {
             EntityChunk chunk = new EntityChunk(archetype);
             chunk.UpdateVersion(version);
-
-            int index = -1;
-            bool added = false;
+            int prevChunk = -1;
             for (int i = 0; i < chunks.Count; i++)
             {
                 if (chunks[i].HasArchetype(archetype))
-                {
-                    chunks.Insert(i + 1, chunk);
-                    index = i + 1;
-                    added = true;
+                    prevChunk = i;
+                //We have surparsed the last chunk with the archetype.
+                else if (prevChunk != -1)
                     break;
-                }
             }
 
-            if (!added)
+            int index;
+            if (prevChunk != -1)
+            {
+                chunks.Insert(prevChunk + 1, chunk);
+                index = prevChunk + 1;
+            }
+            else
             {
                 index = chunks.Count;
                 chunks.Add(chunk);

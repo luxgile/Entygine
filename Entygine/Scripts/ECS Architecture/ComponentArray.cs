@@ -37,7 +37,8 @@ namespace Entygine.Ecs
 
         public bool TypeMatch<T0>() where T0 : IComponent
         {
-            return TypeMatch(TypeCache.GetTypeCache(typeof(T0), true));
+            return componentType.Type == typeof(T0);
+            //return TypeMatch(TypeCache.GetTypeCache(typeof(T0), true));
         }
         public bool TypeMatch(TypeCache type)
         {

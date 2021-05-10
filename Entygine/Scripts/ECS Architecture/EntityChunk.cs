@@ -318,7 +318,8 @@ namespace Entygine.Ecs
         {
             return obj is EntityChunk chunk 
                 && chunk.Archetype.Equals(Archetype)
-                && chunk.Count == Count;
+                && chunk.Count == Count
+                && chunk.sharedComponents == sharedComponents;
         }
 
         public override int GetHashCode()

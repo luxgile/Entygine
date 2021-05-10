@@ -1,4 +1,5 @@
-﻿using Entygine.Rendering;
+﻿using Entygine.Mathematics;
+using Entygine.Rendering;
 using OpenTK.Mathematics;
 using System.Collections.Generic;
 
@@ -27,19 +28,19 @@ namespace Entygine.UI
                 },
             };
 
-            deltaTimeText = new UIText
+            deltaTimeText = new()
             {
                 Size = 0.3f
             };
 
 
-            UIImage bgImg = new UIImage()
+            UIImage bgImg = new()
             {
                 Color = Color01.gray,
             };
             bgImg.Children.Add(deltaTimeText);
 
-            UIButton exitButton = new UIButton()
+            UIButton exitButton = new()
             {
                 Padding = new Padding() { left = new Padding.PaddingElement(0.05f), right = new Padding.PaddingElement(0.85f) },
             };
@@ -52,11 +53,11 @@ namespace Entygine.UI
             Root.Children.Add(stackPanel);
 
             //Image to test alignment:
-            UIImage img = new UIImage()
+            UIImage img = new()
             {
                 Color = Color01.white,
             };
-            UIText t = new UIText("SOME TEXT")
+            UIText t = new("SOME TEXT")
             {
                 VerticalAlignment = EVerticalAlign.Center,
                 HorizontalAlignment = EHorizontalAlign.Right
@@ -88,7 +89,8 @@ namespace Entygine.UI
 
         public void UpdateRenderers()
         {
-            Rect rootRect = new Rect(Vector2.Zero, new Vector2(MainDevWindowGL.Window.Size.X, MainDevWindowGL.Window.Size.Y));
+            Vec2i resolution = AppScreen.Resolution;
+            Rect rootRect = new(Vector2.Zero, new Vector2(resolution.x, resolution.y));
             UpdateElementRenderers(rootRect, Root);
             static void UpdateElementRenderers(Rect parentRect, UIElement element)
             {
