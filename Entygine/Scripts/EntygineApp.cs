@@ -58,6 +58,8 @@ namespace Entygine
 
             DevConsole.Log(LogType.Info, "Creating Entity World...");
 
+            ExampleCallGenerated.CallGenerated();
+
             coreWorker = new WorkerCycleCore();
             EntityWorld world = InitEcs();
 

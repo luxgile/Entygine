@@ -7,6 +7,30 @@ using System.Diagnostics;
 namespace Entygine.Benchmarking
 {
     public struct Dummy : IComponent { public int value; }
+    public struct A : IComponent { }
+    public struct B : IComponent { }
+    public struct C : IComponent { }
+    public class TypeComparison
+    {
+        private int a = 5;
+        private int b = 3;
+
+        [Benchmark]
+        public bool TypeCompare()
+        {
+            return typeof(A).Equals(typeof(B));
+        }
+        [Benchmark]
+        public bool IntCompare()
+        {
+            return a.Equals(b);
+        }
+        [Benchmark]
+        public bool TypeCacheCompare()
+        {
+            return TypeCache.ReadType<A>().Equals(TypeCache.ReadType<B>());
+        }
+    }
 
     public class ReadComponent
     {
@@ -91,10 +115,11 @@ namespace Entygine.Benchmarking
     {
         private static void Main(string[] args)
         {
+            BenchmarkRunner.Run<TypeComparison>();
             //BenchmarkRunner.Run<ReadComponent>();
-            var rc = new ReadComponent();
-            rc.Read();
-            rc.Write();
+            //var rc = new ReadComponent();
+            //rc.Read();
+            //rc.Write();
             Console.Read();
         }
     }

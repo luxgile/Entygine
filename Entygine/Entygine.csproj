@@ -48,6 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Entygine.SourceGen\Entygine.SourceGen.csproj" OutputItemType="Analyzer" 
+  ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="SharpFont">
       <HintPath>Dependencies\SharpFont.dll</HintPath>
     </Reference>

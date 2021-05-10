@@ -11,7 +11,7 @@ namespace Entygine.Ecs
 
         public ComponentArray(TypeCache componentType, int count)
         {
-            this.componentType = componentType ?? throw new ArgumentNullException(nameof(componentType));
+            this.componentType = componentType;
             components = new IComponent[count];
 
             //TODO: This is awful but works for now
@@ -42,7 +42,7 @@ namespace Entygine.Ecs
         }
         public bool TypeMatch(TypeCache type)
         {
-            return type == componentType;
+            return type.Equals(componentType);
         }
 
         public T0[] CastTo<T0>() where T0 : IComponent
