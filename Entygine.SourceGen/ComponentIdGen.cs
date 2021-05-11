@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Entygine_SourceGen
@@ -10,21 +11,39 @@ namespace Entygine_SourceGen
     {
         public void Execute(GeneratorExecutionContext context)
         {
-            StringBuilder sb = new(@"
-    public static class ExampleCallGenerated
-    {
-        public static void CallGenerated()
-        {
-            
-        }
-    }");
+            ComponentReceiver receiver = (ComponentReceiver)context.SyntaxReceiver;
 
-            context.AddSource("Example", SourceText.From(sb.ToString(), Encoding.UTF8));
+
+            StringBuilder sb = new StringBuilder($@"public enum TypesFound {{ {string.Join(", ", receiver.Types)} }}");
+
+            context.AddSource("Example2.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
         }
 
         public void Initialize(GeneratorInitializationContext context)
         {
+            context.RegisterForSyntaxNotifications(() => new ComponentReceiver());
+        }
 
+        public class ComponentReceiver : ISyntaxReceiver
+        {
+            public List<string> Types { get; } = new List<string>();
+            public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
+            {
+                if (!(syntaxNode is StructDeclarationSyntax structSyntax))
+                    return;
+
+                SeparatedSyntaxList<BaseTypeSyntax> baseTypes = structSyntax.BaseList?.Types ?? default;
+
+                for (int i = 0; i < baseTypes.Count; i++)
+                {
+                    if (!(baseTypes[i] is SimpleBaseTypeSyntax syntax) || syntax.Type.GetText()?.ToString() != $"IComponent")
+                        return;
+                }
+
+                string text = structSyntax.Identifier.Text;
+                if (!Types.Contains(text))
+                    Types.Add(text);
+            }
         }
     }
 }

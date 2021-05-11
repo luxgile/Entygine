@@ -71,7 +71,7 @@ namespace Entygine_Editor
             //EditorProject.OpenProject(pathToLastProject);
             //EngineEditorSettings.Current.ProjMeta.LastProjectOpened = pathToLastProject;
             //DevConsole.Log(LogType.Info, "Loaded project at: " + pathToLastProject);
-
+            //ExampleCallGenerated.CallGenerated
             EntygineApp.LoadEngine();
 
             DevConsole.Log(LogType.Info, "Editor started succesfully.");

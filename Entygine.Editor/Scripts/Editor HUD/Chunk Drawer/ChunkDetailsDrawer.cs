@@ -1,5 +1,6 @@
 ﻿using Entygine.Ecs;
 using ImGuiNET;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Entygine_Editor
