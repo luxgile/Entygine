@@ -35,7 +35,7 @@ namespace Entygine
             nativeWindowSettings.Size = new Vector2i(1600, 900);
 
             using MainDevWindowGL mainWindow = new MainDevWindowGL(gameWindowSettings, nativeWindowSettings);
-            
+
             //DevConsole.Log("Engine started succesfully.");
 
             mainWindow.Load += LoadEngine;

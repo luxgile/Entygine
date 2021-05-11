@@ -13,7 +13,6 @@ namespace Entygine_SourceGen
         {
             ComponentReceiver receiver = (ComponentReceiver)context.SyntaxReceiver;
 
-
             StringBuilder sb = new StringBuilder($@"public enum TypesFound {{ {string.Join(", ", receiver.Types)} }}");
 
             context.AddSource("Example2.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
@@ -33,10 +32,12 @@ namespace Entygine_SourceGen
                     return;
 
                 SeparatedSyntaxList<BaseTypeSyntax> baseTypes = structSyntax.BaseList?.Types ?? default;
+                if (baseTypes.Count == 0)
+                    return;
 
                 for (int i = 0; i < baseTypes.Count; i++)
                 {
-                    if (!(baseTypes[i] is SimpleBaseTypeSyntax syntax) || syntax.Type.GetText()?.ToString() != $"IComponent")
+                    if (!(baseTypes[i] is SimpleBaseTypeSyntax syntax) || syntax.Type.ToString() != $"IComponent")
                         return;
                 }
 
