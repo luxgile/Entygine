@@ -4,6 +4,8 @@
     {
         private QueryScope query;
 
+        protected virtual bool CheckChanges { get; } = true;
+
         protected abstract QueryScope SetupQuery();
 
         protected override void OnSystemCreated()
@@ -17,7 +19,7 @@
         {
             base.OnPerformFrame(dt);
 
-            query.OnlyChanged(LastVersionWorked).Perform();
+            query.OnlyChanged(CheckChanges ? LastVersionWorked : 0).Perform();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Entygine.Ecs
 {
-    public struct C_Position : IComponent
+    public partial struct C_Position : IComponent
     {
         public Vec3f value;
     }

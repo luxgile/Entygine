@@ -9,7 +9,7 @@ namespace Entygine.Ecs.Systems
 {
     public class EditorCameraControlSystem : QuerySystem
     {
-        private QuerySettings settings = new QuerySettings().With(TypeCache.WriteType(typeof(C_Transform)), TypeCache.WriteType(typeof(C_EditorCamera)));
+        private QuerySettings settings = new QuerySettings().With(C_Transform.Identifier, C_EditorCamera.Identifier);
 
         private float scrollDelta;
         private Vector2 lastCursorPos;
@@ -18,12 +18,14 @@ namespace Entygine.Ecs.Systems
         private Vector3 posDelta;
         private Vector2 rotDelta;
 
+        protected override bool CheckChanges => false;
+
         protected override QueryScope SetupQuery()
         {
-            return new EntityQueryScope(settings, (context) =>
+            return new EntityQueryScope(settings, (ref EntityQueryContext context) =>
             {
-                context.Read(out C_EditorCamera editorCamera);
-                context.Read(out C_Transform transform);
+                context.Read(C_EditorCamera.Identifier, out C_EditorCamera editorCamera);
+                context.Read(C_Transform.Identifier, out C_Transform transform);
 
                 editorCamera.speed += speedDelta * deltaTime;
                 editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
@@ -50,8 +52,8 @@ namespace Entygine.Ecs.Systems
                 //DevGizmos.DrawPoint((Vec3f)editorCamera.focusPoint);
                 DevGizmos.DrawLine((Vec3f)editorCamera.focusPoint, (Vec3f)editorCamera.focusPoint + Vec3f.Right);
 
-                context.Write(transform);
-                context.Write(editorCamera);
+                context.Write(C_Transform.Identifier, transform);
+                context.Write(C_EditorCamera.Identifier, editorCamera);
             });
         }
 

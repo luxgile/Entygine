@@ -10,7 +10,6 @@ namespace Entygine.Ecs
         public override void Perform()
         {
             EntityWorld world = EntityWorld.Active;
-            bool generalWrite = Settings.IsGeneralWrite();
             List<EntityChunk> chunks = world.EntityManager.GetChunks();
             for (int i = 0; i < chunks.Count; i++)
             {
@@ -22,9 +21,9 @@ namespace Entygine.Ecs
                     continue;
 
                 ChunkQueryContext context = new(chunk);
-                Iterator(context);
+                Iterator(ref context);
 
-                if (generalWrite && Settings.NeedsUpdate(ref chunk))
+                if (context.HasWriten)
                     chunk.UpdateVersion(world.EntityManager.Version);
             }
         }
@@ -33,20 +32,23 @@ namespace Entygine.Ecs
     public struct ChunkQueryContext : IQueryContext
     {
         public EntityChunk Chunk { private get; init; }
+        public bool HasWriten { get; private set; }
 
         public ChunkQueryContext(EntityChunk chunk)
         {
             Chunk = chunk;
+            HasWriten = false;
         }
 
-        public void ReadComponent<T0>(int index, out T0 component) where T0 : IComponent
+        public void ReadComponent<T0>(int index, TypeId id, out T0 component) where T0 : IComponent
         {
-            Chunk.TryGetComponent(index, out component);
+            Chunk.TryGetComponent(index, id, out component);
         }
 
-        public void WriteComponent<T0>(int index, T0 component) where T0 : IComponent
+        public void WriteComponent<T0>(int index, TypeId id, T0 component) where T0 : IComponent
         {
-            Chunk.SetComponent(index, component);
+            Chunk.SetComponent(index, id, component);
+            HasWriten = true;
         }
 
         public void Read<T0>(out T0 shared) where T0 : ISharedComponent
@@ -54,9 +56,10 @@ namespace Entygine.Ecs
             Chunk.TryGetSharedComponent(out shared);
         }
 
-        public void Write<T0>(T0 shared) where T0 : ISharedComponent
+        public void Write<T0>(TypeId id, T0 shared) where T0 : ISharedComponent
         {
-            Chunk.SetSharedComponent(shared);
+            Chunk.SetSharedComponent(id, shared);
+            HasWriten = true;
         }
 
         public int GetEntityCount() => Chunk.Count;

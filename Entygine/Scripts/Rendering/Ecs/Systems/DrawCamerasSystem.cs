@@ -12,18 +12,18 @@ namespace Entygine.Ecs.Systems
     [SystemGroup(typeof(MainPhases.DefaultPhaseId), PhaseType.Render)]
     public class DrawCamerasSystem : QuerySystem
     {
-        private readonly QuerySettings settings = new QuerySettings().With(TypeCache.ReadType(typeof(C_Camera)), TypeCache.ReadType(typeof(C_Transform)));
-
+        private readonly QuerySettings settings = new QuerySettings().With(C_Camera.Identifier, C_Transform.Identifier);
+        protected override bool CheckChanges => false;
         protected override QueryScope SetupQuery()
         {
-            return new ChunkQueryScope(settings, (context) =>
+            return new ChunkQueryScope(settings, (ref ChunkQueryContext context) =>
             {
                 int entityCount = context.GetEntityCount();
                 CameraData[] cameraDatas = new CameraData[entityCount];
                 Matrix4[] cameraTransforms = new Matrix4[entityCount];
                 for (int c = 0; c < entityCount; c++)
                 {
-                    context.ReadComponent(c, out C_Camera cam);
+                    context.ReadComponent(c, C_Camera.Identifier, out C_Camera cam);
                     if (cam.cameraData.Framebuffer == null)
                     {
                         Vec2i res = AppScreen.Resolution;
@@ -37,7 +37,7 @@ namespace Entygine.Ecs.Systems
                         ffb.AddColorBuffer(false);
                         cam.cameraData.SetFinalFramebuffer(ffb);
 
-                        context.WriteComponent(c, cam);
+                        context.WriteComponent(c, C_Camera.Identifier, cam);
                     }
                     else if (cam.cameraData.Framebuffer.Size != AppScreen.Resolution)
                     {
@@ -47,7 +47,7 @@ namespace Entygine.Ecs.Systems
 
                     cameraDatas[c] = cam.cameraData;
 
-                    context.ReadComponent(c, out C_Transform transform);
+                    context.ReadComponent(c, C_Transform.Identifier, out C_Transform transform);
                     cameraTransforms[c] = transform.value;
                 }
 

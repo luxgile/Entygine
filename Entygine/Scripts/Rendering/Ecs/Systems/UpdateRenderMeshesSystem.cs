@@ -6,11 +6,11 @@ namespace Entygine.Ecs.Systems
     [BeforeSystem(typeof(QueueRenderTransformsSystem))]
     public class UpdateRenderMeshesSystem : QuerySystem
     {
-        private readonly QuerySettings settings = new QuerySettings().With(TypeCache.WriteType(typeof(SC_RenderMesh)));
+        private readonly QuerySettings settings = new QuerySettings().With(SC_RenderMesh.Identifier);
 
         protected override QueryScope SetupQuery()
         {
-            return new ChunkQueryScope(settings, (context) =>
+            return new ChunkQueryScope(settings, (ref ChunkQueryContext context) =>
             {
                 context.Read(out SC_RenderMesh renderMesh);
 
@@ -22,7 +22,7 @@ namespace Entygine.Ecs.Systems
                 else
                     group.MeshRender = renderMesh.value;
 
-                context.Write(renderMesh);
+                context.Write(SC_RenderMesh.Identifier, renderMesh);
             });
         }
     }

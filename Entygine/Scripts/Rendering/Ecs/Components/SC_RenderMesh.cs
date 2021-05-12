@@ -3,7 +3,7 @@ using System;
 
 namespace Entygine.Ecs.Components
 {
-    public struct SC_RenderMesh : ISharedComponent
+    public partial struct SC_RenderMesh : ISharedComponent
     {
         public int id;
         public RenderMesh value;

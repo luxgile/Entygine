@@ -9,16 +9,16 @@ namespace Entygine.Ecs
 
     public class QuerySettings
     {
-        private TypeCache[] withTypes;
-        private TypeCache[] anyTypes;
+        private TypeId[] withTypes;
+        private TypeId[] anyTypes;
 
-        public QuerySettings With(params TypeCache[] types)
+        public QuerySettings With(params TypeId[] types)
         {
             this.withTypes = types;
             return this;
         }
 
-        public QuerySettings Any(params TypeCache[] types)
+        public QuerySettings Any(params TypeId[] types)
         {
             this.anyTypes = types;
             return this;
@@ -37,33 +37,33 @@ namespace Entygine.Ecs
             return withCheck && anyCheck;
         }
 
-        public bool IsGeneralWrite()
-        {
-            if (withTypes == null)
-                return false;
+        //public bool IsGeneralWrite()
+        //{
+        //    if (withTypes == null)
+        //        return false;
 
-            for (int i = 0; i < withTypes.Length; i++)
-            {
-                if (!withTypes[i].IsReadOnly)
-                    return true;
-            }
+        //    for (int i = 0; i < withTypes.Length; i++)
+        //    {
+        //        if (!withTypes[i].IsReadOnly)
+        //            return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public bool NeedsUpdate(ref EntityChunk chunk)
-        {
-            if (anyTypes == null)
-                return false;
+        //public bool NeedsUpdate(ref EntityChunk chunk)
+        //{
+        //    if (anyTypes == null)
+        //        return false;
 
-            for (int i = 0; i < anyTypes.Length; i++)
-            {
-                TypeCache type = anyTypes[i];
-                if (chunk.Archetype.HasTypes(type) && !type.IsReadOnly)
-                    return true;
-            }
-            return false;
-        }
+        //    for (int i = 0; i < anyTypes.Length; i++)
+        //    {
+        //        TypeId type = anyTypes[i];
+        //        if (chunk.Archetype.HasTypes(type) && !type.IsReadOnly)
+        //            return true;
+        //    }
+        //    return false;
+        //}
 
         public static readonly QuerySettings Empty = new QuerySettings();
     }

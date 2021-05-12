@@ -5,11 +5,11 @@ namespace Entygine.Ecs.Systems
 {
     public class QueueRenderTransformsSystem : QuerySystem
     {
-        private readonly QuerySettings settings = new QuerySettings().With(TypeCache.ReadType(typeof(SC_RenderMesh)), TypeCache.WriteType(typeof(C_Transform)));
+        private readonly QuerySettings settings = new QuerySettings().With(SC_RenderMesh.Identifier, C_Transform.Identifier);
 
         protected override QueryScope SetupQuery()
         {
-            return new ChunkQueryScope(settings, (context) =>
+            return new ChunkQueryScope(settings, (ref ChunkQueryContext context) =>
             {
                 context.Read(out SC_RenderMesh renderMesh);
 
@@ -22,7 +22,7 @@ namespace Entygine.Ecs.Systems
                     int entityCount = context.GetEntityCount();
                     for (int i = 0; i < entityCount; i++)
                     {
-                        context.ReadComponent(i, out C_Transform transform);
+                        context.ReadComponent(i, C_Transform.Identifier, out C_Transform transform);
                         group.AddTransform(transform.value);
                     }
                 }

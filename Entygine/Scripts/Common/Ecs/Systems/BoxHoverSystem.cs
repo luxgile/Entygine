@@ -2,19 +2,19 @@
 
 namespace Entygine.Ecs.Systems
 {
-    public struct C_BoxTag : IComponent { }
+    public partial struct C_BoxTag : IComponent { }
 
     public class BoxHoverSystem : QuerySystem
     {
-        private readonly QuerySettings settings = new QuerySettings().With(TypeCache.ReadType<C_BoxTag>(), TypeCache.WriteType<C_Position>());
+        private readonly QuerySettings settings = new QuerySettings().With(C_BoxTag.Identifier, C_Position.Identifier);
 
         protected override QueryScope SetupQuery()
         {
-            return new EntityQueryScope(settings, (context) =>
+            return new EntityQueryScope(settings, (ref EntityQueryContext context) =>
             {
-                context.Read(out C_Position position);
+                context.Read(C_Position.Identifier, out C_Position position);
                 position.value.y += (MathUtils.Sin((float)EntygineApp.EngineTime)) * 0.01f;
-                context.Write(position);
+                context.Write(C_Position.Identifier, position);
             });
         }
     }

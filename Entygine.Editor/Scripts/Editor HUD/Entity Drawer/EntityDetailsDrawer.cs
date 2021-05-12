@@ -14,13 +14,13 @@ namespace Entygine_Editor
         {
             drawers.FindDrawers();
 
-            queryScope = new(QuerySettings.Empty, (context) =>
+            queryScope = new(QuerySettings.Empty, (ref EntityQueryContext context) =>
             {
                 context.GetEntity(out Entity entity);
                 if (!entity.Equals(selectedEntity))
                     return;
 
-                context.ReadAll(out IComponent[] components);
+                context.ReadAll(out TypeId[] ids, out IComponent[] components);
 
                 for (int i = 0; i < components.Length; i++)
                 {

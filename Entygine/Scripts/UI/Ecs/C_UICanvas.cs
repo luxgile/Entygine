@@ -2,7 +2,7 @@
 
 namespace Entygine.UI
 {
-    public struct C_UICanvas : IComponent
+    public partial struct C_UICanvas : IComponent
     {
         public UICanvas canvas;
     }

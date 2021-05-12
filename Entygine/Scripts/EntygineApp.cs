@@ -104,39 +104,36 @@ namespace Entygine
                 Material materialResource = new Material(shaderResource, texture);
                 SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
 
-                EntityArchetype meshArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform), typeof(C_Position));
-                EntityArchetype boxArchetype = new EntityArchetype(typeof(SC_RenderMesh), typeof(C_Transform), typeof(C_Position), typeof(C_BoxTag));
+                EntityArchetype meshArchetype = new EntityArchetype(SC_RenderMesh.Identifier, C_Transform.Identifier, C_Position.Identifier);
+                EntityArchetype boxArchetype = new EntityArchetype(SC_RenderMesh.Identifier, C_Transform.Identifier, C_Position.Identifier, C_BoxTag.Identifier);
 
                 Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
-                world.EntityManager.SetComponent(planeEntity, new C_Position() { value = new Vec3f(0, 0, 0) });
-                //world.EntityManager.SetComponent(planeEntity, new C_PhysicsBody() { body = new PhysicBody() { isStatic = true } });
+                world.EntityManager.SetComponent(planeEntity, C_Position.Identifier, new C_Position() { value = new Vec3f(0, 0, 0) });
                 Mesh planeMesh = MeshPrimitives.CreatePlaneXZ(50);
                 Material planeMaterial = new Material(shaderResource, Texture2D.CreateWhiteTexture(64, 64));
-                world.EntityManager.SetSharedComponent(planeEntity, new SC_RenderMesh(planeMesh, planeMaterial));
+                world.EntityManager.SetSharedComponent(planeEntity, SC_RenderMesh.Identifier, new SC_RenderMesh(planeMesh, planeMaterial));
 
                 Entity planeEntity2 = world.EntityManager.CreateEntity(meshArchetype);
-                world.EntityManager.SetComponent(planeEntity2, new C_Position() { value = new Vec3f(0, 5, -10) });
-                //world.EntityManager.SetComponent(planeEntity2, new C_PhysicsBody() { body = new PhysicBody() { isStatic = true } });
-
+                world.EntityManager.SetComponent(planeEntity2, C_Position.Identifier, new C_Position() { value = new Vec3f(0, 5, -10) });
                 Mesh planeMesh2 = MeshPrimitives.CreatePlaneXY(10);
                 Material planeMaterial2 = new Material(shaderResource, texture);
-                world.EntityManager.SetSharedComponent(planeEntity2, new SC_RenderMesh(planeMesh2, planeMaterial2));
+                world.EntityManager.SetSharedComponent(planeEntity2, SC_RenderMesh.Identifier, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
-                for (int x = 0; x < 30; x++)
+                for (int x = 0; x < 50; x++)
                 {
-                    for (int z = 0; z < 30; z++)
+                    for (int z = 0; z < 50; z++)
                     {
                         Entity boxEntity = world.EntityManager.CreateEntity(boxArchetype);
-                        world.EntityManager.SetComponent(boxEntity, new C_Position() { value = new Vec3f(x + x, 2, z + z) });
-                        world.EntityManager.SetSharedComponent(boxEntity, renderMesh);
+                        world.EntityManager.SetComponent(boxEntity, C_Position.Identifier, new C_Position() { value = new Vec3f(x + x, 2, z + z) });
+                        world.EntityManager.SetSharedComponent(boxEntity, SC_RenderMesh.Identifier, renderMesh);
                     }
                 }
 
-                EntityArchetype editorCameraArchetype = new (typeof(C_Camera), typeof(C_Transform), typeof(C_EditorCamera));
+                EntityArchetype editorCameraArchetype = new(C_Camera.Identifier, C_Transform.Identifier, C_EditorCamera.Identifier);
                 Entity cameraEditorEntity = world.EntityManager.CreateEntity(editorCameraArchetype);
-                world.EntityManager.SetComponent(cameraEditorEntity, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
+                world.EntityManager.SetComponent(cameraEditorEntity, C_Camera.Identifier, new C_Camera() { cameraData = CameraData.CreatePerpectiveCamera(45f, 800f / 600f, 0.1f, 100f) });
 
-                world.EntityManager.SetComponent(cameraEditorEntity, new C_EditorCamera()
+                world.EntityManager.SetComponent(cameraEditorEntity, C_EditorCamera.Identifier, new C_EditorCamera()
                 { speed = 10f, focusPoint = new Vector3(0, 2, 0), focusDistance = 12, pitch = 20, yaw = 115, sensitivity = 20 });
             }
 
@@ -148,9 +145,9 @@ namespace Entygine
 
             void InitUI(EntityWorld world)
             {
-                EntityArchetype canvasArch = new EntityArchetype(typeof(C_UICanvas));
+                EntityArchetype canvasArch = new EntityArchetype(C_UICanvas.Identifier);
                 var entity = world.EntityManager.CreateEntity(canvasArch);
-                world.EntityManager.SetComponent(entity, new C_UICanvas() { canvas = new UICanvas() });
+                world.EntityManager.SetComponent(entity, C_UICanvas.Identifier, new C_UICanvas() { canvas = new UICanvas() });
             }
 
             static void InitSkybox()

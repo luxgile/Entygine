@@ -2,7 +2,7 @@
 
 namespace Entygine.Ecs
 {
-    public delegate void QueryDelegate<T0>(T0 context);
+    public delegate void QueryDelegate<T0>(ref T0 context);
     public interface IQueryContext { }
     public abstract class QueryScope
     {

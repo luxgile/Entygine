@@ -9,7 +9,7 @@ namespace EntygineTests
         [Test]
         public void CreateEntity()
         {
-            EntityArchetype arch = new EntityArchetype(typeof(C_Transform));
+            EntityArchetype arch = new EntityArchetype(C_Transform.Identifier);
             EntityManager em = new EntityManager();
             em.CreateEntity(arch);
 

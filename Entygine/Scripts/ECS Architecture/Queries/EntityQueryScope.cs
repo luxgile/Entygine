@@ -21,7 +21,6 @@ namespace Entygine.Ecs
             if (world == null)
                 world = EntityWorld.Active;
 
-            bool generalWrite = Settings.IsGeneralWrite();
             List<EntityChunk> chunks = world.EntityManager.GetChunks();
             for (int i = 0; i < chunks.Count; i++)
             {
@@ -32,13 +31,15 @@ namespace Entygine.Ecs
                 if (!chunk.HasChanged(ChangeVersion))
                     continue;
 
+                bool hasWriten = false;
                 for (int e = 0; e < chunk.Count; e++)
                 {
                     EntityQueryContext context = new(chunk, e);
-                    Iterator(context);
+                    Iterator(ref context);
+                    hasWriten = context.HasWriten;
                 }
 
-                if (generalWrite && Settings.NeedsUpdate(ref chunk))
+                if (hasWriten)
                     chunk.UpdateVersion(world.EntityManager.Version);
             }
         }
@@ -48,11 +49,13 @@ namespace Entygine.Ecs
     {
         public EntityChunk Chunk { get; init; }
         public int Index { get; init; }
+        public bool HasWriten { get; private set; }
 
         public EntityQueryContext(EntityChunk chunk, int index)
         {
             this.Chunk = chunk;
             this.Index = index;
+            HasWriten = false;
         }
 
         public void GetEntity(out Entity entity)
@@ -60,19 +63,20 @@ namespace Entygine.Ecs
             entity = Chunk.GetEntity(Index);
         }
 
-        public bool Read<T0>(out T0 comp) where T0 : IComponent
+        public bool Read<T0>(TypeId id, out T0 comp) where T0 : IComponent
         {
-            return Chunk.TryGetComponent(Index, out comp);
+            return Chunk.TryGetComponent(Index, id, out comp);
         }
 
-        public void ReadAll(out IComponent[] components)
+        public void ReadAll(out TypeId[] ids, out IComponent[] components)
         {
-            Chunk.GetComponentsFromIndex(Index, out components);
+            Chunk.GetComponentsFromIndex(Index, out ids, out components);
         }
 
-        public void Write<T0>(T0 comp) where T0 : IComponent
+        public void Write<T0>(TypeId id, T0 comp) where T0 : IComponent
         {
-            Chunk.SetComponent(Index, comp);
+            HasWriten = true;
+            Chunk.SetComponent(Index, id, comp);
         }
     }
 }

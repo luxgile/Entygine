@@ -12,7 +12,7 @@ namespace Entygine_Editor
     {
         public override string Title => "Client";
 
-        private QuerySettings settings = new QuerySettings().Any(TypeCache.ReadType<C_Camera>());
+        private QuerySettings settings = new QuerySettings().Any(C_Camera.Identifier);
         private EntityQueryScope queryScope;
 
         private bool keepAspect = true;
@@ -24,9 +24,9 @@ namespace Entygine_Editor
         {
             Flags |= ImGuiWindowFlags.MenuBar;
 
-            queryScope = new EntityQueryScope(settings, (context) =>
+            queryScope = new EntityQueryScope(settings, (ref EntityQueryContext context) =>
             {
-                context.Read(out C_Camera camera);
+                context.Read(C_Camera.Identifier, out C_Camera camera);
                 Vector2 floatingSize = (ImGui.GetContentRegionAvail() - currSize) / 2f;
                 ImGui.SetCursorPos(ImGui.GetCursorPos() + floatingSize);
                 ImGui.Image((IntPtr)camera.cameraData.FinalFramebuffer.ColorBuffer, currSize, new Vector2(0, 0), new Vector2(1, -1));

@@ -2,7 +2,7 @@
 
 namespace Entygine.Ecs
 {
-    public struct C_Rotation : IComponent
+    public partial struct C_Rotation : IComponent
     {
         public Quaternion value;
     }

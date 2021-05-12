@@ -15,7 +15,7 @@ namespace Entygine.Ecs
 
         public EntityChunk GetChunk(int index) => chunks[index];
 
-        public void SetComponent<T0>(Entity entity, T0 component) where T0 : IComponent
+        public void SetComponent<T0>(Entity entity, TypeId id, T0 component) where T0 : IComponent
         {
             for (int i = 0; i < chunks.Count; i++)
             {
@@ -25,7 +25,7 @@ namespace Entygine.Ecs
                     Entity currEntity = chunk.GetEntity(e);
                     if (currEntity.id == entity.id)
                     {
-                        chunk.SetComponent(e, component);
+                        chunk.SetComponent(e, id, component);
                         chunk.UpdateVersion(version);
                         return;
                     }
@@ -35,7 +35,7 @@ namespace Entygine.Ecs
             throw new Exception("Entity not found.");
         }
 
-        public void SetSharedComponent<T0>(Entity entity, T0 component) where T0 : ISharedComponent
+        public void SetSharedComponent<T0>(Entity entity, TypeId id, T0 component) where T0 : ISharedComponent
         {
             int chunkFound = -1;
             for (int i = 0; i < chunks.Count; i++)
@@ -51,7 +51,7 @@ namespace Entygine.Ecs
                     //Needs to be initialized
                     if (chunk.IsSharedComponentEmpty<T0>())
                     {
-                        chunk.SetSharedComponent(component);
+                        chunk.SetSharedComponent(id, component);
                         return;
                     }
 
@@ -81,27 +81,27 @@ namespace Entygine.Ecs
                 if(!chunk.IsFull && chunk.HasArchetype(fromChunk.Archetype) && (chunk.HasSharedComponents(sharedsToFind)))
                 {
                     //Valid chunk found. Move entity to it.
-                    fromChunk.GetComponentsFromEntity(entity, out IComponent[] components);
+                    fromChunk.GetComponentsFromEntity(entity, out TypeId[] ids, out IComponent[] components);
                     fromChunk.DestroyEntity(entity);
 
                     chunk.AddEntity(entity);
-                    chunk.SetSharedComponent(component);
-                    chunk.SetComponents(entity, components);
+                    chunk.SetSharedComponent(id, component);
+                    chunk.SetComponents(entity, ids, components);
                     return;
                 }
             }
 
             {
                 //Create a new chunk with the given archetype and new shared component
-                fromChunk.GetComponentsFromEntity(entity, out IComponent[] components);
+                fromChunk.GetComponentsFromEntity(entity, out TypeId[] ids, out IComponent[] components);
                 fromChunk.DestroyEntity(entity);
 
                 int newChunkIndex = CreateChunk(fromChunk.Archetype);
                 EntityChunk newChunk = chunks[newChunkIndex];
                 newChunk.AddEntity(entity);
-                newChunk.SetSharedComponents(fromChunk.GetSharedComponents());
-                newChunk.SetSharedComponent(component);
-                newChunk.SetComponents(entity, components);
+                newChunk.SetSharedComponents(fromChunk.Archetype.GetSharedTypes(), fromChunk.GetSharedComponents());
+                newChunk.SetSharedComponent(id, component);
+                newChunk.SetComponents(entity, ids, components);
             }
         }
 

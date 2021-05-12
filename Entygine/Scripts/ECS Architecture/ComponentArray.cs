@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 
 namespace Entygine.Ecs
 {
     public class ComponentArray
     {
-        private TypeCache componentType;
+        private TypeId typeId;
         private IComponent[] components;
 
-        public ComponentArray(TypeCache componentType, int count)
+        public ComponentArray(TypeId typeId, int count)
         {
-            this.componentType = componentType;
+            this.typeId = typeId;
             components = new IComponent[count];
 
             //TODO: This is awful but works for now
             for (int i = 0; i < count; i++)
-                components[i] = (IComponent)Activator.CreateInstance(componentType.Type);
+                components[i] = (IComponent)Activator.CreateInstance(TypeManager.GetTypeFromId(typeId));
         }
 
         public IComponent this[int index]
@@ -35,14 +34,9 @@ namespace Entygine.Ecs
             Array.Copy(components, array, index);
         }
 
-        public bool TypeMatch<T0>() where T0 : IComponent
+        public bool TypeMatch(TypeId id)
         {
-            return componentType.Type == typeof(T0);
-            //return TypeMatch(TypeCache.GetTypeCache(typeof(T0), true));
-        }
-        public bool TypeMatch(TypeCache type)
-        {
-            return type.Equals(componentType);
+            return id == typeId;
         }
 
         public T0[] CastTo<T0>() where T0 : IComponent

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Entygine.Ecs
 {
@@ -22,8 +23,8 @@ namespace Entygine.Ecs
                 currentCount = 0;
                 this.arch = arch;
 
-                TypeCache[] cTypes = arch.GetComponenTypes();
-                TypeCache[] sTypes = arch.GetSharedTypes();
+                TypeId[] cTypes = arch.GetComponenTypes();
+                TypeId[] sTypes = arch.GetSharedTypes();
                 int entityAmount = arch.GetChunkCapacity(CHUNK_SIZE);
 
                 entities = new StructArray<Entity>(entityAmount, true);
@@ -109,9 +110,9 @@ namespace Entygine.Ecs
             chunkVersion = version;
         }
 
-        public bool TryGetComponent<T0>(int index, out T0 component) where T0 : IComponent
+        public bool TryGetComponent<T0>(int index, TypeId id, out T0 component) where T0 : IComponent
         {
-            if (TryGetComponents<T0>(out ComponentArray comp))
+            if (TryGetComponents(id, out ComponentArray comp))
             {
                 component = (T0)comp[index];
                 return true;
@@ -121,28 +122,28 @@ namespace Entygine.Ecs
             return false;
         }
 
-        public bool TryGetComponents<T0>(out ComponentArray comp) where T0 : IComponent
+        //public bool TryGetComponents<T0>(out ComponentArray comp) where T0 : IComponent
+        //{
+        //    for (int i = 0; i < componentCollections.Length; i++)
+        //    {
+        //        ComponentArray currCollection = componentCollections[i];
+        //        if (currCollection.TypeMatch<T0>())
+        //        {
+        //            comp = currCollection;
+        //            return true;
+        //        }
+        //    }
+
+        //    comp = null;
+        //    return false;
+        //}
+
+        public bool TryGetComponents(TypeId typeId, out ComponentArray comp)
         {
             for (int i = 0; i < componentCollections.Length; i++)
             {
                 ComponentArray currCollection = componentCollections[i];
-                if (currCollection.TypeMatch<T0>())
-                {
-                    comp = currCollection;
-                    return true;
-                }
-            }
-
-            comp = null;
-            return false;
-        }
-
-        public bool TryGetComponents(TypeCache componentType, out ComponentArray comp)
-        {
-            for (int i = 0; i < componentCollections.Length; i++)
-            {
-                ComponentArray currCollection = componentCollections[i];
-                if (currCollection.TypeMatch(componentType))
+                if (currCollection.TypeMatch(typeId))
                 {
                     comp = currCollection;
                     return true;
@@ -166,37 +167,46 @@ namespace Entygine.Ecs
             throw new Exception("Entity not found.");
         }
 
-        public void GetComponentsFromEntity(Entity entity, out IComponent[] components)
+        public void GetComponentsFromEntity(Entity entity, out TypeId[] ids, out IComponent[] components)
         {
             int entityIndex = GetEntityIndex(entity);
-            GetComponentsFromIndex(entityIndex, out components);
+            GetComponentsFromIndex(entityIndex, out ids, out components);
         }
-        public void GetComponentsFromIndex(int index, out IComponent[] components)
+        public void GetComponentsFromIndex(int index, out TypeId[] ids, out IComponent[] components)
         {
+            ids = Archetype.GetComponenTypes();
             components = new IComponent[componentCollections.Length];
             for (int c = 0; c < componentCollections.Length; c++)
                 components[c] = (componentCollections[c][index]);
         }
 
-        public void SetComponent<T0>(int index, T0 component) where T0 : IComponent
+        //public void SetComponent<T0>(int index, T0 component) where T0 : IComponent
+        //{
+        //    if (TryGetComponents<T0>(out ComponentArray comp))
+        //        comp[index] = component;
+        //    else
+        //        throw new Exception("Entity doesn't have the expected component.");
+        //}
+        public void SetComponent<T0>(int index, TypeId id, T0 component) where T0 : IComponent
         {
-            if (TryGetComponents<T0>(out ComponentArray comp))
+            if (TryGetComponents(id, out ComponentArray comp))
                 comp[index] = component;
             else
                 throw new Exception("Entity doesn't have the expected component.");
         }
 
-        public void SetComponents(Entity entity, params IComponent[] components)
+        public void SetComponents(Entity entity, TypeId[] ids, IComponent[] components)
         {
             int index = GetEntityIndex(entity);
             for (int i = 0; i < components.Length; i++)
             {
                 IComponent currComponent = components[i];
-                if (TryGetComponents(TypeCache.GetTypeCache(currComponent.GetType(), false), out ComponentArray componentArray))
+                if (TryGetComponents(ids[i], out ComponentArray componentArray))
                     componentArray[index] = currComponent;
             }
         }
 
+        //TODO: Change this to use TypeId
         public bool TryGetSharedComponent<T0>(out T0 comp) where T0 : ISharedComponent
         {
             for (int i = 0; i < sharedComponents.Length; i++)
@@ -259,9 +269,9 @@ namespace Entygine.Ecs
             return true;
         }
 
-        public void SetSharedComponent<T0>(T0 component) where T0 : ISharedComponent
+        public void SetSharedComponent<T0>(TypeId id, T0 component) where T0 : ISharedComponent
         {
-            if (!arch.HasSharedType(TypeCache.GetTypeCache(typeof(T0), false)))
+            if (!arch.HasSharedType(id))
                 throw new Exception("Shared component not found in chunk.");
 
             int indexNull = -1;
@@ -283,7 +293,7 @@ namespace Entygine.Ecs
                 throw new Exception("Shared component not found in chunk.");
         }
 
-        public void SetSharedComponents(params ISharedComponent[] shareds)
+        public void SetSharedComponents(TypeId[] ids, ISharedComponent[] shareds)
         {
             for (int i = 0; i < shareds.Length; i++)
             {
@@ -291,7 +301,7 @@ namespace Entygine.Ecs
                 if (currShared == null)
                     continue;
 
-                if (!arch.HasSharedType(TypeCache.GetTypeCache(currShared.GetType(), false)))
+                if (!arch.HasSharedType(ids[i]))
                     throw new Exception("Shared component not found in chunk.");
 
                 int indexNull = -1;

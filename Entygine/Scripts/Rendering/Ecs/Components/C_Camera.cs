@@ -2,7 +2,7 @@
 
 namespace Entygine.Ecs.Components
 {
-    public struct C_Camera : IComponent
+    public partial struct C_Camera : IComponent
     {
         public CameraData cameraData;
     }

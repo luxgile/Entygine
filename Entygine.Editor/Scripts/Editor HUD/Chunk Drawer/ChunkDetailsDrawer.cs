@@ -23,8 +23,8 @@ namespace Entygine_Editor
             ImGui.Text("Archetype:");
 
             EntityArchetype archetype = chunk.Archetype;
-            TypeCache[] sharedTypes = archetype.GetSharedTypes();
-            TypeCache[] componentTypes = archetype.GetComponenTypes();
+            TypeId[] sharedTypes = archetype.GetSharedTypes();
+            TypeId[] componentTypes = archetype.GetComponenTypes();
 
             if(sharedTypes.Length == 0)
             {
@@ -35,7 +35,7 @@ namespace Entygine_Editor
             else if (ImGui.TreeNodeEx("Shared", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 for (int i = 0; i < sharedTypes.Length; i++)
-                    ImGui.BulletText(sharedTypes[i].Type.Name);
+                    ImGui.BulletText(sharedTypes[i].Id.ToString());
                 ImGui.TreePop();
             }
 
@@ -48,7 +48,7 @@ namespace Entygine_Editor
             else if (ImGui.TreeNodeEx("Instanced", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 for (int i = 0; i < componentTypes.Length; i++)
-                    ImGui.BulletText(componentTypes[i].Type.Name);
+                    ImGui.BulletText(componentTypes[i].Id.ToString());
                 ImGui.TreePop();
             }
         }

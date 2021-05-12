@@ -8,11 +8,11 @@ namespace Entygine.UI
     [SystemGroup(typeof(MainPhases.EarlyPhaseId), PhaseType.Logic)]
     public class CanvasRegistrerSystem : QuerySystem
     {
-        private readonly QuerySettings settings = new QuerySettings().With(TypeCache.ReadType(typeof(C_UICanvas)));
+        private readonly QuerySettings settings = new QuerySettings().With(C_UICanvas.Identifier);
 
         protected override QueryScope SetupQuery()
         {
-            return new ChunkQueryScope(settings, (context) =>
+            return new ChunkQueryScope(settings, (ref ChunkQueryContext context) =>
             {
                 if (!RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
                     return;
@@ -22,7 +22,7 @@ namespace Entygine.UI
                 int entityCount = context.GetEntityCount();
                 for (int i = 0; i < entityCount; i++)
                 {
-                    context.ReadComponent(i, out C_UICanvas canvas);
+                    context.ReadComponent(i, C_UICanvas.Identifier, out C_UICanvas canvas);
                     canvasData.AddCanvas(canvas.canvas);
                 }
             });
