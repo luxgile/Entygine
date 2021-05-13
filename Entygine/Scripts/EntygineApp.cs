@@ -119,13 +119,15 @@ namespace Entygine
                 Material planeMaterial2 = new Material(shaderResource, texture);
                 world.EntityManager.SetSharedComponent(planeEntity2, SC_RenderMesh.Identifier, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
-                for (int x = 0; x < 50; x++)
+                uint countSqrd = 10;
+                Entity[] entities = world.EntityManager.CreateEntities(boxArchetype, countSqrd * countSqrd);
+                for (uint x = 0; x < countSqrd; x++)
                 {
-                    for (int z = 0; z < 50; z++)
+                    for (uint z = 0; z < countSqrd; z++)
                     {
-                        Entity boxEntity = world.EntityManager.CreateEntity(boxArchetype);
-                        world.EntityManager.SetComponent(boxEntity, C_Position.Identifier, new C_Position() { value = new Vec3f(x + x, 2, z + z) });
-                        world.EntityManager.SetSharedComponent(boxEntity, SC_RenderMesh.Identifier, renderMesh);
+                        uint index = x * countSqrd + z;
+                        world.EntityManager.SetComponent(entities[index], C_Position.Identifier, new C_Position() { value = new Vec3f(x + x, 2, z + z) });
+                        world.EntityManager.SetSharedComponent(entities[index], SC_RenderMesh.Identifier, renderMesh);
                     }
                 }
 

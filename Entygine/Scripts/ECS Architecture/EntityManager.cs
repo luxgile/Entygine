@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entygine.Mathematics;
+using System;
 using System.Collections.Generic;
 
 namespace Entygine.Ecs
@@ -61,7 +62,7 @@ namespace Entygine.Ecs
                 }
             }
 
-            if(chunkFound == -1)
+            if (chunkFound == -1)
                 throw new Exception("Entity not found.");
 
             EntityChunk fromChunk = chunks[chunkFound];
@@ -78,7 +79,7 @@ namespace Entygine.Ecs
             {
                 int index = i;
                 EntityChunk chunk = chunks[index];
-                if(!chunk.IsFull && chunk.HasArchetype(fromChunk.Archetype) && (chunk.HasSharedComponents(sharedsToFind)))
+                if (!chunk.IsFull && chunk.HasArchetype(fromChunk.Archetype) && (chunk.HasSharedComponents(sharedsToFind)))
                 {
                     //Valid chunk found. Move entity to it.
                     fromChunk.GetComponentsFromEntity(entity, out TypeId[] ids, out IComponent[] components);
@@ -121,6 +122,25 @@ namespace Entygine.Ecs
             chunk.UpdateVersion(version);
             Entity entity = chunk.CreateEntity(id);
             return entity;
+        }
+
+        public Entity[] CreateEntities(EntityArchetype archetype, uint count)
+        {
+            if (count == 0)
+                return null;
+
+            List<Entity> entities = new List<Entity>();
+            uint startId = (uint)GetEntityCount() + 1;
+            while (count > 0)
+            {
+                EntityChunk avalChunk = chunks[GetAvaliableChunk(archetype)];
+                uint toFill = MathUtils.Min(count, (uint)avalChunk.CountLeft);
+                avalChunk.UpdateVersion(version);
+                avalChunk.CreateEntities(startId, toFill, ref entities);
+                startId += toFill;
+                count -= toFill;
+            }
+            return entities.ToArray();
         }
 
         /// <summary>

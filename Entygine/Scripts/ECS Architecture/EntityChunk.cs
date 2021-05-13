@@ -51,6 +51,22 @@ namespace Entygine.Ecs
             return entities[index];
         }
 
+        public void CreateEntities(uint startId, uint count, ref List<Entity> entitiesList)
+        {
+            if(count > CountLeft)
+                throw new Exception("Chunk doesn't have enough space. Create a new one.");
+
+            int index = Count;
+            for (int i = 0; i < count; i++)
+            {
+                ref Entity entity = ref entities[index++];
+                entity.id = startId++;
+                entity.version++;
+                entitiesList.Add(entity);
+            }
+            currentCount += (int)count;
+        }
+
         public void AddEntity(Entity entity)
         {
             if (IsFull)
@@ -59,6 +75,17 @@ namespace Entygine.Ecs
             int index = Count;
             entities[index] = entity;
             currentCount++;
+        }
+
+        public void AddEntities(Entity[] entities)
+        {
+            if (IsFull || entities.Length > CountLeft)
+                throw new Exception("Chunk doesn't have enough space. Create a new one.");
+
+            int index = Count;
+            for (int i = 0; i < entities.Length; i++)
+                entities[index++] = entities[i];
+            currentCount += entities.Length;
         }
 
         public void DestroyEntity(Entity entity)
@@ -340,6 +367,7 @@ namespace Entygine.Ecs
         public bool IsFull => Count == Capacity;
         public int Count => currentCount;
         public int Capacity => entities.Count;
+        public int CountLeft => Capacity - Count;
         public EntityArchetype Archetype => arch;
         public uint ChunkVersion
         {
