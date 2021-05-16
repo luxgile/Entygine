@@ -36,6 +36,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\ECS Architecture\Iteration\EntityIterator_Iterations.gen.tt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Scripts\ECS Architecture\Iteration\EntityIterator_Iterations.gen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EntityIterator_Iterations.gen.cs</LastGenOutput>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Win32.SystemEvents" Version="5.0.0" />
     <PackageReference Include="OpenTK" Version="4.6.3" />
     <PackageReference Include="SharpFont" Version="4.0.1" />
@@ -58,6 +69,18 @@
     <Reference Include="SharpFont">
       <HintPath>Dependencies\SharpFont.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Scripts\ECS Architecture\Iteration\EntityIterator_Iterations.gen.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EntityIterator_Iterations.gen.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

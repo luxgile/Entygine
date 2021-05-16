@@ -1,7 +1,8 @@
-﻿namespace Entygine.Ecs
-{
-    public class EntityIterator
-    {
+﻿using System.Collections.Generic;
 
+namespace Entygine.Ecs
+{
+    public partial class EntityIterator
+    {
     }
 }
