@@ -18,6 +18,8 @@ namespace Entygine_SourceGen
 
             sb.Append("#region USINGS\n");
             sb.Append("using Entygine.Ecs;\n");
+            sb.Append("using System;\n");
+            sb.Append("using System.Collections.Generic;\n");
             foreach (KeyValuePair<string, List<string>> item in receiver.Types)
             {
                 sb.Append($"using {item.Key};\n");
@@ -44,16 +46,24 @@ namespace Entygine_SourceGen
 
             sb.Append("#region TYPE MANAGER\n");
             sb.Append("namespace Entygine.Ecs\n{\n");
-            sb.Append($"public static partial class TypeManager \n{{\n\tstatic TypeManager()\n\t{{\n");
+            sb.Append($"\tpublic static partial class TypeManager \n\t{{\n");
+            sb.Append($"\t\tprivate static readonly Type[] idToType = Array.Empty<Type>();\n\t\t\n");
+            sb.Append($"\t\tprivate static readonly Dictionary<Type, TypeId> typeToId = new Dictionary<Type, TypeId>();\n\t\t\n");
+            sb.Append($"\t\tstatic TypeManager() {{\n");
+
+            int componentCount = componentId;
+            sb.Append($"\t\t\tidToType = new Type[{componentCount}];\n");
+
             componentId = 0;
             foreach (KeyValuePair<string, List<string>> item in receiver.Types)
             {
                 for (int i = 0; i < item.Value.Count; i++)
                 {
-                    sb.Append($"\t\tidToType.Add(new TypeId({componentId++}), typeof({item.Value[i]}));\n");
+                    sb.Append($"\t\t\t idToType[{componentId}] = typeof({item.Value[i]});\n");
+                    sb.Append($"\t\t\t typeToId.Add(typeof({item.Value[i]}), new TypeId({componentId++}));\n");
                 }
             }
-            sb.Append($"\t}}\n}}\n}}\n");
+            sb.Append($"\t\t}}\n\t}}\n}}\n");
             sb.Append("#endregion");
 
             context.AddSource("__ComponentIds__.cs", SourceText.From(sb.ToString(), Encoding.UTF8));

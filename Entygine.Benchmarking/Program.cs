@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Running;
 using Entygine.Ecs;
 using Entygine.Ecs.Components;
+using Entygine.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -193,11 +194,51 @@ namespace Entygine.Benchmarking
     //    }
     //}
 
+    public class IterationDiff
+    {
+        private EntityWorld world;
+        private EntityQueryScope query;
+
+        public IterationDiff()
+        {
+            world = EntityWorld.CreateWorld();
+            world.EntityManager.CreateEntities(new EntityArchetype(C_Position.Identifier), 10000);
+            QuerySettings settings = new QuerySettings().With(C_Position.Identifier);
+            query = new EntityQueryScope(settings, world, (ref EntityQueryContext context) =>
+            {
+                context.Read(C_Position.Identifier, out C_Position position);
+                position.value = Vec3f.Zero;
+                context.Write(C_Position.Identifier, position);
+            });
+        }
+
+        [Benchmark]
+        public void OldIterate()
+        {
+            query.Perform();
+        }
+
+        [Benchmark]
+        public void NewIterate()
+        {
+            query.Iterate((ref C_Position position) =>
+            {
+                position.value = Vec3f.Zero;
+            });
+        }
+
+        [Benchmark]
+        public void MixIterate()
+        {
+            query2.Perform();
+        }
+    }
+
     public class Program
     {
         private static void Main(string[] args)
         {
-            BenchmarkRunner.Run<IdToTypeComparison>();
+            BenchmarkRunner.Run<IterationDiff>();
             //BenchmarkRunner.Run<ReadComponent>();
             //var rc = new ReadComponent();
             //rc.Read();

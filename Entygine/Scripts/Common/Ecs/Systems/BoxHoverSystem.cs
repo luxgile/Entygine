@@ -10,12 +10,23 @@ namespace Entygine.Ecs.Systems
 
         protected override QueryScope SetupQuery()
         {
-            return new EntityQueryScope(settings, (ref EntityQueryContext context) =>
-            {
-                context.Read(C_Position.Identifier, out C_Position position);
-                position.value.y += (MathUtils.Sin((float)EntygineApp.EngineTime)) * 0.01f;
-                context.Write(C_Position.Identifier, position);
-            });
+            return null;
+            //return new EntityQueryScope(settings, (ref EntityQueryContext context) =>
+            //{
+            //    context.Read(C_Position.Identifier, out C_Position position);
+            //    position.value.y += (MathUtils.Sin((float)EntygineApp.EngineTime)) * 0.01f;
+            //    context.Write(C_Position.Identifier, position);
+            //});
+        }
+
+        protected override void OnPerformFrame(float dt)
+        {
+            base.OnPerformFrame(dt);
+
+            //new EntityQueryScope(settings, (ref EntityQueryContext x) => { }).Iterate((ref C_Position position) =>
+            //{
+            //    position.value.y += (MathUtils.Sin((float)EntygineApp.EngineTime)) * 0.01f;
+            //});
         }
     }
 }

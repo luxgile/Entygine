@@ -37,6 +37,9 @@ namespace Entygine.Ecs
             return withCheck && anyCheck;
         }
 
+        public TypeId[] WithTypes => withTypes;
+        public TypeId[] AnyTypes => anyTypes;
+
         //public bool IsGeneralWrite()
         //{
         //    if (withTypes == null)

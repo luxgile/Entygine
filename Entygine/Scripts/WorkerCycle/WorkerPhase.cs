@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entygine.DevTools;
+using System;
 using System.Collections.Generic;
 
 namespace Entygine.Cycles
@@ -27,14 +28,14 @@ namespace Entygine.Cycles
         public void PerformPhase(float deltaTime)
         {
             try { phasePerformed?.Invoke(deltaTime); }
-            catch (Exception e) { Console.WriteLine(e); }
+            catch (Exception e) { DevConsole.Log(LogType.Error, e.Message); }
 
             try 
             {
                 for (int i = 0; i < subPhases.Length; i++)
                     subPhases[i].PerformPhase(deltaTime);
             }
-            catch (Exception e) { Console.WriteLine(e); }
+            catch (Exception e) { DevConsole.Log(LogType.Error, e.Message); }
         }
 
         public bool IsPhase<T>() where T : IPhaseId => IsPhase(typeof(T));

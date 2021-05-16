@@ -19,7 +19,7 @@
         {
             base.OnPerformFrame(dt);
 
-            query.OnlyChanged(CheckChanges ? LastVersionWorked : 0).Perform();
+            query?.OnlyChanged(CheckChanges ? LastVersionWorked : 0).Perform();
         }
     }
 }

@@ -206,6 +206,12 @@ namespace Entygine.Ecs
             for (int c = 0; c < componentCollections.Length; c++)
                 components[c] = (componentCollections[c][index]);
         }
+        public void GetComponentsFromIndexNonAlloc(int index, ref TypeId[] ids, ref IComponent[] components)
+        {
+            ids = Archetype.GetComponenTypes();
+            for (int c = 0; c < componentCollections.Length; c++)
+                components[c] = (componentCollections[c][index]);
+        }
 
         //public void SetComponent<T0>(int index, T0 component) where T0 : IComponent
         //{
