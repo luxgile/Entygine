@@ -1,6 +1,7 @@
 ﻿using Entygine.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Entygine.Ecs
 {
@@ -14,6 +15,7 @@ namespace Entygine.Ecs
             chunks = new List<EntityChunk>();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public EntityChunk GetChunk(int index) => chunks[index];
 
         public void SetComponent<T0>(Entity entity, TypeId id, T0 component) where T0 : IComponent
@@ -201,6 +203,25 @@ namespace Entygine.Ecs
             }
 
             return index;
+        }
+
+        public void GetChunks(QuerySettings settings, out int start, out int count)
+        {
+            start = -1;
+            count = 0;
+            for (int i = 0; i < chunks.Count; i++)
+            {
+                EntityChunk chunk = chunks[i];
+                if (settings.Matches(chunk.Archetype))
+                {
+                    if (start == -1)
+                        start = i;
+
+                    count++;
+                }
+                else if (start != -1)
+                    return;
+            }
         }
 
         public List<EntityChunk> GetChunks() => chunks;

@@ -198,12 +198,14 @@ namespace Entygine.Benchmarking
     {
         private EntityWorld world;
         private EntityQueryScope query;
+        private EntityIterator iterator;
 
         public IterationDiff()
         {
             world = EntityWorld.CreateWorld();
             world.EntityManager.CreateEntities(new EntityArchetype(C_Position.Identifier), 10000);
             QuerySettings settings = new QuerySettings().With(C_Position.Identifier);
+            iterator = new EntityIterator(world);
             query = new EntityQueryScope(settings, world, (ref EntityQueryContext context) =>
             {
                 context.Read(C_Position.Identifier, out C_Position position);
@@ -221,16 +223,10 @@ namespace Entygine.Benchmarking
         [Benchmark]
         public void NewIterate()
         {
-            query.Iterate((ref C_Position position) =>
+            iterator.Iterate((ref C_Position position) =>
             {
                 position.value = Vec3f.Zero;
-            });
-        }
-
-        [Benchmark]
-        public void MixIterate()
-        {
-            query2.Perform();
+            }).Synchronous();
         }
     }
 

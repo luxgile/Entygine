@@ -11,6 +11,7 @@ namespace Entygine.Ecs
     {
         private TypeId[] withTypes;
         private TypeId[] anyTypes;
+        private TypeId[] noneTypes;
 
         public QuerySettings With(params TypeId[] types)
         {
@@ -24,17 +25,27 @@ namespace Entygine.Ecs
             return this;
         }
 
+        public QuerySettings None(params TypeId[] types)
+        {
+            this.noneTypes = types;
+            return this;
+        }
+
         public bool Matches(EntityArchetype archetype)
         {
             bool withCheck = true;
-            if (withTypes != null)
+            if (withTypes != null && withTypes.Length > 0)
                 withCheck = archetype.HasTypes(withTypes);
 
+            bool noneCheck = true;
+            if (noneTypes != null && noneTypes.Length > 0)
+                noneCheck = !archetype.HasAnyTypes(noneTypes);
+
             bool anyCheck = true;
-            if (anyTypes != null)
+            if (anyTypes != null && anyTypes.Length > 0)
                 anyCheck = archetype.HasAnyTypes(anyTypes);
 
-            return withCheck && anyCheck;
+            return withCheck && noneCheck && anyCheck;
         }
 
         public TypeId[] WithTypes => withTypes;

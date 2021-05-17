@@ -44,32 +44,6 @@ namespace Entygine.Ecs
                     chunk.UpdateVersion(world.EntityManager.Version);
             }
         }
-
-        public delegate void R<R1>(ref R1 read) where R1 : IComponent;
-        public unsafe void Iterate<R1>(R<R1> readIteration) where R1 : struct, IComponent
-        {
-            TypeId readId = TypeManager.GetIdFromType(typeof(R1));
-            List<EntityChunk> chunks = world.EntityManager.GetChunks();
-            for (int i = 0; i < chunks.Count; i++)
-            {
-                EntityChunk chunk = chunks[i];
-                if (!Settings.Matches(chunk.Archetype))
-                    continue;
-
-                if (!chunk.HasChanged(ChangeVersion))
-                    continue;
-
-                chunk.TryGetComponents(readId, out ComponentArray collection);
-                for (int e = 0; e < chunk.Count; e++)
-                {
-                    IComponent cm = collection[e];
-                    ref R1 rcr = ref Unsafe.Unbox<R1>(cm);
-                    readIteration(ref rcr);
-                }
-
-                chunk.UpdateVersion(world.EntityManager.Version);
-            }
-        }
     }
 
     public struct EntityQueryContext : IQueryContext

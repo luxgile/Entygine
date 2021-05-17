@@ -7,63 +7,17 @@ using Entygine.Input;
 
 namespace Entygine.Ecs.Systems
 {
-    public class EditorCameraControlSystem : QuerySystem
+    public class EditorCameraControlSystem : QuerySystem<EntityIterator>
     {
-        private QuerySettings settings = new QuerySettings().With(C_Transform.Identifier, C_EditorCamera.Identifier);
-
-        private float scrollDelta;
         private Vector2 lastCursorPos;
-        private float deltaTime;
-        private float speedDelta;
-        private Vector3 posDelta;
-        private Vector2 rotDelta;
 
         protected override bool CheckChanges => false;
 
-        protected override QueryScope SetupQuery()
+        protected override void OnFrame(float dt)
         {
-            return new EntityQueryScope(settings, (ref EntityQueryContext context) =>
-            {
-                context.Read(C_EditorCamera.Identifier, out C_EditorCamera editorCamera);
-                context.Read(C_Transform.Identifier, out C_Transform transform);
-
-                editorCamera.speed += speedDelta * deltaTime;
-                editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
-
-                editorCamera.focusDistance -= scrollDelta * deltaTime * 100;
-
-                editorCamera.yaw += rotDelta.X * deltaTime * editorCamera.sensitivity;
-                editorCamera.pitch += rotDelta.Y * deltaTime * editorCamera.sensitivity;
-
-                Vector3 dir = new (
-                    (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch))
-                  , (float)MathHelper.Sin(MathHelper.DegreesToRadians(editorCamera.pitch))
-                  , (float)MathHelper.Sin(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch)));
-
-                Vector3 right = Vector3.Normalize(Vector3.Cross(dir, Vector3.UnitY));
-                Vector3 up = Vector3.Normalize(Vector3.Cross(right, dir));
-
-                Vector3 posDeltaRelative = -right * posDelta.X + dir * posDelta.Z + Vector3.UnitY * posDelta.Y;
-                posDeltaRelative *= deltaTime;
-
-                editorCamera.focusPoint += posDeltaRelative * editorCamera.speed;
-                transform.value = Matrix4.LookAt(editorCamera.focusPoint + dir * editorCamera.focusDistance, editorCamera.focusPoint, up);
-
-                //DevGizmos.DrawPoint((Vec3f)editorCamera.focusPoint);
-                DevGizmos.DrawLine((Vec3f)editorCamera.focusPoint, (Vec3f)editorCamera.focusPoint + Vec3f.Right);
-
-                context.Write(C_Transform.Identifier, transform);
-                context.Write(C_EditorCamera.Identifier, editorCamera);
-            });
-        }
-
-        protected override void OnPerformFrame(float dt)
-        {
-            base.OnPerformFrame(dt);
-
-            speedDelta = 0;
-            posDelta = Vector3.Zero;
-            rotDelta = Vector2.Zero;
+            var speedDelta = 0f;
+            var posDelta = Vector3.Zero;
+            var rotDelta = Vector2.Zero;
 
             //TODO: Create input system
             KeyboardState keyboard = AppInput.CurrentInput.keyboard;
@@ -76,7 +30,7 @@ namespace Entygine.Ecs.Systems
             MouseState mouse = AppInput.CurrentInput.mouse;
             Vector2 cursorPos = mouse.Position;
 
-            scrollDelta = mouse.ScrollDelta.Y;
+            var scrollDelta = mouse.ScrollDelta.Y;
 
             if (keyboard.IsKeyDown(Keys.LeftAlt) && mouse.IsButtonDown(MouseButton.Button1))
                 rotDelta = cursorPos - lastCursorPos;
@@ -101,9 +55,33 @@ namespace Entygine.Ecs.Systems
             if (keyboard.IsKeyDown(Keys.Q))
                 posDelta -= Vector3.UnitY;
 
-            deltaTime = dt;
+            Iterator.Iterate((ref C_EditorCamera editorCamera, ref C_Transform transform) =>
+            {
+                editorCamera.speed += speedDelta * dt;
+                editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);
 
-            scrollDelta = 0;
+                editorCamera.focusDistance -= scrollDelta * dt * 100;
+
+                editorCamera.yaw += rotDelta.X * dt * editorCamera.sensitivity;
+                editorCamera.pitch += rotDelta.Y * dt * editorCamera.sensitivity;
+
+                Vector3 dir = new(
+                    (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch))
+                  , (float)MathHelper.Sin(MathHelper.DegreesToRadians(editorCamera.pitch))
+                  , (float)MathHelper.Sin(MathHelper.DegreesToRadians(editorCamera.yaw)) * (float)MathHelper.Cos(MathHelper.DegreesToRadians(editorCamera.pitch)));
+
+                Vector3 right = Vector3.Normalize(Vector3.Cross(dir, Vector3.UnitY));
+                Vector3 up = Vector3.Normalize(Vector3.Cross(right, dir));
+
+                Vector3 posDeltaRelative = -right * posDelta.X + dir * posDelta.Z + Vector3.UnitY * posDelta.Y;
+                posDeltaRelative *= dt;
+
+                editorCamera.focusPoint += posDeltaRelative * editorCamera.speed;
+                transform.value = Matrix4.LookAt(editorCamera.focusPoint + dir * editorCamera.focusDistance, editorCamera.focusPoint, up);
+
+                //DevGizmos.DrawPoint((Vec3f)editorCamera.focusPoint);
+                DevGizmos.DrawLine((Vec3f)editorCamera.focusPoint, (Vec3f)editorCamera.focusPoint + Vec3f.Right);
+            });
         }
     }
 }

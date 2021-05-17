@@ -4,8 +4,6 @@ using Entygine.Mathematics;
 using Entygine.Rendering;
 using Entygine.Rendering.Pipeline;
 using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
 
 namespace Entygine.Ecs.Systems
 {

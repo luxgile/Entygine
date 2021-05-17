@@ -6,11 +6,16 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
+<#@ import namespace="System.Runtime.CompilerServices" #>
+using System.Runtime.CompilerServices;
+
 namespace Entygine.Ecs
 {
-    public partial class EntityIterator
+    public static class GeneratedIterators
     {
 <#
+//I'm sorry to anyone who reads this in the future, I'm really sorry.
+
 int parameters = 8;
 List<string> AllModeCombinationsFor(int amount)
 {
@@ -36,9 +41,15 @@ List<string> AllModeCombinationsFor(int amount)
             return result;
         }).ToList();
 }
-foreach(var str in AllModeCombinationsFor(parameters))
+List<string> combinations = new List<string>();
+for(int i = 1; i < parameters; i++)
 {
-#>      public delegate void <#= str #><<#
+    combinations.AddRange(AllModeCombinationsFor(i));
+}
+
+foreach(var str in combinations) 
+{
+#>          public delegate void <#= str #><<#
 for(int i = 0; i < str.Length; i++)
 {
 char c = str[i];
@@ -46,7 +57,7 @@ if(c == 'R') { #>C<#= i #><# }
 if(c == 'W') { #>C<#= i #><# }
 if(i != str.Length - 1) {#>, <#}
 }
-#>>(<#
+#>>(<# 
 
 for(int i = 0; i < str.Length; i++)
 {
@@ -55,7 +66,86 @@ if(c == 'R') { #>in C<#= i #> read<#= i #><# }
 if(c == 'W') { #>ref C<#= i #> write<#= i #><# }
 if(i != str.Length - 1) {#>, <#}
 }
-#>); 
+#>)
+            <# 
+for(int i = 0; i < str.Length; i++)
+{
+char c = str[i];#>
+where C<#= i #> : struct, IComponent <#
+} 
+#>;
+<#
+}
+#>
+    }
+
+    public partial class EntityIterator
+    {
+<#
+foreach(var str in combinations) 
+{
+    #>          public IIteratorPhase2 Iterate<<#
+    for(int i = 0; i < str.Length; i++)
+    {
+        char c = str[i];
+        #>C<#= i #><#
+        if(i != str.Length - 1)
+        {
+            #>, <#
+        }
+    }
+    #>> (GeneratedIterators.<#=str#><<#
+    for(int i = 0; i < str.Length; i++)
+    {
+        char c = str[i];
+        #>C<#= i #><#
+        if(i != str.Length - 1)
+        {
+            #>, <#
+        }
+    }
+    #>> iterator) <# 
+for(int i = 0; i < str.Length; i++)
+{
+char c = str[i];#>
+where C<#= i #> : struct, IComponent <#
+} 
+#>
+
+            {
+<#
+for(int i = 0; i < str.Length; i++)
+{
+char c = str[i];#>
+            TypeId id<#=i#> = TypeManager.GetIdFromType(typeof(C<#=i#>));
+            AddType(withTypes, id<#=i#>);
+<#
+}#>
+            BakeSettings();
+            SetDelegate((chunk) =>
+            {
+<#
+for(int i = 0; i < str.Length; i++)
+{
+char c = str[i];#>              chunk.TryGetComponents(id<#=i#>, out ComponentArray collection<#=i#>);
+<#
+}#>
+                for (int e = 0; e < chunk.Count; e++)
+                {
+                    iterator(<#
+for(int i = 0; i < str.Length; i++)
+{
+char c = str[i];
+if(c == 'R') { #>in Unsafe.Unbox<C<#=i#>>(collection<#=i#>[e])<# }
+if(c == 'W') { #>ref Unsafe.Unbox<C<#=i#>>(collection<#=i#>[e])<# }
+if(i != str.Length - 1) {#>, <#}
+}
+#>);
+                }
+            });
+            
+            return this;
+            }
 <#
 }
 #>

@@ -30,6 +30,11 @@ namespace Entygine.Ecs
             return (T0)this[index];
         }
 
+        public ref T0 GetRef<T0>(int index) where T0 : struct, IComponent
+        {
+            return ref Unsafe.Unbox<T0>(this[index]);
+        }
+
         public void CopyTo(Array array, int index)
         {
             Array.Copy(components, array, index);

@@ -5,23 +5,13 @@ using Entygine.Ecs;
 namespace Entygine.UI
 {
     [SystemGroup(typeof(MainPhases.EarlyPhaseId), PhaseType.Logic)]
-    public class CanvasMouseEventsSystem : QuerySystem
+    public class CanvasMouseEventsSystem : QuerySystem<EntityIterator>
     {
-        private readonly QuerySettings settings = new QuerySettings().With(C_UICanvas.Identifier);
-        private MouseData mouseData;
-
-        protected override void OnPerformFrame(float dt)
+        protected override void OnFrame(float dt)
         {
-            base.OnPerformFrame(dt);
-
-            mouseData = new MouseData();
-        }
-
-        protected override QueryScope SetupQuery()
-        {
-            return new EntityQueryScope(settings, (ref EntityQueryContext context) =>
+            var mouseData = new MouseData();
+            Iterator.Iterate((ref C_UICanvas canvas) =>
             {
-                context.Read(C_UICanvas.Identifier, out C_UICanvas canvas);
                 canvas.canvas.TriggerMouseEvent(mouseData);
             });
         }

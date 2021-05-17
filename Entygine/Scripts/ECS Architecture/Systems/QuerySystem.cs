@@ -1,25 +1,26 @@
 ﻿namespace Entygine.Ecs
 {
-    public abstract class QuerySystem : BaseSystem
+    public abstract class QuerySystem<T> : BaseSystem where T : IIteratorPhase2, new()
     {
-        private QueryScope query;
+        protected T Iterator { get; private set; }
 
         protected virtual bool CheckChanges { get; } = true;
-
-        protected abstract QueryScope SetupQuery();
 
         protected override void OnSystemCreated()
         {
             base.OnSystemCreated();
 
-            query = SetupQuery();
+            Iterator = new();
+            Iterator.SetWorld(World);
         }
 
-        protected override void OnPerformFrame(float dt)
+        protected sealed override void OnPerformFrame(float dt)
         {
             base.OnPerformFrame(dt);
-
-            query?.OnlyChanged(CheckChanges ? LastVersionWorked : 0).Perform();
+            OnFrame(dt);
+            Iterator.SetVersion(CheckChanges ? LastVersionWorked : 0).Synchronous();
         }
+
+        protected abstract void OnFrame(float dt);
     }
 }

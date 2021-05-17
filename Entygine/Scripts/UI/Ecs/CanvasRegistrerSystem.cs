@@ -6,23 +6,21 @@ using Entygine.Rendering.Pipeline;
 namespace Entygine.UI
 {
     [SystemGroup(typeof(MainPhases.EarlyPhaseId), PhaseType.Logic)]
-    public class CanvasRegistrerSystem : QuerySystem
+    public class CanvasRegistrerSystem : QuerySystem<ChunkIterator>
     {
-        private readonly QuerySettings settings = new QuerySettings().With(C_UICanvas.Identifier);
-
-        protected override QueryScope SetupQuery()
+        protected override void OnFrame(float dt)
         {
-            return new ChunkQueryScope(settings, (ref ChunkQueryContext context) =>
+            if (!RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
+                return;
+
+            canvasData.ClearCanvas();
+
+            Iterator.With(C_UICanvas.Identifier).Iterate((chunk) =>
             {
-                if (!RenderPipelineCore.TryGetContext(out UICanvasRenderData canvasData))
-                    return;
-
-                canvasData.ClearCanvas();
-
-                int entityCount = context.GetEntityCount();
-                for (int i = 0; i < entityCount; i++)
+                chunk.TryGetComponents(C_UICanvas.Identifier, out ComponentArray array);
+                for (int i = 0; i < chunk.Count; i++)
                 {
-                    context.ReadComponent(i, C_UICanvas.Identifier, out C_UICanvas canvas);
+                    ref C_UICanvas? canvas = ref array?.GetRef<C_UICanvas>(i);
                     canvasData.AddCanvas(canvas.canvas);
                 }
             });
