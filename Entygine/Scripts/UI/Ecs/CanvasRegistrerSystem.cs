@@ -20,7 +20,7 @@ namespace Entygine.UI
                 chunk.TryGetComponents(C_UICanvas.Identifier, out ComponentArray array);
                 for (int i = 0; i < chunk.Count; i++)
                 {
-                    ref C_UICanvas? canvas = ref array?.GetRef<C_UICanvas>(i);
+                    ref C_UICanvas canvas = ref array.GetRef<C_UICanvas>(i);
                     canvasData.AddCanvas(canvas.canvas);
                 }
             });

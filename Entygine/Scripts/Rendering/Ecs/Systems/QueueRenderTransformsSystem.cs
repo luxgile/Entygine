@@ -3,27 +3,24 @@ using Entygine.Rendering.Pipeline;
 
 namespace Entygine.Ecs.Systems
 {
-    public class QueueRenderTransformsSystem : QuerySystem
+    public class QueueRenderTransformsSystem : QuerySystem<ChunkIterator>
     {
-        private readonly QuerySettings settings = new QuerySettings().With(SC_RenderMesh.Identifier, C_Transform.Identifier);
-
-        protected override QueryScope SetupQuery()
+        protected override void OnFrame(float dt)
         {
-            return new ChunkQueryScope(settings, (ref ChunkQueryContext context) =>
-            {
-                context.Read(out SC_RenderMesh renderMesh);
+            if (!RenderPipelineCore.TryGetContext(out Rendering.GeometryRenderData geometryData))
+                return;
 
-                if (!RenderPipelineCore.TryGetContext(out Rendering.GeometryRenderData geometryData))
-                    return;
+            Iterator.With(SC_RenderMesh.Identifier, C_Transform.Identifier).Iterate((chunk) =>
+            {
+                chunk.TryGetSharedComponent(SC_RenderMesh.Identifier, out SC_RenderMesh renderMesh);
 
                 if (geometryData.TryGetRenderMeshGroup(renderMesh.id, out Rendering.MeshRenderGroup group))
                 {
                     group.ClearTransforms();
-                    int entityCount = context.GetEntityCount();
-                    for (int i = 0; i < entityCount; i++)
+                    chunk.TryGetComponents(C_Transform.Identifier, out ComponentArray transforms);
+                    for (int i = 0; i < chunk.Count; i++)
                     {
-                        context.ReadComponent(i, C_Transform.Identifier, out C_Transform transform);
-                        group.AddTransform(transform.value);
+                        group.AddTransform(transforms.Get<C_Transform>(i).value);
                     }
                 }
             });

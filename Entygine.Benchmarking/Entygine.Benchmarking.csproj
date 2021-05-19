@@ -3,12 +3,31 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
   </ItemGroup>
+  
+  <Target Name="AddSourceGeneratedFiles" AfterTargets="CoreCompile">
+    <ItemGroup>
+      <Compile Include="GeneratedFiles\**" />
+    </ItemGroup>
+  </Target>
+  <Target Name="RemoveSourceGeneratedFiles" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Compile Remove="GeneratedFiles\**" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CleanSourceGeneratedFiles" AfterTargets="Clean">
+    <RemoveDir Directories="GeneratedFiles" />
+  </Target>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Entygine.SourceGen\Entygine.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entygine\Entygine.csproj" />
   </ItemGroup>

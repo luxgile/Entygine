@@ -1,4 +1,5 @@
 ﻿using Entygine.Mathematics;
+using Entygine.Ecs;
 
 namespace Entygine.Ecs.Systems
 {

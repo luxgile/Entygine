@@ -8,20 +8,22 @@ using OpenTK.Mathematics;
 namespace Entygine.Ecs.Systems
 {
     [SystemGroup(typeof(MainPhases.DefaultPhaseId), PhaseType.Render)]
-    public class DrawCamerasSystem : QuerySystem
+    public class DrawCamerasSystem : QuerySystem<ChunkIterator>
     {
-        private readonly QuerySettings settings = new QuerySettings().With(C_Camera.Identifier, C_Transform.Identifier);
         protected override bool CheckChanges => false;
-        protected override QueryScope SetupQuery()
+        protected override void OnFrame(float dt)
         {
-            return new ChunkQueryScope(settings, (ref ChunkQueryContext context) =>
+            Iterator.With(C_Camera.Identifier, C_Transform.Identifier).Iterate((chunk) =>
             {
-                int entityCount = context.GetEntityCount();
+                int entityCount = chunk.Count;
                 CameraData[] cameraDatas = new CameraData[entityCount];
                 Matrix4[] cameraTransforms = new Matrix4[entityCount];
+                chunk.TryGetComponents(C_Camera.Identifier, out ComponentArray cameras);
+                chunk.TryGetComponents(C_Transform.Identifier, out ComponentArray transforms);
                 for (int c = 0; c < entityCount; c++)
                 {
-                    context.ReadComponent(c, C_Camera.Identifier, out C_Camera cam);
+                    ref C_Camera cam = ref cameras.GetRef<C_Camera>(c);
+                    ref C_Transform transform = ref transforms.GetRef<C_Transform>(c);
                     if (cam.cameraData.Framebuffer == null)
                     {
                         Vec2i res = AppScreen.Resolution;
@@ -34,8 +36,6 @@ namespace Entygine.Ecs.Systems
                         var ffb = new Framebuffer(res, "Camera Final FBO");
                         ffb.AddColorBuffer(false);
                         cam.cameraData.SetFinalFramebuffer(ffb);
-
-                        context.WriteComponent(c, C_Camera.Identifier, cam);
                     }
                     else if (cam.cameraData.Framebuffer.Size != AppScreen.Resolution)
                     {
@@ -44,8 +44,6 @@ namespace Entygine.Ecs.Systems
                     }
 
                     cameraDatas[c] = cam.cameraData;
-
-                    context.ReadComponent(c, C_Transform.Identifier, out C_Transform transform);
                     cameraTransforms[c] = transform.value;
                 }
 

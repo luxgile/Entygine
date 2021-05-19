@@ -205,7 +205,8 @@ namespace Entygine.Benchmarking
             world = EntityWorld.CreateWorld();
             world.EntityManager.CreateEntities(new EntityArchetype(C_Position.Identifier), 10000);
             QuerySettings settings = new QuerySettings().With(C_Position.Identifier);
-            iterator = new EntityIterator(world);
+            iterator = new EntityIterator();
+            iterator.SetWorld(world);
             query = new EntityQueryScope(settings, world, (ref EntityQueryContext context) =>
             {
                 context.Read(C_Position.Identifier, out C_Position position);
@@ -226,7 +227,7 @@ namespace Entygine.Benchmarking
             iterator.Iterate((ref C_Position position) =>
             {
                 position.value = Vec3f.Zero;
-            }).Synchronous();
+            }).SetVersion(0).Synchronous();
         }
     }
 

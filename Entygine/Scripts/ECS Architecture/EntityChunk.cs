@@ -239,9 +239,9 @@ namespace Entygine.Ecs
             }
         }
 
-        //TODO: Change this to use TypeId
-        public bool TryGetSharedComponent<T0>(out T0 comp) where T0 : ISharedComponent
+        public bool TryGetSharedComponent<T0>(TypeId id, out T0 comp) where T0 : ISharedComponent
         {
+            //In the future, id will be used, for now is added even if is not used right now to avoid having to refactor future code.
             for (int i = 0; i < sharedComponents.Length; i++)
             {
                 ISharedComponent sComp = sharedComponents[i];

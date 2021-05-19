@@ -66,7 +66,7 @@ namespace Entygine_SourceGen
             sb.Append($"\t\t}}\n\t}}\n}}\n");
             sb.Append("#endregion");
 
-            context.AddSource("__ComponentIds__.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+            context.AddSource("__ComponentIds__.gen.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
         }
 
         public void Initialize(GeneratorInitializationContext context)

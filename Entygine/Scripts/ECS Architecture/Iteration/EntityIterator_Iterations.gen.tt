@@ -16,7 +16,7 @@ namespace Entygine.Ecs
 <#
 //I'm sorry to anyone who reads this in the future, I'm really sorry.
 
-int parameters = 8;
+int parameters = 0;
 List<string> AllModeCombinationsFor(int amount)
 {
     if (amount == 0)

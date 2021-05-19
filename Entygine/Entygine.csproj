@@ -5,9 +5,23 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>preview</LangVersion>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <EmitCompilerGeneratedFiles>True</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
+  
+  <Target Name="AddSourceGeneratedFiles" AfterTargets="CoreCompile">
+    <ItemGroup>
+      <Compile Include="GeneratedFiles\**" />
+    </ItemGroup>
+  </Target>
+  <Target Name="RemoveSourceGeneratedFiles" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Compile Remove="GeneratedFiles\**" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CleanSourceGeneratedFiles" AfterTargets="Clean">
+    <RemoveDir Directories="GeneratedFiles" />
+  </Target>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -51,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Entygine.SourceGen\Entygine.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Entygine.SourceGen\Entygine.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
   <ItemGroup>

@@ -51,9 +51,9 @@ namespace Entygine.Ecs
             HasWriten = true;
         }
 
-        public void Read<T0>(out T0 shared) where T0 : ISharedComponent
+        public void Read<T0>(TypeId id, out T0 shared) where T0 : ISharedComponent
         {
-            Chunk.TryGetSharedComponent(out shared);
+            Chunk.TryGetSharedComponent(id, out shared);
         }
 
         public void Write<T0>(TypeId id, T0 shared) where T0 : ISharedComponent
