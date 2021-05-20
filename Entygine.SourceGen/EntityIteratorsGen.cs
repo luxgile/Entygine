@@ -75,6 +75,7 @@ namespace Entygine.SourceGen
             sb.Append("using System.Runtime.CompilerServices;\n");
             sb.Append("namespace Entygine.Ecs\n");
             sb.Append("{\n");
+            sb.Append("public static class GeneratedStaticTest { }\n");
             sb.Append("public partial class EntityIterator\n");
             sb.Append("{\n");
             try
@@ -99,7 +100,7 @@ namespace Entygine.SourceGen
                             for (int t = 0; t < parametersSyntax.Length; t++)
                                 arguments.Add(CreateArgument(parametersSyntax[t], model));
 
-                            arguments.Sort();
+                            //arguments.Sort();
                             if (!hash.Contains(arguments, new ArgumentsEqualityComparer()))
                             {
                                 sb.Append($"//From file: {current.tree.FilePath}\n");
@@ -114,7 +115,7 @@ namespace Entygine.SourceGen
             catch (Exception e) { sb.Append($"\n /* {e} */"); }
             sb.Append("}\n");
             sb.Append("}\n");
-            context.AddSource("__Iterators__.gen.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+            context.AddSource("Iterators.gen.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
         }
 
         public class ArgumentsEqualityComparer : IEqualityComparer<List<IteratorArguments>>
