@@ -13,7 +13,6 @@ namespace Entygine.SourceGen
     [Generator]
     public class EntityIteratorsGen : ISourceGenerator
     {
-
         public struct IteratorArguments : IEquatable<IteratorArguments>, IComparable<IteratorArguments>
         {
             public bool shared;
@@ -73,11 +72,12 @@ namespace Entygine.SourceGen
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("using System.Runtime.CompilerServices;\n");
+            sb.Append("using System.Collections.Generic;\n");
             sb.Append("namespace Entygine.Ecs\n");
             sb.Append("{\n");
-            sb.Append("public static class GeneratedStaticTest { }\n");
-            sb.Append("public partial class EntityIterator\n");
+            sb.Append("public class EntityIterator : IIteratorPhase1, IIteratorPhase2, IIteratorPhase3\n");
             sb.Append("{\n");
+            sb.Append(IteratorMethods + "\n");
             try
             {
                 for (int i = 0; i < finder.ids.Count; i++)
@@ -270,11 +270,12 @@ namespace Entygine.SourceGen
             sb.Append("\n{\n");
             for (int i = 0; i < arguments.Length; i++)
             {
+                var argument = arguments[i];
                 sb.Append($"TypeId id{i} = TypeManager.GetIdFromType(typeof(C{i}));\n");
-                sb.Append($"AddType(withTypes, id{i});\n");
+                sb.Append($"AddType({(argument.optional ? "anyTypes" : "withTypes")}, id{i});\n");
             }
             sb.Append("BakeSettings();\n");
-            sb.Append("SetDelegate((chunk) => \n{\n");
+            sb.Append("iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => \n{\n");
             for (int i = 0; i < arguments.Length; i++)
             {
                 IteratorArguments argument = arguments[i];
@@ -335,6 +336,74 @@ namespace Entygine.SourceGen
             return this;
         }
         */
+
+        private const string IteratorMethods = @"
+        private List<TypeId> anyTypes = new();
+        private List<TypeId> withTypes = new();
+        private List<TypeId> noneTypes = new();
+
+        private EntityWorld world;
+        private QuerySettings settings;
+        private IteratorAction iteration;
+
+        public uint Version { get; private set; }
+
+        public EntityIterator()
+        {
+            settings = new();
+        }
+
+        public void SetWorld(EntityWorld world) => this.world = world;
+
+        private void AddType(List<TypeId> list, TypeId type)
+        {
+            if (!list.Contains(type))
+                list.Add(type);
+        }
+
+        public IIteratorPhase3 SetVersion(uint version)
+        {
+            Version = version;
+            return this;
+        }
+
+        IIteratorPhase1 IIteratorPhase1.Any(params TypeId[] types) => Any(types);
+        public IIteratorPhase1 Any(params TypeId[] types)
+        {
+            foreach (var type in types)
+                AddType(anyTypes, type);
+
+            return this;
+        }
+
+        IIteratorPhase1 IIteratorPhase1.None(params TypeId[] types) => None(types);
+        public IIteratorPhase1 None(params TypeId[] types)
+        {
+            foreach (var type in types)
+                AddType(noneTypes, type);
+            return this;
+        }
+
+        IIteratorPhase1 IIteratorPhase1.With(params TypeId[] types) => With(types);
+        public EntityIterator With(params TypeId[] types)
+        {
+            foreach (var type in types)
+                AddType(withTypes, type);
+            return this;
+        }
+
+        private void BakeSettings()
+        {
+            settings.With(withTypes.ToArray());
+            settings.Any(anyTypes.ToArray());
+            settings.None(noneTypes.ToArray());
+        }
+
+        public void Synchronous()
+        {
+            iteration();
+        }
+";
     }
 
     public class EntityIteratorsFinder : ISyntaxReceiver

@@ -2,11 +2,11 @@
 
 namespace Entygine.Ecs
 {
-    public static class GeneratedIterators
-    {
-    }
+    //public static class GeneratedIterators
+    //{
+    //}
 
-    public partial class EntityIterator
-    {
-    }
+    //public partial class EntityIterator
+    //{
+    //}
 }

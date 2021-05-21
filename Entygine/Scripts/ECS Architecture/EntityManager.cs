@@ -205,22 +205,14 @@ namespace Entygine.Ecs
             return index;
         }
 
-        public void GetChunks(QuerySettings settings, out int start, out int count)
+        public void GetChunks(QuerySettings settings, List<EntityChunk> foundChunks)
         {
-            start = -1;
-            count = 0;
+            foundChunks.Clear();
             for (int i = 0; i < chunks.Count; i++)
             {
                 EntityChunk chunk = chunks[i];
                 if (settings.Matches(chunk.Archetype))
-                {
-                    if (start == -1)
-                        start = i;
-
-                    count++;
-                }
-                else if (start != -1)
-                    return;
+                    foundChunks.Add(chunk);
             }
         }
 
