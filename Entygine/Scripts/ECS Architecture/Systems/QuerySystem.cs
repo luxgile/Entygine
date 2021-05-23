@@ -18,6 +18,7 @@
         {
             base.OnPerformFrame(dt);
             OnFrame(dt);
+            //TODO: Create dependency tree
             Iterator.SetVersion(CheckChanges ? LastVersionWorked : 0).Synchronous();
         }
 

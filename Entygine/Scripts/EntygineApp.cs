@@ -119,7 +119,7 @@ namespace Entygine
                 Material planeMaterial2 = new Material(shaderResource, texture);
                 world.EntityManager.SetSharedComponent(planeEntity2, SC_RenderMesh.Identifier, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
-                uint countSqrd = 10;
+                uint countSqrd = 15;
                 Entity[] entities = world.EntityManager.CreateEntities(boxArchetype, countSqrd * countSqrd);
                 for (uint x = 0; x < countSqrd; x++)
                 {

@@ -1,11 +1,13 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using Entygine.Async;
 using Entygine.Ecs;
 using Entygine.Ecs.Components;
 using Entygine.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Entygine.Benchmarking
 {
@@ -235,12 +237,28 @@ namespace Entygine.Benchmarking
     {
         private static void Main(string[] args)
         {
-            BenchmarkRunner.Run<IterationDiff>();
+            //BenchmarkRunner.Run<IterationDiff>();
             //BenchmarkRunner.Run<ReadComponent>();
             //var rc = new ReadComponent();
             //rc.Read();
             //rc.Write();
+
+            WorkAsyncHandle lastWork = null;
+            for (int i = 0; i < 100; i++)
+            {
+                int index = i;
+                lastWork = new WorkAsyncHandle(() => Wait(index), lastWork);
+                lastWork.Async();
+            }
+
+            lastWork.FinishWork();
+            Console.WriteLine("Finished.");
             Console.Read();
+        }
+
+        private static void Wait(int i)
+        {
+            Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: {i}");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entygine.Async;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -20,6 +21,7 @@ namespace Entygine.Ecs
     public interface IIteratorPhase3
     {
         void Synchronous();
+        WorkAsyncHandle Asynchronous(WorkAsyncHandle dependency);
     }
 
     public delegate void IteratorAction();
@@ -206,6 +208,13 @@ namespace Entygine.Ecs
         public void Synchronous()
         {
             iteration();
+        }
+
+        public WorkAsyncHandle Asynchronous(WorkAsyncHandle dependency)
+        {
+            var handle = new WorkAsyncHandle(() => iteration(), dependency);
+            handle.Async();
+            return handle;
         }
 
         private void SetDelegate(Action<EntityChunk> act)
