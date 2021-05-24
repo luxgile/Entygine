@@ -5,7 +5,7 @@ using Entygine.Ecs;
 namespace Entygine.UI
 {
     [SystemGroup(typeof(MainPhases.EarlyPhaseId), PhaseType.Logic)]
-    public class CanvasMouseEventsSystem : QuerySystem<EntityIterator>
+    public class CanvasMouseEventsSystem : QuerySystem<EntityIterator_Entygine>
     {
         protected override void OnFrame(float dt)
         {

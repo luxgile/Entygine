@@ -102,7 +102,7 @@ namespace Entygine_SourceGen
                         return;
 
                     string typeName = syntax.Type.ToString();
-                    if (typeName != "IComponent" && typeName != "ISharedComponent")
+                    if (typeName != "IComponent" && typeName != "ISharedComponent" && typeName != "ISingletonComponent")
                         return;
                 }
 

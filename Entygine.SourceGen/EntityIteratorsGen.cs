@@ -13,44 +13,25 @@ namespace Entygine.SourceGen
     [Generator]
     public class EntityIteratorsGen : ISourceGenerator
     {
-        public struct IteratorArguments : IEquatable<IteratorArguments>, IComparable<IteratorArguments>
+        public enum ComponentType { Default = 0, Shared = 1, Singleton = 2, }
+        public string className = "";
+        public struct IteratorArguments : IEquatable<IteratorArguments>
         {
-            public bool shared;
+            public ComponentType type;
             public bool write;
             public bool optional;
-
-            public int CompareTo(IteratorArguments other)
-            {
-                int comparison = 0;
-                if (shared && !other.shared)
-                    comparison += 100;
-                else if (!shared && other.shared)
-                    comparison -= 100;
-
-                if (write && !other.write)
-                    comparison += 10;
-                else if (!write && other.write)
-                    comparison -= 10;
-
-                if (optional && !other.optional)
-                    comparison += 1;
-                else if (!optional && other.optional)
-                    comparison -= 1;
-
-                return comparison;
-            }
 
             public override bool Equals(object obj)
             {
                 return obj is IteratorArguments arguments &&
-                       shared == arguments.shared &&
+                       type == arguments.type &&
                        write == arguments.write &&
                        optional == arguments.optional;
             }
 
             public bool Equals(IteratorArguments other)
             {
-                return shared == other.shared &&
+                return type == other.type &&
                        write == other.write &&
                        optional == other.optional;
             }
@@ -58,7 +39,7 @@ namespace Entygine.SourceGen
             public override int GetHashCode()
             {
                 int hashCode = -237574455;
-                hashCode = hashCode * -1521134295 + shared.GetHashCode();
+                hashCode = hashCode * -1521134295 + type.GetHashCode();
                 hashCode = hashCode * -1521134295 + write.GetHashCode();
                 hashCode = hashCode * -1521134295 + optional.GetHashCode();
                 return hashCode;
@@ -70,18 +51,21 @@ namespace Entygine.SourceGen
 
         public void Execute(GeneratorExecutionContext context)
         {
+            className = $"EntityIterator_{context.Compilation.Assembly.Name.Replace('.', '_')}";
+
             StringBuilder sb = new StringBuilder();
             sb.Append("using System.Runtime.CompilerServices;\n");
             sb.Append("using System.Collections.Generic;\n");
             sb.Append("namespace Entygine.Ecs\n");
             sb.Append("{\n");
-            sb.Append("public class EntityIterator : IIteratorPhase1, IIteratorPhase2, IIteratorPhase3\n");
+            sb.Append($"public class {className} : IIteratorPhase1, IIteratorPhase2, IIteratorPhase3\n");
             sb.Append("{\n");
             sb.Append(IteratorMethods + "\n");
             try
             {
                 for (int i = 0; i < finder.ids.Count; i++)
                 {
+                    sb.Append("//A\n");
                     Stuff current = finder.ids[i];
                     Compilation compilation = context.Compilation;
 
@@ -89,20 +73,27 @@ namespace Entygine.SourceGen
                         compilation = context.Compilation.AddSyntaxTrees(current.tree);
 
                     SemanticModel model = compilation.GetSemanticModel(current.tree);
-
+                    sb.Append("//B\n");
                     TypeInfo typeKind = model.GetTypeInfo(current.invocation);
                     if (typeKind.Type != null)
                     {
-                        if (typeKind.Type.Name == "EntityIterator")
+                        if (typeKind.Type.Name == className)
                         {
+                            sb.Append("//C\n");
                             ParameterSyntax[] parametersSyntax = GetLambdaParameters(current.invocation);
+                            if (parametersSyntax == null)
+                                continue;
+
                             List<IteratorArguments> arguments = new List<IteratorArguments>();
                             for (int t = 0; t < parametersSyntax.Length; t++)
                                 arguments.Add(CreateArgument(parametersSyntax[t], model));
 
+                            sb.Append("//D\n");
                             //arguments.Sort();
                             if (!hash.Contains(arguments, new ArgumentsEqualityComparer()))
                             {
+
+                                sb.Append("//E\n");
                                 sb.Append($"//From file: {current.tree.FilePath}\n");
                                 PrintDelegate(sb, arguments.ToArray());
                                 PrintIterator(sb, arguments.ToArray());
@@ -142,20 +133,28 @@ namespace Entygine.SourceGen
             if (parameter.ChildTokens()?.ToArray()[0].IsKind(SyntaxKind.RefKeyword) ?? false)
                 isWrite = true;
 
-            bool isShared = false;
+            ComponentType componentType = ComponentType.Default;
             bool isOptional = false;
             if (parameter.ChildNodes()?.ToArray()[0] is IdentifierNameSyntax idSyntax)
-                isShared = model.GetTypeInfo(idSyntax).Type.AllInterfaces.Any((x) => x.Name == "ISharedComponent");
+            {
+                if (model.GetTypeInfo(idSyntax).Type.AllInterfaces.Any((x) => x.Name == "ISharedComponent"))
+                    componentType = ComponentType.Shared;
+                else if (model.GetTypeInfo(idSyntax).Type.AllInterfaces.Any((x) => x.Name == "ISingletonComponent"))
+                    componentType = ComponentType.Singleton;
+            }
             else if (parameter.ChildNodes()?.ToArray()[0] is NullableTypeSyntax nullableSyntax && nullableSyntax.ChildNodes()?.ToArray()[0] is IdentifierNameSyntax idSyntax2)
             {
                 isOptional = true;
-                isShared = model.GetTypeInfo(idSyntax2).Type.AllInterfaces.Any((x) => x.Name == "ISharedComponent");
+                if (model.GetTypeInfo(idSyntax2).Type.AllInterfaces.Any((x) => x.Name == "ISharedComponent"))
+                    componentType = ComponentType.Shared;
+                else if (model.GetTypeInfo(idSyntax2).Type.AllInterfaces.Any((x) => x.Name == "ISingletonComponent"))
+                    componentType = ComponentType.Singleton;
             }
 
             return new IteratorArguments()
             {
                 write = isWrite,
-                shared = isShared,
+                type = componentType,
                 optional = isOptional,
             };
         }
@@ -188,6 +187,33 @@ namespace Entygine.SourceGen
             return null;
         }
 
+        private string TypeToChar(ComponentType type)
+        {
+            switch (type)
+            {
+                default:
+                case ComponentType.Default:
+                return "";
+                case ComponentType.Shared:
+                return "s";
+                case ComponentType.Singleton:
+                return "S";
+            }
+        }
+        private string TypeToName(ComponentType type)
+        {
+            switch (type)
+            {
+                default:
+                case ComponentType.Default:
+                return "IComponent";
+                case ComponentType.Shared:
+                return "ISharedComponent";
+                case ComponentType.Singleton:
+                return "ISingletonComponent";
+            }
+        }
+
         private void PrintDelegate(StringBuilder sb, IteratorArguments[] arguments)
         {
             sb.Append($"public delegate void ");
@@ -197,7 +223,7 @@ namespace Entygine.SourceGen
                     sb.Append("_");
 
                 var argument = arguments[i];
-                sb.Append(argument.shared ? "S" : "");
+                sb.Append(TypeToChar(argument.type));
                 sb.Append(argument.write ? "W" : "R");
                 sb.Append(argument.optional ? "O" : "");
             }
@@ -226,7 +252,7 @@ namespace Entygine.SourceGen
             {
                 var argument = arguments[i];
                 sb.Append(" where ");
-                sb.Append($"C{i} : struct, {(argument.shared ? "ISharedComponent" : "IComponent")}");
+                sb.Append($"C{i} : struct, {TypeToName(argument.type)}");
             }
             sb.Append(";\n");
         }
@@ -248,7 +274,7 @@ namespace Entygine.SourceGen
                     sb.Append("_");
 
                 var argument = arguments[i];
-                sb.Append(argument.shared ? "S" : "");
+                sb.Append(TypeToChar(argument.type));
                 sb.Append(argument.write ? "W" : "R");
                 sb.Append(argument.optional ? "O" : "");
             }
@@ -264,7 +290,7 @@ namespace Entygine.SourceGen
             {
                 var argument = arguments[i];
                 sb.Append(" where ");
-                sb.Append($"C{i} : struct, {(argument.shared ? "ISharedComponent" : "IComponent")}");
+                sb.Append($"C{i} : struct, {TypeToName(argument.type)}");
             }
 
             sb.Append("\n{\n");
@@ -337,7 +363,7 @@ namespace Entygine.SourceGen
         }
         */
 
-        private const string IteratorMethods = @"
+        private string IteratorMethods => @$"
         private List<TypeId> anyTypes = new();
         private List<TypeId> withTypes = new();
         private List<TypeId> noneTypes = new();
@@ -346,63 +372,63 @@ namespace Entygine.SourceGen
         private QuerySettings settings;
         private IteratorAction iteration;
 
-        public uint Version { get; private set; }
+        public uint Version {{ get; private set; }}
 
-        public EntityIterator()
-        {
+        public {className}()
+        {{
             settings = new();
-        }
+        }}
 
         public void SetWorld(EntityWorld world) => this.world = world;
 
         private void AddType(List<TypeId> list, TypeId type)
-        {
+        {{
             if (!list.Contains(type))
                 list.Add(type);
-        }
+        }}
 
         public IIteratorPhase3 SetVersion(uint version)
-        {
+        {{
             Version = version;
             return this;
-        }
+        }}
 
         IIteratorPhase1 IIteratorPhase1.Any(params TypeId[] types) => Any(types);
         public IIteratorPhase1 Any(params TypeId[] types)
-        {
+        {{
             foreach (var type in types)
                 AddType(anyTypes, type);
 
             return this;
-        }
+        }}
 
         IIteratorPhase1 IIteratorPhase1.None(params TypeId[] types) => None(types);
         public IIteratorPhase1 None(params TypeId[] types)
-        {
+        {{
             foreach (var type in types)
                 AddType(noneTypes, type);
             return this;
-        }
+        }}
 
         IIteratorPhase1 IIteratorPhase1.With(params TypeId[] types) => With(types);
-        public EntityIterator With(params TypeId[] types)
-        {
+        public {className} With(params TypeId[] types)
+        {{
             foreach (var type in types)
                 AddType(withTypes, type);
             return this;
-        }
+        }}
 
         private void BakeSettings()
-        {
+        {{
             settings.With(withTypes.ToArray());
             settings.Any(anyTypes.ToArray());
             settings.None(noneTypes.ToArray());
-        }
+        }}
 
         public void Synchronous()
-        {
+        {{
             iteration();
-        }
+        }}
 ";
     }
 

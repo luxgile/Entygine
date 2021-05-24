@@ -96,6 +96,8 @@ namespace Entygine
 
             void InitScene(EntityWorld world)
             {
+                world.EntityManager.CreateSingleton<WorldTimeComponent>(WorldTimeComponent.Identifier);
+
                 Mesh meshResource = MeshPrimitives.CreateCube(1);
                 Shader shaderResource = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
                                                     AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.frag"), "Standard Shader");

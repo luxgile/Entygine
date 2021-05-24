@@ -21,7 +21,8 @@ namespace Entygine.Ecs
     public interface IIteratorPhase3
     {
         void Synchronous();
-        WorkAsyncHandle Asynchronous(WorkAsyncHandle dependency);
+        //TODO: Needs to be added once dependency handling is added to the ECS world
+        //WorkAsyncHandle Asynchronous(WorkAsyncHandle dependency);
     }
 
     public delegate void IteratorAction();

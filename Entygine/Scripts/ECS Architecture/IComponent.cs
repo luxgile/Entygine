@@ -2,4 +2,5 @@
 {
     public interface IComponent { }
     public interface ISharedComponent { }
+    public interface ISingletonComponent { }
 }

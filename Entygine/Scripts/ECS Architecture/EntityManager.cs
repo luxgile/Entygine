@@ -9,6 +9,7 @@ namespace Entygine.Ecs
     {
         private uint version;
         private List<EntityChunk> chunks;
+        private Dictionary<TypeId, ISingletonComponent> singletons = new ();
 
         public EntityManager()
         {
@@ -203,6 +204,23 @@ namespace Entygine.Ecs
             }
 
             return index;
+        }
+
+        public void CreateSingleton<T0>(TypeId id) where T0 : struct, ISingletonComponent
+        {
+            ISingletonComponent singleton = Activator.CreateInstance<T0>();
+            singletons.Add(id, singleton);
+        }
+        public void RemoveSingleton<T0>(TypeId id) where T0 : struct, ISingletonComponent
+        {
+            singletons.Remove(id);
+        }
+        public ref T0 GetSingleton<T0>(TypeId id) where T0 : struct, ISingletonComponent
+        {
+            if (singletons.TryGetValue(id, out ISingletonComponent singleton))
+                return ref Unsafe.Unbox<T0>(singleton);
+
+            throw new Exception("No singleton found on Entity Manager.");
         }
 
         public void GetChunks(QuerySettings settings, List<EntityChunk> foundChunks)

@@ -200,14 +200,14 @@ namespace Entygine.Benchmarking
     {
         private EntityWorld world;
         private EntityQueryScope query;
-        private EntityIterator iterator;
+        private EntityIterator_Entygine_Benchmarking iterator;
 
         public IterationDiff()
         {
             world = EntityWorld.CreateWorld();
             world.EntityManager.CreateEntities(new EntityArchetype(C_Position.Identifier), 10000);
             QuerySettings settings = new QuerySettings().With(C_Position.Identifier);
-            iterator = new EntityIterator();
+            iterator = new EntityIterator_Entygine_Benchmarking();
             iterator.SetWorld(world);
             query = new EntityQueryScope(settings, world, (ref EntityQueryContext context) =>
             {

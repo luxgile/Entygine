@@ -1,4 +1,6 @@
-﻿namespace Entygine.Ecs
+﻿using Entygine.DevTools;
+
+namespace Entygine.Ecs
 {
     public abstract class BaseSystem
     {
@@ -26,7 +28,14 @@
 
             World.EntityManager.Version++;
 
-            OnPerformFrame(dt);
+            try
+            {
+                OnPerformFrame(dt);
+            }
+            catch(System.Exception e)
+            {
+                DevConsole.Log(LogType.Error, e.Message);
+            }
 
             lastVersionWorked = World.EntityManager.Version;
         }
@@ -34,6 +43,11 @@
         protected virtual void OnSystemCreated() { }
         protected virtual void OnPerformFrame(float dt) { }
         protected virtual void OnSystemDestroyed() { }
+
+        public ref T0 GetSingleton<T0>(TypeId id) where T0 : struct, ISingletonComponent
+        {
+            return ref World.EntityManager.GetSingleton<T0>(id);
+        }
 
         public EntityWorld World => world;
         public uint LastVersionWorked => lastVersionWorked;
