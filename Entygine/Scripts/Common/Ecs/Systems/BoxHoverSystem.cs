@@ -6,7 +6,7 @@ namespace Entygine.Ecs.Systems
 {
     public partial struct C_BoxTag : IComponent { }
 
-    public class BoxHoverSystem : QuerySystem<EntityIterator_Entygine>
+    internal class BoxHoverSystem : QuerySystem<EntygineGeneratedIterators>
     {
         protected override void OnFrame(float dt)
         {

@@ -195,19 +195,20 @@ namespace Entygine.Benchmarking
     //        return temp;
     //    }
     //}
-
+    [GenerateIteratorsTarget]
+    internal partial class BenchmarkIterationGenerated { }
     public class IterationDiff
     {
         private EntityWorld world;
         private EntityQueryScope query;
-        private EntityIterator_Entygine_Benchmarking iterator;
+        private BenchmarkIterationGenerated iterator;
 
         public IterationDiff()
         {
             world = EntityWorld.CreateWorld();
             world.EntityManager.CreateEntities(new EntityArchetype(C_Position.Identifier), 10000);
             QuerySettings settings = new QuerySettings().With(C_Position.Identifier);
-            iterator = new EntityIterator_Entygine_Benchmarking();
+            iterator = new BenchmarkIterationGenerated();
             iterator.SetWorld(world);
             query = new EntityQueryScope(settings, world, (ref EntityQueryContext context) =>
             {

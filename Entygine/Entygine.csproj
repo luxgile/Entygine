@@ -11,16 +11,16 @@
 
 	<!--<Target Name="AddSourceGeneratedFiles" AfterTargets="CoreCompile">
     <ItemGroup>
-      <Compile Include="GeneratedFiles\**" />
+      <Compile Include="$(BaseIntermediateOutputPath)\GeneratedFiles\**" />
     </ItemGroup>
-  </Target>
-  <Target Name="RemoveSourceGeneratedFiles" BeforeTargets="CoreCompile">
+  </Target>-->
+  <!--<Target Name="RemoveSourceGeneratedFiles" BeforeTargets="CoreCompile">
     <ItemGroup>
-      <Compile Remove="GeneratedFiles\**" />
+      <Compile Remove="$(BaseIntermediateOutputPath)\GeneratedFiles\**" />
     </ItemGroup>
   </Target>
   <Target Name="CleanSourceGeneratedFiles" AfterTargets="Clean">
-    <RemoveDir Directories="GeneratedFiles" />
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)\GeneratedFiles" />
   </Target>-->
 
 	<!--
@@ -31,31 +31,31 @@
     As a workaround for https://github.com/dotnet/roslyn/issues/44093 we skip source generators for design-time builds
     and emit generated files and include them for design-time builds.
 	-->
-	<Target Name="Roslyn44093Workaround" BeforeTargets="CoreCompile;ResolveProjectReferences;$(PrepareProjectReferencesDependsOn)" Condition="'$(DesignTimeBuild)' == 'true'">
+	<!--<Target Name="Roslyn44093Workaround" BeforeTargets="CoreCompile;ResolveProjectReferences;$(PrepareProjectReferencesDependsOn)" Condition="'$(DesignTimeBuild)' == 'true'">
 		<ItemGroup>
-			<!-- This is slightly over-zealous since it removes in-solution analyzers too -->
+			 This is slightly over-zealous since it removes in-solution analyzers too 
 			<_AnalyzerProjectReferencesToRemove Include="@(ProjectReference)" Condition="'%(OutputItemType)' == 'Analyzer'" />
 			<ProjectReference Remove="@(_AnalyzerProjectReferencesToRemove)" />
 
 			<Compile Include="$(CompilerGeneratedFilesOutputPath)/%(_AnalyzerProjectReferencesToRemove.FileName)/**/*.cs" Visible="false" />
 		</ItemGroup>
 	</Target>
-	<!-- Workaround for https://github.com/dotnet/roslyn/issues/47966 and https://github.com/dotnet/roslyn/issues/49125 -->
+	 Workaround for https://github.com/dotnet/roslyn/issues/47966 and https://github.com/dotnet/roslyn/issues/49125 
 	<Target Name="Roslyn46966And49125Workaround" BeforeTargets="CoreCompile;Clean" Condition="'$(DesignTimeBuild)' != 'true' and '$(CompilerGeneratedFilesOutputPath)' != ''">
 		<ItemGroup>
 			<_GeneratedSourceFileToRemove Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
 		</ItemGroup>
 		<Delete Files="@(_GeneratedSourceFileToRemove)" />
-	</Target>
+	</Target>-->
 
 	<ItemGroup>
 		<ProjectReference Include="..\Entygine.SourceGen\Entygine.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 	<!-- Fix for IDE to make intellisense working-->
-	<!--<ItemGroup>
+	<ItemGroup>
     <Compile Include="$(IntermediateOutputPath)*.gen.cs" Condition="'$(DesignTimeBuild)' == 'true'" Link="%(Filename)%(Extension)" Visible="false" />
-  </ItemGroup>-->
+  </ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>

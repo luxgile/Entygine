@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 
 namespace Entygine.Ecs
 {
+    [GenerateIteratorsTarget] 
+    internal partial class EntygineGeneratedIterators { }
     public interface IIteratorPhase1
     {
         IIteratorPhase1 With(params TypeId[] types);

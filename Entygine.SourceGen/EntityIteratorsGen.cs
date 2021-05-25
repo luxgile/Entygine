@@ -51,21 +51,22 @@ namespace Entygine.SourceGen
 
         public void Execute(GeneratorExecutionContext context)
         {
-            className = $"EntityIterator_{context.Compilation.Assembly.Name.Replace('.', '_')}";
+            className = finder.iteratorClassName;
+            if (className == null)
+                return;
 
             StringBuilder sb = new StringBuilder();
             sb.Append("using System.Runtime.CompilerServices;\n");
             sb.Append("using System.Collections.Generic;\n");
             sb.Append("namespace Entygine.Ecs\n");
             sb.Append("{\n");
-            sb.Append($"public class {className} : IIteratorPhase1, IIteratorPhase2, IIteratorPhase3\n");
+            sb.Append($"internal partial class {className} : IIteratorPhase1, IIteratorPhase2, IIteratorPhase3\n");
             sb.Append("{\n");
             sb.Append(IteratorMethods + "\n");
             try
             {
                 for (int i = 0; i < finder.ids.Count; i++)
                 {
-                    sb.Append("//A\n");
                     Stuff current = finder.ids[i];
                     Compilation compilation = context.Compilation;
 
@@ -73,37 +74,32 @@ namespace Entygine.SourceGen
                         compilation = context.Compilation.AddSyntaxTrees(current.tree);
 
                     SemanticModel model = compilation.GetSemanticModel(current.tree);
-                    sb.Append("//B\n");
                     TypeInfo typeKind = model.GetTypeInfo(current.invocation);
-                    if (typeKind.Type != null)
+                    if (typeKind.Type != null && typeKind.Type.Name == className)
                     {
-                        if (typeKind.Type.Name == className)
+                        ParameterSyntax[] parametersSyntax = GetLambdaParameters(current.invocation);
+                        if (parametersSyntax == null)
+                            continue;
+
+                        List<IteratorArguments> arguments = new List<IteratorArguments>();
+                        for (int t = 0; t < parametersSyntax.Length; t++)
+                            arguments.Add(CreateArgument(parametersSyntax[t], model));
+
+                        //arguments.Sort();
+                        if (!hash.Contains(arguments, new ArgumentsEqualityComparer()))
                         {
-                            sb.Append("//C\n");
-                            ParameterSyntax[] parametersSyntax = GetLambdaParameters(current.invocation);
-                            if (parametersSyntax == null)
-                                continue;
-
-                            List<IteratorArguments> arguments = new List<IteratorArguments>();
-                            for (int t = 0; t < parametersSyntax.Length; t++)
-                                arguments.Add(CreateArgument(parametersSyntax[t], model));
-
-                            sb.Append("//D\n");
-                            //arguments.Sort();
-                            if (!hash.Contains(arguments, new ArgumentsEqualityComparer()))
-                            {
-
-                                sb.Append("//E\n");
-                                sb.Append($"//From file: {current.tree.FilePath}\n");
-                                PrintDelegate(sb, arguments.ToArray());
-                                PrintIterator(sb, arguments.ToArray());
-                                hash.Add(arguments);
-                            }
+                            sb.Append($"//From file: {current.tree.FilePath}\n");
+                            PrintDelegate(sb, arguments.ToArray());
+                            PrintIterator(sb, arguments.ToArray());
+                            hash.Add(arguments);
                         }
                     }
                 }
             }
-            catch (Exception e) { sb.Append($"\n /* {e} */"); }
+            catch (Exception e) 
+            { 
+                Debug.Print(e.ToString()); 
+            }
             sb.Append("}\n");
             sb.Append("}\n");
             context.AddSource("Iterators.gen.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
@@ -124,6 +120,8 @@ namespace Entygine.SourceGen
 
         public void Initialize(GeneratorInitializationContext context)
         {
+            //if (!Debugger.IsAttached)
+            //    Debugger.Launch();
             context.RegisterForSyntaxNotifications(() => finder);
         }
 
@@ -189,29 +187,21 @@ namespace Entygine.SourceGen
 
         private string TypeToChar(ComponentType type)
         {
-            switch (type)
+            return type switch
             {
-                default:
-                case ComponentType.Default:
-                return "";
-                case ComponentType.Shared:
-                return "s";
-                case ComponentType.Singleton:
-                return "S";
-            }
+                ComponentType.Shared => "s",
+                ComponentType.Singleton => "S",
+                _ => "",
+            };
         }
         private string TypeToName(ComponentType type)
         {
-            switch (type)
+            return type switch
             {
-                default:
-                case ComponentType.Default:
-                return "IComponent";
-                case ComponentType.Shared:
-                return "ISharedComponent";
-                case ComponentType.Singleton:
-                return "ISingletonComponent";
-            }
+                ComponentType.Shared => "ISharedComponent",
+                ComponentType.Singleton => "ISingletonComponent",
+                _ => "IComponent",
+            };
         }
 
         private void PrintDelegate(StringBuilder sb, IteratorArguments[] arguments)
@@ -434,9 +424,16 @@ namespace Entygine.SourceGen
 
     public class EntityIteratorsFinder : ISyntaxReceiver
     {
+        public string iteratorClassName;
         public List<Stuff> ids = new List<Stuff>();
         public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
         {
+            if (syntaxNode is ClassDeclarationSyntax classSyntax)
+            {
+                if (classSyntax.AttributeLists.Count > 0 && classSyntax.AttributeLists.First().Attributes.Any((x) => x.Name.ToString() == "GenerateIteratorsTarget"))
+                    iteratorClassName = classSyntax.Identifier.Text;
+            }
+
             if (syntaxNode is IdentifierNameSyntax invocationExpressionSyntax && invocationExpressionSyntax.Parent is MemberAccessExpressionSyntax)
             {
                 ids.Add(new Stuff() { tree = syntaxNode.SyntaxTree, invocation = invocationExpressionSyntax });
