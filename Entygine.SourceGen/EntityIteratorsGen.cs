@@ -58,7 +58,9 @@ namespace Entygine.SourceGen
             StringBuilder sb = new StringBuilder();
             sb.Append("using System.Runtime.CompilerServices;\n");
             sb.Append("using System.Collections.Generic;\n");
-            sb.Append("namespace Entygine.Ecs\n");
+            sb.Append("using Entygine.Ecs;\n");
+            if (!string.IsNullOrEmpty(finder.namespaceName))
+                sb.Append($"namespace {finder.namespaceName}\n");
             sb.Append("{\n");
             sb.Append($"internal partial class {className} : IIteratorPhase1, IIteratorPhase2, IIteratorPhase3\n");
             sb.Append("{\n");
@@ -77,6 +79,7 @@ namespace Entygine.SourceGen
                     TypeInfo typeKind = model.GetTypeInfo(current.invocation);
                     if (typeKind.Type != null && typeKind.Type.Name == className)
                     {
+                        //sb.Append($"//{typeKind.Type.Name}\n");
                         ParameterSyntax[] parametersSyntax = GetLambdaParameters(current.invocation);
                         if (parametersSyntax == null)
                             continue;
@@ -96,13 +99,13 @@ namespace Entygine.SourceGen
                     }
                 }
             }
-            catch (Exception e) 
-            { 
-                Debug.Print(e.ToString()); 
+            catch (Exception e)
+            {
+                Debug.Print(e.ToString());
             }
             sb.Append("}\n");
             sb.Append("}\n");
-            context.AddSource("Iterators.gen.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+            context.AddSource($"{className}.gen.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
         }
 
         public class ArgumentsEqualityComparer : IEqualityComparer<List<IteratorArguments>>
@@ -172,17 +175,21 @@ namespace Entygine.SourceGen
             if (parentInvocation == null)
                 return null;
 
-            for (int i = 0; i < parentInvocation.ArgumentList.Arguments.Count; i++)
-            {
-                var childs = parentInvocation.ArgumentList.Arguments[i].ChildNodes().ToArray();
-                for (int i2 = 0; i < childs.Length; i++)
-                {
-                    if (childs[i2] is ParenthesizedLambdaExpressionSyntax lambda)
-                        return lambda.ParameterList.Parameters.ToArray();
-                }
-            }
+            var parameters = parentInvocation.DescendantNodes()
+                .Where((x) => x.IsKind(SyntaxKind.ParenthesizedLambdaExpression))
+                .Cast<ParenthesizedLambdaExpressionSyntax>().FirstOrDefault()?.ParameterList.Parameters.ToArray();
+            return parameters;
+            //for (int i = 0; i < parentInvocation.ArgumentList.Arguments.Count; i++)
+            //{
+            //    var childs = parentInvocation.ArgumentList.Arguments[i].ChildNodes().ToArray();
+            //    for (int i2 = 0; i < childs.Length; i++)
+            //    {
+            //        if (childs[i2] is ParenthesizedLambdaExpressionSyntax lambda)
+            //            return lambda.ParameterList.Parameters.ToArray();
+            //    }
+            //}
 
-            return null;
+            //return null;
         }
 
         private string TypeToChar(ComponentType type)
@@ -424,6 +431,7 @@ namespace Entygine.SourceGen
 
     public class EntityIteratorsFinder : ISyntaxReceiver
     {
+        public string namespaceName;
         public string iteratorClassName;
         public List<Stuff> ids = new List<Stuff>();
         public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
@@ -431,7 +439,10 @@ namespace Entygine.SourceGen
             if (syntaxNode is ClassDeclarationSyntax classSyntax)
             {
                 if (classSyntax.AttributeLists.Count > 0 && classSyntax.AttributeLists.First().Attributes.Any((x) => x.Name.ToString() == "GenerateIteratorsTarget"))
+                {
                     iteratorClassName = classSyntax.Identifier.Text;
+                    namespaceName = syntaxNode.SyntaxTree.GetRoot().ChildNodes().Where((x) => x.IsKind(SyntaxKind.NamespaceDeclaration)).Cast<NamespaceDeclarationSyntax>().First().Name.ToString();
+                }
             }
 
             if (syntaxNode is IdentifierNameSyntax invocationExpressionSyntax && invocationExpressionSyntax.Parent is MemberAccessExpressionSyntax)

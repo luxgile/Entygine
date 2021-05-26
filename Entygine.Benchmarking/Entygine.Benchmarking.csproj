@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,8 +37,11 @@
 	</Target>-->
 
   <ItemGroup>
-    <ProjectReference Include="..\Entygine.SourceGen\Entygine.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+    <ProjectReference Include="..\Entygine.SourceGen\Entygine.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <Compile Include="$(IntermediateOutputPath)*.gen.cs" Condition="'$(DesignTimeBuild)' == 'true'" Link="%(Filename)%(Extension)" Visible="false" />
+  </ItemGroup>
 
 </Project>
