@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 namespace Entygine.Ecs
 {
 	[SystemGroup(typeof(MainPhases.LatePhaseId))]
-	internal class TransformConverterSystem : QuerySystem<EntygineGeneratedIterators>
+	internal class TransformConverterSystem : QuerySystem
 	{
 		protected override void OnFrame(float dt)
 		{

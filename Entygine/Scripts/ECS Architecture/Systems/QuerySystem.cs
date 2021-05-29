@@ -1,8 +1,8 @@
 ﻿namespace Entygine.Ecs
 {
-    public abstract class QuerySystem<T> : BaseSystem where T : IIteratorPhase2, new()
+    public abstract class QuerySystem : BaseSystem
     {
-        protected T Iterator { get; private set; }
+        protected EntityIterator Iterator { get; private set; }
 
         protected virtual bool CheckChanges { get; } = true;
 

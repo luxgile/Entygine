@@ -7,7 +7,7 @@ using Entygine.Input;
 
 namespace Entygine.Ecs.Systems
 {
-    internal class EditorCameraControlSystem : QuerySystem<EntygineGeneratedIterators>
+    internal class EditorCameraControlSystem : QuerySystem
     {
         private Vector2 lastCursorPos;
 

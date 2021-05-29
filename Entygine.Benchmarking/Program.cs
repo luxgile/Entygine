@@ -11,10 +11,10 @@ using System.Threading;
 
 namespace Entygine.Benchmarking
 {
-    public struct Dummy : IComponent { public int value; }
-    public struct A : IComponent { }
-    public struct B : IComponent { }
-    public struct C : IComponent { }
+    public partial struct Dummy : IComponent { public int value; }
+    public partial struct A : IComponent { }
+    public partial struct B : IComponent { }
+    public partial struct C : IComponent { }
     public class IdToTypeComparison
     {
         public Dictionary<int, Type> intToType = new();
@@ -201,14 +201,14 @@ namespace Entygine.Benchmarking
     {
         private EntityWorld world;
         private EntityQueryScope query;
-        private BenchmarkIterationGenerated iterator;
+        private EntityIterator iterator;
 
         public IterationDiff()
         {
             world = EntityWorld.CreateWorld();
             world.EntityManager.CreateEntities(new EntityArchetype(C_Position.Identifier), 10000);
             QuerySettings settings = new QuerySettings().With(C_Position.Identifier);
-            iterator = new BenchmarkIterationGenerated();
+            iterator = new EntityIterator();
             iterator.SetWorld(world);
             query = new EntityQueryScope(settings, world, (ref EntityQueryContext context) =>
             {

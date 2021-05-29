@@ -11,143 +11,119 @@ using System.Runtime.CompilerServices;
 
 namespace Entygine.Ecs
 {
-    public static class GeneratedIterators
-    {
-<#
-//I'm sorry to anyone who reads this in the future, I'm really sorry.
-
-int parameters = 0;
-List<string> AllModeCombinationsFor(int amount)
-{
-    if (amount == 0)
-        return new List<string>() { "" };
-
-    var oneFewerResult = AllModeCombinationsFor(amount - 1);
-
-    return oneFewerResult.SelectMany(oldResult =>
-        {
-            if (oldResult == "")
-            {
-                return new List<string>() { "R","W" };
-            }
-            var result = new List<string>()
-            {
-                oldResult+"W"
-            };
-            char lastChar = oldResult[oldResult.Length-1];
-            if (lastChar == 'R')
-                result.Add(oldResult+"R");
-
-            return result;
-        }).ToList();
-}
-List<string> combinations = new List<string>();
-for(int i = 1; i < parameters; i++)
-{
-    combinations.AddRange(AllModeCombinationsFor(i));
-}
-
-foreach(var str in combinations) 
-{
-#>          public delegate void <#= str #><<#
-for(int i = 0; i < str.Length; i++)
-{
-char c = str[i];
-if(c == 'R') { #>C<#= i #><# }
-if(c == 'W') { #>C<#= i #><# }
-if(i != str.Length - 1) {#>, <#}
-}
-#>>(<# 
-
-for(int i = 0; i < str.Length; i++)
-{
-char c = str[i];
-if(c == 'R') { #>in C<#= i #> read<#= i #><# }
-if(c == 'W') { #>ref C<#= i #> write<#= i #><# }
-if(i != str.Length - 1) {#>, <#}
-}
-#>)
-            <# 
-for(int i = 0; i < str.Length; i++)
-{
-char c = str[i];#>
-where C<#= i #> : struct, IComponent <#
-} 
-#>;
-<#
-}
-#>
-    }
-
     public partial class EntityIterator
     {
 <#
-foreach(var str in combinations) 
-{
-    #>          public IIteratorPhase2 Iterate<<#
-    for(int i = 0; i < str.Length; i++)
-    {
-        char c = str[i];
-        #>C<#= i #><#
-        if(i != str.Length - 1)
-        {
-            #>, <#
-        }
-    }
-    #>> (GeneratedIterators.<#=str#><<#
-    for(int i = 0; i < str.Length; i++)
-    {
-        char c = str[i];
-        #>C<#= i #><#
-        if(i != str.Length - 1)
-        {
-            #>, <#
-        }
-    }
-    #>> iterator) <# 
-for(int i = 0; i < str.Length; i++)
-{
-char c = str[i];#>
-where C<#= i #> : struct, IComponent <#
-} 
-#>
+        string[] states = { "r", "R", "V", "W" };
 
+        var combinations = GetCombinations();
+            foreach (var combination in combinations)
+                WriteMethod(combination);
+
+        string[] GetComponentCount(int count)
+        {
+            List<string> s = new List<string>();
+            for (int i = 0; i < count; i++)
             {
-<#
-for(int i = 0; i < str.Length; i++)
-{
-char c = str[i];#>
-            TypeId id<#=i#> = TypeManager.GetIdFromType(typeof(C<#=i#>));
-            AddType(withTypes, id<#=i#>);
-<#
-}#>
-            BakeSettings();
-            SetDelegate((chunk) =>
-            {
-<#
-for(int i = 0; i < str.Length; i++)
-{
-char c = str[i];#>              chunk.TryGetComponents(id<#=i#>, out ComponentArray collection<#=i#>);
-<#
-}#>
-                for (int e = 0; e < chunk.Count; e++)
-                {
-                    iterator(<#
-for(int i = 0; i < str.Length; i++)
-{
-char c = str[i];
-if(c == 'R') { #>in Unsafe.Unbox<C<#=i#>>(collection<#=i#>[e])<# }
-if(c == 'W') { #>ref Unsafe.Unbox<C<#=i#>>(collection<#=i#>[e])<# }
-if(i != str.Length - 1) {#>, <#}
-}
-#>);
-                }
-            });
-            
-            return this;
+                s.Add($"C{i}");
             }
-<#
-}
+            return s.ToArray();
+        }
+        string GetPrefix(string s)
+        {
+            if (s == states[0] || s == states[1])
+                return "in";
+            if (s == states[2] || s == states[3])
+                return "ref";
+
+            throw new System.Exception("Invalid value");
+        }
+        string GetSuffix(string s)
+        {
+            if (s == states[0] || s == states[2])
+                return "?";
+
+            return "";
+        }
+
+        void WriteMethod(string parameters)
+        {
+            var comps = GetComponentCount(parameters.Length);
+            WriteLine($"\t\tpublic delegate void {parameters}<{string.Join(", ", comps)}>({string.Join(", ", comps.Select(x => $"{GetPrefix(parameters[(int)char.GetNumericValue(x[1])].ToString())} {x + GetSuffix(parameters[(int)char.GetNumericValue(x[1])].ToString())} {x.ToLower()}"))}) {string.Join(" ", comps.Select(x => $"where {x} : struct, IComponent"))};");
+            WriteLine($"\t\tpublic IIteratorPhase2 Iterate<{string.Join(", ", comps)}>({parameters}<{string.Join(", ", comps)}> iterator) {string.Join(" ", comps.Select(x => $"where {x} : struct, IComponent"))}");
+            WriteLine("\t\t{");
+            comps.ToList().ForEach(x =>
+            {
+                WriteLine($"\t\t\tTypeId id{x[1]} = TypeManager.GetIdFromType(typeof({x}));");
+                WriteLine($"\t\t\tAddType({(GetSuffix(parameters[(int)char.GetNumericValue(x[1])].ToString()).Contains('?') ? "anyTypes" : "withTypes")}, id{x[1]});");
+            });
+            WriteLine("\t\t\tBakeSettings();");
+            WriteLine("\t\t\titeration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => ");
+            WriteLine("\t\t\t{");
+            comps.ToList().ForEach(x =>
+            {
+                Write($"\t\t\t\t");
+                if (GetSuffix(parameters[(int)char.GetNumericValue(x[1])].ToString()).Contains('?'))
+                    Write($"bool flag{x[1]} = ");
+                WriteLine($"chunk.TryGetComponents(id{x[1]}, out ComponentArray array{x[1]});");
+            });
+            WriteLine("\t\t\t\tfor (int i = 0; i < chunk.Count; i++)");
+            WriteLine("\t\t\t\t{");
+            comps.ToList().ForEach(x =>
+            {
+
+                if (!GetSuffix(parameters[(int)char.GetNumericValue(x[1])].ToString()).Contains('?'))
+                    WriteLine($"\t\t\t\t\tref {x} c{x[1]} = ref array{x[1]}.GetRef<{x}>(i);");
+                else
+                    WriteLine($"\t\t\t\t\t{x}? c{x[1]} = flag{x[1]} ? array{x[1]}.Get<{x}>(i) : null;");
+            });
+            WriteLine($"\t\t\t\t\titerator({string.Join(", ", comps.Select(x => $"{GetPrefix(parameters[(int)char.GetNumericValue(x[1])].ToString())} {x.ToLower()}"))});");
+            comps.ToList().ForEach(x =>
+            {
+
+                if (GetSuffix(parameters[(int)char.GetNumericValue(x[1])].ToString()).Contains('?'))
+                    WriteLine($"\t\t\t\t\tif(flag{x[1]}) array{x[1]}[i] = c{x[1]};");
+            });
+            WriteLine("\t\t\t\t}");
+            WriteLine("\t\t\t});");
+            WriteLine("\t\t\treturn this;");
+            WriteLine("\t\t}");
+        }
+
+        string[] GetCombinations()
+        {
+            int parameters = 8;
+            List<string> combinations = new();
+            for (int i = 0; i <= parameters; i++)
+            {
+                combinations.AddRange(Combine(i));
+            }
+            return combinations.Skip(1).ToArray();
+            List<string> Combine(int count)
+            {
+                if (count == 0)
+                    return new() { "" };
+
+                List<string> lowerCombination = Combine(count - 1);
+
+                return lowerCombination.SelectMany(x =>
+                {
+                    if (string.IsNullOrEmpty(x))
+                        return new List<string>() { states[0], states[1], states[2], states[3] };
+
+                    List<string> result = new List<string>() { x + states[0] };
+                    string lastChar = x[x.Length - 1].ToString();
+                    if (lastChar == states[1] || lastChar == states[2] || lastChar == states[3])
+                        result.Add(x + states[1]);
+                    if (lastChar == states[2] || lastChar == states[3])
+                        result.Add(x + states[2]);
+                    if (lastChar == states[3])
+                        result.Add(x + states[3]);
+
+                    return result;
+                }).ToList();
+            }
+        }
 #>
     }
 }

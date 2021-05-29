@@ -125,8 +125,10 @@ namespace Entygine_Editor
             if (_frameBegun)
             {
                 _frameBegun = false;
+                GL.PushDebugGroup(DebugSourceExternal.DebugSourceThirdParty, 0, 5, "ImGui");
                 ImGui.Render();
                 RenderImDrawData(ImGui.GetDrawData());
+                GL.PopDebugGroup();
             }
         }
 

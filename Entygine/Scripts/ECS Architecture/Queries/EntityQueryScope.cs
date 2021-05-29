@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Entygine.Ecs
 {
+    [Obsolete("Use EntityIterator instead.")]
     public class EntityQueryScope : QueryScope<EntityQueryContext>
     {
         private EntityWorld world;

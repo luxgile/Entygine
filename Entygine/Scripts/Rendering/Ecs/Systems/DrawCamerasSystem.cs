@@ -8,7 +8,7 @@ using OpenTK.Mathematics;
 namespace Entygine.Ecs.Systems
 {
     [SystemGroup(typeof(MainPhases.DefaultPhaseId), PhaseType.Render)]
-    public class DrawCamerasSystem : QuerySystem<ChunkIterator>
+    public class DrawCamerasSystem : QuerySystem
     {
         protected override bool CheckChanges => false;
         protected override void OnFrame(float dt)

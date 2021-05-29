@@ -6,7 +6,7 @@ using Entygine.Rendering.Pipeline;
 namespace Entygine.UI
 {
     [SystemGroup(typeof(MainPhases.EarlyPhaseId), PhaseType.Logic)]
-    public class CanvasRegistrerSystem : QuerySystem<ChunkIterator>
+    public class CanvasRegistrerSystem : QuerySystem
     {
         protected override void OnFrame(float dt)
         {

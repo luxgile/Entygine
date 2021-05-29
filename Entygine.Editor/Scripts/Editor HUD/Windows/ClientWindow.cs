@@ -13,7 +13,7 @@ namespace Entygine_Editor
         public override string Title => "Client";
 
         private QuerySettings settings = new QuerySettings().Any(C_Camera.Identifier);
-        private EntityQueryScope queryScope;
+        private EntityIterator iterator = new();
 
         private bool keepAspect = true;
 
@@ -23,14 +23,6 @@ namespace Entygine_Editor
         public ClientWindow()
         {
             Flags |= ImGuiWindowFlags.MenuBar;
-
-            queryScope = new EntityQueryScope(settings, (ref EntityQueryContext context) =>
-            {
-                context.Read(C_Camera.Identifier, out C_Camera camera);
-                Vector2 floatingSize = (ImGui.GetContentRegionAvail() - currSize) / 2f;
-                ImGui.SetCursorPos(ImGui.GetCursorPos() + floatingSize);
-                ImGui.Image((IntPtr)camera.cameraData.FinalFramebuffer.ColorBuffer, currSize, new Vector2(0, 0), new Vector2(1, -1));
-            });
         }
 
         protected override void OnPreDraw()
@@ -65,7 +57,16 @@ namespace Entygine_Editor
                 AppScreen.Resolution = (Vec2i)currSize;
             prevSize = currSize;
 
-            queryScope.Perform();
+            if (EntityWorld.Active != null)
+            {
+                iterator.SetWorld(EntityWorld.Active);
+                iterator.Iterate((in C_Camera camera) =>
+                {
+                    Vector2 floatingSize = (ImGui.GetContentRegionAvail() - currSize) / 2f;
+                    ImGui.SetCursorPos(ImGui.GetCursorPos() + floatingSize);
+                    ImGui.Image((IntPtr)camera.cameraData.FinalFramebuffer.ColorBuffer, currSize, new Vector2(0, 0), new Vector2(1, -1));
+                }).SetVersion(0).Synchronous();
+            }
 
             ImGui.SetNextWindowPos(new Vector2(10, 100));
             ImGui.BeginChildFrame(2345234, new Vector2(300, 300));

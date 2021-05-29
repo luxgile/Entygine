@@ -3,7 +3,7 @@ using Entygine.Rendering.Pipeline;
 
 namespace Entygine.Ecs.Systems
 {
-    public class QueueRenderTransformsSystem : QuerySystem<ChunkIterator>
+    public class QueueRenderTransformsSystem : QuerySystem
     {
         protected override void OnFrame(float dt)
         {

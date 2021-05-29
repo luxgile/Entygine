@@ -4,13 +4,13 @@ using Entygine.Rendering.Pipeline;
 namespace Entygine.Ecs.Systems
 {
     [BeforeSystem(typeof(QueueRenderTransformsSystem))]
-    public class UpdateRenderMeshesSystem : QuerySystem<ChunkIterator>
+    public class UpdateRenderMeshesSystem : QuerySystem
     {
         protected override void OnFrame(float dt)
         {
             if (!RenderPipelineCore.TryGetContext(out Rendering.GeometryRenderData geometryData))
                 return;
-
+            
             Iterator.With(SC_RenderMesh.Identifier).Iterate((chunk) =>
             {
                 chunk.TryGetSharedComponent(SC_RenderMesh.Identifier, out SC_RenderMesh renderMesh);

@@ -52,6 +52,8 @@ namespace Entygine
 
             loadedEngine = true;
 
+            TypeManager.InitializeComponentsIdentifiers();
+
             Ogl.enableErrorCheck = true;
 
             InitConsole();
