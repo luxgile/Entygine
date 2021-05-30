@@ -10,10 +10,11 @@ namespace Entygine.Ecs.Systems
     [SystemGroup(typeof(MainPhases.DefaultPhaseId), PhaseType.Render)]
     public class DrawCamerasSystem : QuerySystem
     {
+        protected override bool RunAsync => false;
         protected override bool CheckChanges => false;
         protected override void OnFrame(float dt)
         {
-            Iterator.With(C_Camera.Identifier, C_Transform.Identifier).Iterate((chunk) =>
+            Iterator.RWith(C_Camera.Identifier, C_Transform.Identifier).Iterate((chunk) =>
             {
                 int entityCount = chunk.Count;
                 CameraData[] cameraDatas = new CameraData[entityCount];

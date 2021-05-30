@@ -11,12 +11,14 @@ namespace Entygine.Ecs
         private static EntityWorld activeWorld;
 
         private EntityManager entityManager;
+        private WorkDependencyManager dependencyManager;
         private EcsRunner ecsRunner;
 
         private EntityWorld()
         {
-            entityManager = new EntityManager();
-            ecsRunner = new EcsRunner();
+            entityManager = new();
+            dependencyManager = new();
+            ecsRunner = new();
         }
 
         public static EntityWorld CreateWorld()
@@ -32,6 +34,7 @@ namespace Entygine.Ecs
         }
 
         public EntityManager EntityManager => entityManager;
+        public WorkDependencyManager DependencyManager => dependencyManager;
         public EcsRunner Runner => ecsRunner;
         public static EntityWorld Active => activeWorld;
     }

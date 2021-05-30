@@ -98,6 +98,9 @@ namespace Entygine.Ecs
         /// </summary>
         public bool HasAnyTypes(params TypeId[] types)
         {
+            if (types == null || types.Length == 0)
+                return false;
+
             for (int i = 0; i < types.Length; i++)
             {
                 if (HasType(types[i]))

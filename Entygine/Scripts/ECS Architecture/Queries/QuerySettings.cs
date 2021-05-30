@@ -7,77 +7,75 @@ namespace Entygine.Ecs
     public interface IQueryEntityIterator : IQueryIterator { void Iteration(ref EntityChunk chunk, int index); }
     public interface IQueryChunkIterator : IQueryIterator { void Iteration(ref EntityChunk chunk); }
 
+    public struct QueryDesc
+    {
+        public bool needsAny;
+        public TypeId[] readWith;
+        public TypeId[] writeWith;
+        public TypeId[] readAny;
+        public TypeId[] writeAny;
+        public TypeId[] noneTypes;
+    }
+
     public class QuerySettings
     {
-        private TypeId[] withTypes;
-        private TypeId[] anyTypes;
-        private TypeId[] noneTypes;
+        private QueryDesc desc;
 
-        public QuerySettings With(params TypeId[] types)
+        public QuerySettings RWith(params TypeId[] types)
         {
-            this.withTypes = types;
+            desc.readWith = types;
             return this;
         }
 
-        public QuerySettings Any(params TypeId[] types)
+        public QuerySettings WWith(params TypeId[] types)
         {
-            this.anyTypes = types;
+            desc.writeWith = types;
             return this;
         }
 
+        public QuerySettings RAny(params TypeId[] types)
+        {
+            desc.readAny = types;
+            return this;
+        }
+        public QuerySettings WAny(params TypeId[] types)
+        {
+            desc.writeAny = types;
+            return this;
+        }
         public QuerySettings None(params TypeId[] types)
         {
-            this.noneTypes = types;
+            desc.noneTypes = types;
             return this;
         }
+
+        /// <summary>
+        /// Marks if at least one any needs to be found in order to match.
+        /// </summary>
+        public void NeedsAny(bool state) => desc.needsAny = state;
 
         public bool Matches(EntityArchetype archetype)
         {
             bool withCheck = true;
-            if (withTypes != null && withTypes.Length > 0)
-                withCheck = archetype.HasTypes(withTypes);
+            if (desc.readWith != null && desc.readWith.Length > 0)
+                withCheck = archetype.HasTypes(desc.readWith);
+            if (desc.writeWith != null && desc.writeWith.Length > 0)
+                withCheck &= archetype.HasTypes(desc.writeWith);
 
             bool noneCheck = true;
-            if (noneTypes != null && noneTypes.Length > 0)
-                noneCheck = !archetype.HasAnyTypes(noneTypes);
+            if (desc.noneTypes != null && desc.noneTypes.Length > 0)
+                noneCheck = !archetype.HasAnyTypes(desc.noneTypes);
 
-            bool anyCheck = true;
-            if (anyTypes != null && anyTypes.Length > 0)
-                anyCheck = archetype.HasAnyTypes(anyTypes);
+            bool anyCheck = !desc.needsAny;
+            if (desc.readAny != null && desc.readAny.Length > 0)
+                anyCheck |= archetype.HasAnyTypes(desc.readAny);
+            if (desc.writeAny != null && desc.writeAny.Length > 0)
+                anyCheck |= archetype.HasAnyTypes(desc.writeAny);
 
             return withCheck && noneCheck && anyCheck;
         }
 
-        public TypeId[] WithTypes => withTypes;
-        public TypeId[] AnyTypes => anyTypes;
-
-        //public bool IsGeneralWrite()
-        //{
-        //    if (withTypes == null)
-        //        return false;
-
-        //    for (int i = 0; i < withTypes.Length; i++)
-        //    {
-        //        if (!withTypes[i].IsReadOnly)
-        //            return true;
-        //    }
-
-        //    return false;
-        //}
-
-        //public bool NeedsUpdate(ref EntityChunk chunk)
-        //{
-        //    if (anyTypes == null)
-        //        return false;
-
-        //    for (int i = 0; i < anyTypes.Length; i++)
-        //    {
-        //        TypeId type = anyTypes[i];
-        //        if (chunk.Archetype.HasTypes(type) && !type.IsReadOnly)
-        //            return true;
-        //    }
-        //    return false;
-        //}
+        public QueryDesc Descriptor => desc;
 
         public static readonly QuerySettings Empty = new QuerySettings();
     }

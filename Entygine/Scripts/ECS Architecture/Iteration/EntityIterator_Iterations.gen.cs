@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Entygine.Async;
 
 namespace Entygine.Ecs
 {
@@ -8,9 +9,9 @@ namespace Entygine.Ecs
 		public IIteratorPhase2 Iterate<C0>(r<C0> iterator) where C0 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				for (int i = 0; i < chunk.Count; i++)
@@ -19,16 +20,16 @@ namespace Entygine.Ecs
 					iterator(in c0);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void R<C0>(in C0 c0) where C0 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0>(R<C0> iterator) where C0 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				for (int i = 0; i < chunk.Count; i++)
@@ -36,16 +37,16 @@ namespace Entygine.Ecs
 					ref C0 c0 = ref array0.GetRef<C0>(i);
 					iterator(in c0);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void V<C0>(ref C0? c0) where C0 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0>(V<C0> iterator) where C0 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				for (int i = 0; i < chunk.Count; i++)
@@ -54,16 +55,16 @@ namespace Entygine.Ecs
 					iterator(ref c0);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void W<C0>(ref C0 c0) where C0 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0>(W<C0> iterator) where C0 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				for (int i = 0; i < chunk.Count; i++)
@@ -71,18 +72,18 @@ namespace Entygine.Ecs
 					ref C0 c0 = ref array0.GetRef<C0>(i);
 					iterator(ref c0);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void rr<C0, C1>(in C0? c0, in C1? c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(rr<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -94,18 +95,18 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Rr<C0, C1>(in C0 c0, in C1? c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(Rr<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -116,18 +117,18 @@ namespace Entygine.Ecs
 					iterator(in c0, in c1);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RR<C0, C1>(in C0 c0, in C1 c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(RR<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -137,18 +138,18 @@ namespace Entygine.Ecs
 					ref C1 c1 = ref array1.GetRef<C1>(i);
 					iterator(in c0, in c1);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Vr<C0, C1>(ref C0? c0, in C1? c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(Vr<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -160,18 +161,18 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VR<C0, C1>(ref C0? c0, in C1 c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(VR<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -182,18 +183,18 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VV<C0, C1>(ref C0? c0, ref C1? c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(VV<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -205,18 +206,18 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Wr<C0, C1>(ref C0 c0, in C1? c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(Wr<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -227,18 +228,18 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WR<C0, C1>(ref C0 c0, in C1 c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(WR<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -248,18 +249,18 @@ namespace Entygine.Ecs
 					ref C1 c1 = ref array1.GetRef<C1>(i);
 					iterator(ref c0, in c1);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WV<C0, C1>(ref C0 c0, ref C1? c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(WV<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -270,18 +271,18 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WW<C0, C1>(ref C0 c0, ref C1 c1) where C0 : struct, IComponent where C1 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1>(WW<C0, C1> iterator) where C0 : struct, IComponent where C1 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -291,20 +292,20 @@ namespace Entygine.Ecs
 					ref C1 c1 = ref array1.GetRef<C1>(i);
 					iterator(ref c0, ref c1);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void rrr<C0, C1, C2>(in C0? c0, in C1? c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(rrr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -319,20 +320,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Rrr<C0, C1, C2>(in C0 c0, in C1? c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(Rrr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -346,20 +347,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRr<C0, C1, C2>(in C0 c0, in C1 c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(RRr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -372,20 +373,20 @@ namespace Entygine.Ecs
 					iterator(in c0, in c1, in c2);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRR<C0, C1, C2>(in C0 c0, in C1 c1, in C2 c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(RRR<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -397,20 +398,20 @@ namespace Entygine.Ecs
 					ref C2 c2 = ref array2.GetRef<C2>(i);
 					iterator(in c0, in c1, in c2);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Vrr<C0, C1, C2>(ref C0? c0, in C1? c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(Vrr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -425,20 +426,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRr<C0, C1, C2>(ref C0? c0, in C1 c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(VRr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -452,20 +453,20 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRR<C0, C1, C2>(ref C0? c0, in C1 c1, in C2 c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(VRR<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -478,20 +479,20 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVr<C0, C1, C2>(ref C0? c0, ref C1? c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(VVr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -506,20 +507,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVR<C0, C1, C2>(ref C0? c0, ref C1? c1, in C2 c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(VVR<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -533,20 +534,20 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVV<C0, C1, C2>(ref C0? c0, ref C1? c1, ref C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(VVV<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -561,20 +562,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Wrr<C0, C1, C2>(ref C0 c0, in C1? c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(Wrr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -588,20 +589,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRr<C0, C1, C2>(ref C0 c0, in C1 c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WRr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -614,20 +615,20 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRR<C0, C1, C2>(ref C0 c0, in C1 c1, in C2 c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WRR<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -639,20 +640,20 @@ namespace Entygine.Ecs
 					ref C2 c2 = ref array2.GetRef<C2>(i);
 					iterator(ref c0, in c1, in c2);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVr<C0, C1, C2>(ref C0 c0, ref C1? c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WVr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -666,20 +667,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVR<C0, C1, C2>(ref C0 c0, ref C1? c1, in C2 c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WVR<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -692,20 +693,20 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVV<C0, C1, C2>(ref C0 c0, ref C1? c1, ref C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WVV<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -719,20 +720,20 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWr<C0, C1, C2>(ref C0 c0, ref C1 c1, in C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WWr<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -745,20 +746,20 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWR<C0, C1, C2>(ref C0 c0, ref C1 c1, in C2 c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WWR<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -770,20 +771,20 @@ namespace Entygine.Ecs
 					ref C2 c2 = ref array2.GetRef<C2>(i);
 					iterator(ref c0, ref c1, in c2);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWV<C0, C1, C2>(ref C0 c0, ref C1 c1, ref C2? c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WWV<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -796,20 +797,20 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWW<C0, C1, C2>(ref C0 c0, ref C1 c1, ref C2 c2) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2>(WWW<C0, C1, C2> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -821,22 +822,22 @@ namespace Entygine.Ecs
 					ref C2 c2 = ref array2.GetRef<C2>(i);
 					iterator(ref c0, ref c1, ref c2);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void rrrr<C0, C1, C2, C3>(in C0? c0, in C1? c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(rrrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -854,22 +855,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Rrrr<C0, C1, C2, C3>(in C0 c0, in C1? c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(Rrrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -886,22 +887,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRrr<C0, C1, C2, C3>(in C0 c0, in C1 c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(RRrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -917,22 +918,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRr<C0, C1, C2, C3>(in C0 c0, in C1 c1, in C2 c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(RRRr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -947,22 +948,22 @@ namespace Entygine.Ecs
 					iterator(in c0, in c1, in c2, in c3);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRR<C0, C1, C2, C3>(in C0 c0, in C1 c1, in C2 c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(RRRR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -976,22 +977,22 @@ namespace Entygine.Ecs
 					ref C3 c3 = ref array3.GetRef<C3>(i);
 					iterator(in c0, in c1, in c2, in c3);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Vrrr<C0, C1, C2, C3>(ref C0? c0, in C1? c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(Vrrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1009,22 +1010,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRrr<C0, C1, C2, C3>(ref C0? c0, in C1 c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VRrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1041,22 +1042,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRr<C0, C1, C2, C3>(ref C0? c0, in C1 c1, in C2 c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VRRr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1072,22 +1073,22 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRR<C0, C1, C2, C3>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VRRR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1102,22 +1103,22 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVrr<C0, C1, C2, C3>(ref C0? c0, ref C1? c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VVrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1135,22 +1136,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRr<C0, C1, C2, C3>(ref C0? c0, ref C1? c1, in C2 c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VVRr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1167,22 +1168,22 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRR<C0, C1, C2, C3>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VVRR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1198,22 +1199,22 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVr<C0, C1, C2, C3>(ref C0? c0, ref C1? c1, ref C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VVVr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1231,22 +1232,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVR<C0, C1, C2, C3>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VVVR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1263,22 +1264,22 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVV<C0, C1, C2, C3>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(VVVV<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1296,22 +1297,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Wrrr<C0, C1, C2, C3>(ref C0 c0, in C1? c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(Wrrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1328,22 +1329,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRrr<C0, C1, C2, C3>(ref C0 c0, in C1 c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WRrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1359,22 +1360,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRr<C0, C1, C2, C3>(ref C0 c0, in C1 c1, in C2 c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WRRr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1389,22 +1390,22 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRR<C0, C1, C2, C3>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WRRR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1418,22 +1419,22 @@ namespace Entygine.Ecs
 					ref C3 c3 = ref array3.GetRef<C3>(i);
 					iterator(ref c0, in c1, in c2, in c3);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVrr<C0, C1, C2, C3>(ref C0 c0, ref C1? c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WVrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1450,22 +1451,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRr<C0, C1, C2, C3>(ref C0 c0, ref C1? c1, in C2 c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WVRr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1481,22 +1482,22 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRR<C0, C1, C2, C3>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WVRR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1511,22 +1512,22 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVr<C0, C1, C2, C3>(ref C0 c0, ref C1? c1, ref C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WVVr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1543,22 +1544,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVR<C0, C1, C2, C3>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WVVR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1574,22 +1575,22 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVV<C0, C1, C2, C3>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WVVV<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1606,22 +1607,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWrr<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, in C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWrr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1637,22 +1638,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRr<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, in C2 c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWRr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1667,22 +1668,22 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRR<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWRR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1696,22 +1697,22 @@ namespace Entygine.Ecs
 					ref C3 c3 = ref array3.GetRef<C3>(i);
 					iterator(ref c0, ref c1, in c2, in c3);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVr<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, ref C2? c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWVr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1727,22 +1728,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVR<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWVR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1757,22 +1758,22 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVV<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWVV<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1788,22 +1789,22 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWr<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, ref C2 c2, in C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWWr<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1818,22 +1819,22 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWR<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWWR<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1847,22 +1848,22 @@ namespace Entygine.Ecs
 					ref C3 c3 = ref array3.GetRef<C3>(i);
 					iterator(ref c0, ref c1, ref c2, in c3);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWV<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWWV<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1877,22 +1878,22 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWW<C0, C1, C2, C3>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3>(WWWW<C0, C1, C2, C3> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1906,24 +1907,24 @@ namespace Entygine.Ecs
 					ref C3 c3 = ref array3.GetRef<C3>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void rrrrr<C0, C1, C2, C3, C4>(in C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(rrrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1944,24 +1945,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Rrrrr<C0, C1, C2, C3, C4>(in C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(Rrrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -1981,24 +1982,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRrrr<C0, C1, C2, C3, C4>(in C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(RRrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2017,24 +2018,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRrr<C0, C1, C2, C3, C4>(in C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(RRRrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2052,24 +2053,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRr<C0, C1, C2, C3, C4>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(RRRRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2086,24 +2087,24 @@ namespace Entygine.Ecs
 					iterator(in c0, in c1, in c2, in c3, in c4);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRR<C0, C1, C2, C3, C4>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(RRRRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2119,24 +2120,24 @@ namespace Entygine.Ecs
 					ref C4 c4 = ref array4.GetRef<C4>(i);
 					iterator(in c0, in c1, in c2, in c3, in c4);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Vrrrr<C0, C1, C2, C3, C4>(ref C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(Vrrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2157,24 +2158,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRrrr<C0, C1, C2, C3, C4>(ref C0? c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VRrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2194,24 +2195,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRrr<C0, C1, C2, C3, C4>(ref C0? c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VRRrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2230,24 +2231,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRr<C0, C1, C2, C3, C4>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VRRRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2265,24 +2266,24 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRR<C0, C1, C2, C3, C4>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VRRRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2299,24 +2300,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVrrr<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2337,24 +2338,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRrr<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVRrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2374,24 +2375,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRr<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVRRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2410,24 +2411,24 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRR<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVRRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2445,24 +2446,24 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVrr<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVVrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2483,24 +2484,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRr<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVVRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2520,24 +2521,24 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRR<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVVRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2556,24 +2557,24 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVr<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVVVr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2594,24 +2595,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVR<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVVVR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2631,24 +2632,24 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVV<C0, C1, C2, C3, C4>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(VVVVV<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2669,24 +2670,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Wrrrr<C0, C1, C2, C3, C4>(ref C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(Wrrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2706,24 +2707,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRrrr<C0, C1, C2, C3, C4>(ref C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WRrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2742,24 +2743,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRrr<C0, C1, C2, C3, C4>(ref C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WRRrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2777,24 +2778,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRr<C0, C1, C2, C3, C4>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WRRRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2811,24 +2812,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRR<C0, C1, C2, C3, C4>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WRRRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2844,24 +2845,24 @@ namespace Entygine.Ecs
 					ref C4 c4 = ref array4.GetRef<C4>(i);
 					iterator(ref c0, in c1, in c2, in c3, in c4);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVrrr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2881,24 +2882,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRrr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVRrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2917,24 +2918,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVRRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2952,24 +2953,24 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVRRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -2986,24 +2987,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVrr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVVrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3023,24 +3024,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVVRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3059,24 +3060,24 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVVRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3094,24 +3095,24 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVVVr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3131,24 +3132,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVVVR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3167,24 +3168,24 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVV<C0, C1, C2, C3, C4>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WVVVV<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3204,24 +3205,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWrrr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, in C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWrrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3240,24 +3241,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRrr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, in C2 c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWRrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3275,24 +3276,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWRRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3309,24 +3310,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWRRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3342,24 +3343,24 @@ namespace Entygine.Ecs
 					ref C4 c4 = ref array4.GetRef<C4>(i);
 					iterator(ref c0, ref c1, in c2, in c3, in c4);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVrr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2? c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWVrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3378,24 +3379,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWVRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3413,24 +3414,24 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWVRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3447,24 +3448,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWVVr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3483,24 +3484,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWVVR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3518,24 +3519,24 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVV<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWVVV<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3554,24 +3555,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWrr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, in C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWrr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3589,24 +3590,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWRr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3623,24 +3624,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWRR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3656,24 +3657,24 @@ namespace Entygine.Ecs
 					ref C4 c4 = ref array4.GetRef<C4>(i);
 					iterator(ref c0, ref c1, ref c2, in c3, in c4);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWVr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3691,24 +3692,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWVR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3725,24 +3726,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVV<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWVV<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3760,24 +3761,24 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWr<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWWr<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3794,24 +3795,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWR<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWWR<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3827,24 +3828,24 @@ namespace Entygine.Ecs
 					ref C4 c4 = ref array4.GetRef<C4>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWV<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWWV<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3861,24 +3862,24 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWW<C0, C1, C2, C3, C4>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4>(WWWWW<C0, C1, C2, C3, C4> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3894,26 +3895,26 @@ namespace Entygine.Ecs
 					ref C4 c4 = ref array4.GetRef<C4>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void rrrrrr<C0, C1, C2, C3, C4, C5>(in C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(rrrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3937,26 +3938,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Rrrrrr<C0, C1, C2, C3, C4, C5>(in C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(Rrrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -3979,26 +3980,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRrrrr<C0, C1, C2, C3, C4, C5>(in C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(RRrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4020,26 +4021,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRrrr<C0, C1, C2, C3, C4, C5>(in C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(RRRrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4060,26 +4061,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRrr<C0, C1, C2, C3, C4, C5>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(RRRRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4099,26 +4100,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRr<C0, C1, C2, C3, C4, C5>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(RRRRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4137,26 +4138,26 @@ namespace Entygine.Ecs
 					iterator(in c0, in c1, in c2, in c3, in c4, in c5);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRR<C0, C1, C2, C3, C4, C5>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(RRRRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4174,26 +4175,26 @@ namespace Entygine.Ecs
 					ref C5 c5 = ref array5.GetRef<C5>(i);
 					iterator(in c0, in c1, in c2, in c3, in c4, in c5);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Vrrrrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(Vrrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4217,26 +4218,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRrrrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VRrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4259,26 +4260,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRrrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VRRrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4300,26 +4301,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VRRRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4340,26 +4341,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRr<C0, C1, C2, C3, C4, C5>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VRRRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4379,26 +4380,26 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRR<C0, C1, C2, C3, C4, C5>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VRRRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4417,26 +4418,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVrrrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4460,26 +4461,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRrrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVRrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4502,26 +4503,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVRRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4543,26 +4544,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVRRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4583,26 +4584,26 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRR<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVRRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4622,26 +4623,26 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVrrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4665,26 +4666,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4707,26 +4708,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4748,26 +4749,26 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRR<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4788,26 +4789,26 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVrr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVVrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4831,26 +4832,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVVRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4873,26 +4874,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRR<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVVRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4914,26 +4915,26 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVr<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVVVr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4957,26 +4958,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVR<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVVVR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -4999,26 +5000,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVV<C0, C1, C2, C3, C4, C5>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(VVVVVV<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5042,26 +5043,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Wrrrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(Wrrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5084,26 +5085,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRrrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WRrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5125,26 +5126,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WRRrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5165,26 +5166,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WRRRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5204,26 +5205,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WRRRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5242,26 +5243,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WRRRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5279,26 +5280,26 @@ namespace Entygine.Ecs
 					ref C5 c5 = ref array5.GetRef<C5>(i);
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVrrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5321,26 +5322,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVRrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5362,26 +5363,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVRRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5402,26 +5403,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVRRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5441,26 +5442,26 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVRRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5479,26 +5480,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5521,26 +5522,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5562,26 +5563,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5602,26 +5603,26 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5641,26 +5642,26 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVVrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5683,26 +5684,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVVRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5724,26 +5725,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVVRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5764,26 +5765,26 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVVVr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5806,26 +5807,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVVVR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5847,26 +5848,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVV<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WVVVVV<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5889,26 +5890,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWrrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWrrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5930,26 +5931,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWRrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -5970,26 +5971,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWRRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6009,26 +6010,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWRRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6047,26 +6048,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWRRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6084,26 +6085,26 @@ namespace Entygine.Ecs
 					ref C5 c5 = ref array5.GetRef<C5>(i);
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6125,26 +6126,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6165,26 +6166,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6204,26 +6205,26 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6242,26 +6243,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVVrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6283,26 +6284,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVVRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6323,26 +6324,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVVRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6362,26 +6363,26 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVVVr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6403,26 +6404,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVVVR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6443,26 +6444,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVV<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWVVVV<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6484,26 +6485,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWrrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, in C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWrrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6524,26 +6525,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWRrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6563,26 +6564,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWRRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6601,26 +6602,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWRRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6638,26 +6639,26 @@ namespace Entygine.Ecs
 					ref C5 c5 = ref array5.GetRef<C5>(i);
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWVrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6678,26 +6679,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWVRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6717,26 +6718,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWVRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6755,26 +6756,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWVVr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6795,26 +6796,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWVVR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6834,26 +6835,26 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVV<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWVVV<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6874,26 +6875,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWrr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWrr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6913,26 +6914,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWRr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6951,26 +6952,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWRR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -6988,26 +6989,26 @@ namespace Entygine.Ecs
 					ref C5 c5 = ref array5.GetRef<C5>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWVr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7027,26 +7028,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWVR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7065,26 +7066,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVV<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWVV<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7104,26 +7105,26 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWr<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWWr<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7142,26 +7143,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWR<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWWR<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7179,26 +7180,26 @@ namespace Entygine.Ecs
 					ref C5 c5 = ref array5.GetRef<C5>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWV<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWWV<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7217,26 +7218,26 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWW<C0, C1, C2, C3, C4, C5>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5>(WWWWWW<C0, C1, C2, C3, C4, C5> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7254,28 +7255,28 @@ namespace Entygine.Ecs
 					ref C5 c5 = ref array5.GetRef<C5>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void rrrrrrr<C0, C1, C2, C3, C4, C5, C6>(in C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(rrrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7302,28 +7303,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Rrrrrrr<C0, C1, C2, C3, C4, C5, C6>(in C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(Rrrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7349,28 +7350,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRrrrrr<C0, C1, C2, C3, C4, C5, C6>(in C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(RRrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7395,28 +7396,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRrrrr<C0, C1, C2, C3, C4, C5, C6>(in C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(RRRrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7440,28 +7441,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRrrr<C0, C1, C2, C3, C4, C5, C6>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(RRRRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7484,28 +7485,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRrr<C0, C1, C2, C3, C4, C5, C6>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(RRRRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7527,28 +7528,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRRr<C0, C1, C2, C3, C4, C5, C6>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(RRRRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7569,28 +7570,28 @@ namespace Entygine.Ecs
 					iterator(in c0, in c1, in c2, in c3, in c4, in c5, in c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRRR<C0, C1, C2, C3, C4, C5, C6>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(RRRRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7610,28 +7611,28 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(in c0, in c1, in c2, in c3, in c4, in c5, in c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Vrrrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(Vrrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7658,28 +7659,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRrrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VRrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7705,28 +7706,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VRRrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7751,28 +7752,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VRRRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7796,28 +7797,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VRRRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7840,28 +7841,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VRRRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7883,28 +7884,28 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VRRRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7925,28 +7926,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5, in c6);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVrrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -7973,28 +7974,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVRrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8020,28 +8021,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVRRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8066,28 +8067,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVRRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8111,28 +8112,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVRRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8155,28 +8156,28 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVRRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8198,28 +8199,28 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8246,28 +8247,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8293,28 +8294,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8339,28 +8340,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8384,28 +8385,28 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8428,28 +8429,28 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8476,28 +8477,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8523,28 +8524,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8569,28 +8570,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8614,28 +8615,28 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVrr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVVrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8662,28 +8663,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVRr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVVRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8709,28 +8710,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVRR<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVVRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8755,28 +8756,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVr<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVVVr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8803,28 +8804,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVR<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVVVR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8850,28 +8851,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVV<C0, C1, C2, C3, C4, C5, C6>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(VVVVVVV<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8898,28 +8899,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Wrrrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(Wrrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8945,28 +8946,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRrrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WRrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -8991,28 +8992,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WRRrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9036,28 +9037,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WRRRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9080,28 +9081,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WRRRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9123,28 +9124,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WRRRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9165,28 +9166,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5, in c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WRRRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9206,28 +9207,28 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5, in c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVrrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9253,28 +9254,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVRrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9299,28 +9300,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVRRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9344,28 +9345,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVRRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9388,28 +9389,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVRRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9431,28 +9432,28 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVRRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9473,28 +9474,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5, in c6);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9520,28 +9521,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9566,28 +9567,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9611,28 +9612,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9655,28 +9656,28 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9698,28 +9699,28 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9745,28 +9746,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9791,28 +9792,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9836,28 +9837,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9880,28 +9881,28 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVVrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9927,28 +9928,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVVRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -9973,28 +9974,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVVRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10018,28 +10019,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVVVr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10065,28 +10066,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVVVR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10111,28 +10112,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVV<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WVVVVVV<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10158,28 +10159,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWrrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWrrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10204,28 +10205,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWRrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10249,28 +10250,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWRRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10293,28 +10294,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWRRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10336,28 +10337,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWRRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10378,28 +10379,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5, in c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWRRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10419,28 +10420,28 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5, in c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10465,28 +10466,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10510,28 +10511,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10554,28 +10555,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10597,28 +10598,28 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10639,28 +10640,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5, in c6);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10685,28 +10686,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10730,28 +10731,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10774,28 +10775,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10817,28 +10818,28 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVVrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10863,28 +10864,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVVRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10908,28 +10909,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVVRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10952,28 +10953,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVVVr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -10998,28 +10999,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVVVR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11043,28 +11044,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVV<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWVVVVV<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11089,28 +11090,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWrrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWrrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11134,28 +11135,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWRrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11178,28 +11179,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWRRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11221,28 +11222,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWRRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11263,28 +11264,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5, in c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWRRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11304,28 +11305,28 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5, in c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11349,28 +11350,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11393,28 +11394,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11436,28 +11437,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11478,28 +11479,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5, in c6);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVVrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11523,28 +11524,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVVRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11567,28 +11568,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVVRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11610,28 +11611,28 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVVVr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11655,28 +11656,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVVVR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11699,28 +11700,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVV<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWVVVV<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11744,28 +11745,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWrrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWrrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11788,28 +11789,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWRrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11831,28 +11832,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWRRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11873,28 +11874,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5, in c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWRRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11914,28 +11915,28 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5, in c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWVrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -11958,28 +11959,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWVRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12001,28 +12002,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWVRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12043,28 +12044,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5, in c6);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWVVr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12087,28 +12088,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWVVR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12130,28 +12131,28 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVV<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, ref C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWVVV<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12174,28 +12175,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWrr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWrr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12217,28 +12218,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWRr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWRr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12259,28 +12260,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5, in c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWRR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWRR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12300,28 +12301,28 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5, in c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWVr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12343,28 +12344,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWVR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12385,28 +12386,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, in c6);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVV<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, ref C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWVV<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12428,28 +12429,28 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWr<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, in C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWWr<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12470,28 +12471,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, in c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWR<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, in C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWWR<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12511,28 +12512,28 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, in c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWV<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6? c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWWV<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12553,28 +12554,28 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWW<C0, C1, C2, C3, C4, C5, C6>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6 c6) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6>(WWWWWWW<C0, C1, C2, C3, C4, C5, C6> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withWriteTypes, id6);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12594,30 +12595,30 @@ namespace Entygine.Ecs
 					ref C6 c6 = ref array6.GetRef<C6>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void rrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(rrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12647,30 +12648,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Rrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(Rrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12699,30 +12700,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(RRrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12750,30 +12751,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(RRRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12800,30 +12801,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(RRRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12849,30 +12850,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(RRRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12897,30 +12898,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(RRRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12944,30 +12945,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(RRRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -12990,30 +12991,30 @@ namespace Entygine.Ecs
 					iterator(in c0, in c1, in c2, in c3, in c4, in c5, in c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void RRRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(in C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(RRRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withReadTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13035,30 +13036,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(in c0, in c1, in c2, in c3, in c4, in c5, in c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Vrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(Vrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13088,30 +13089,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VRrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13140,30 +13141,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VRRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13191,30 +13192,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VRRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13241,30 +13242,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VRRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13290,30 +13291,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VRRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13338,30 +13339,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VRRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13385,30 +13386,30 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VRRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VRRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13431,30 +13432,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5, in c6, in c7);
 					if(flag0) array0[i] = c0;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13484,30 +13485,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13536,30 +13537,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13587,30 +13588,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13637,30 +13638,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13686,30 +13687,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13734,30 +13735,30 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13781,30 +13782,30 @@ namespace Entygine.Ecs
 					if(flag0) array0[i] = c0;
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13834,30 +13835,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13886,30 +13887,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13937,30 +13938,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -13987,30 +13988,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14036,30 +14037,30 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14084,30 +14085,30 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14137,30 +14138,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14189,30 +14190,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14240,30 +14241,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14290,30 +14291,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14339,30 +14340,30 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14392,30 +14393,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14444,30 +14445,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14495,30 +14496,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14545,30 +14546,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVVrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14598,30 +14599,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVVRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14650,30 +14651,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVVRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14701,30 +14702,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVVr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVVVr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14754,30 +14755,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVVR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVVVR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14806,30 +14807,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void VVVVVVVV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0? c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(VVVVVVVV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(anyTypes, id0);
+			AddType(anyWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				bool flag0 = chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14859,30 +14860,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void Wrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(Wrrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14911,30 +14912,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WRrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -14962,30 +14963,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WRRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15012,30 +15013,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WRRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15061,30 +15062,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WRRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15109,30 +15110,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WRRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15156,30 +15157,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WRRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15202,30 +15203,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5, in c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WRRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, in C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WRRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withReadTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15247,30 +15248,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, in c1, in c2, in c3, in c4, in c5, in c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15299,30 +15300,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15350,30 +15351,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15400,30 +15401,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15449,30 +15450,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15497,30 +15498,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15544,30 +15545,30 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15590,30 +15591,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5, in c6, in c7);
 					if(flag1) array1[i] = c1;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15642,30 +15643,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15693,30 +15694,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15743,30 +15744,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15792,30 +15793,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15840,30 +15841,30 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15887,30 +15888,30 @@ namespace Entygine.Ecs
 					if(flag1) array1[i] = c1;
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15939,30 +15940,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -15990,30 +15991,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16040,30 +16041,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16089,30 +16090,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16137,30 +16138,30 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16189,30 +16190,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16240,30 +16241,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16290,30 +16291,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16339,30 +16340,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVVrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16391,30 +16392,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVVRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16442,30 +16443,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVVRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16492,30 +16493,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVVr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVVVr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16544,30 +16545,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVVR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVVVR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16595,30 +16596,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WVVVVVVV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1? c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WVVVVVVV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(anyTypes, id1);
+			AddType(anyWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				bool flag1 = chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16647,30 +16648,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, in C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWrrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16698,30 +16699,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, in C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWRrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16748,30 +16749,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWRRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16797,30 +16798,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWRRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16845,30 +16846,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWRRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16892,30 +16893,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWRRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16938,30 +16939,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5, in c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, in C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWRRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withReadTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -16983,30 +16984,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, ref c1, in c2, in c3, in c4, in c5, in c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17034,30 +17035,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17084,30 +17085,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17133,30 +17134,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17181,30 +17182,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17228,30 +17229,30 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17274,30 +17275,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5, in c6, in c7);
 					if(flag2) array2[i] = c2;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17325,30 +17326,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17375,30 +17376,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17424,30 +17425,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17472,30 +17473,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17519,30 +17520,30 @@ namespace Entygine.Ecs
 					if(flag2) array2[i] = c2;
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17570,30 +17571,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17620,30 +17621,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17669,30 +17670,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17717,30 +17718,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVVrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17768,30 +17769,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVVRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17818,30 +17819,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVVRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17867,30 +17868,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVVr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVVVr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17918,30 +17919,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVVR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVVVR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -17968,30 +17969,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWVVVVVV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2? c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWVVVVVV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(anyTypes, id2);
+			AddType(anyWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18019,30 +18020,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWrrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, in C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWrrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18069,30 +18070,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWRrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18118,30 +18119,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWRRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18166,30 +18167,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWRRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18213,30 +18214,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWRRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18259,30 +18260,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5, in c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWRRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, in C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWRRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withReadTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18304,30 +18305,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, ref c1, ref c2, in c3, in c4, in c5, in c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18354,30 +18355,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18403,30 +18404,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18451,30 +18452,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18498,30 +18499,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18544,30 +18545,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5, in c6, in c7);
 					if(flag3) array3[i] = c3;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18594,30 +18595,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18643,30 +18644,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18691,30 +18692,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18738,30 +18739,30 @@ namespace Entygine.Ecs
 					if(flag3) array3[i] = c3;
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVVrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18788,30 +18789,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVVRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18837,30 +18838,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVVRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18885,30 +18886,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVVr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVVVr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18935,30 +18936,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVVR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVVVR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -18984,30 +18985,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWVVVVV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3? c3, ref C4? c4, ref C5? c5, ref C6? c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWVVVVV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(anyTypes, id3);
+			AddType(anyWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19034,30 +19035,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWrrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWrrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19083,30 +19084,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWRrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19131,30 +19132,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWRRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19178,30 +19179,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWRRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19224,30 +19225,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5, in c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWRRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, in C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWRRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withReadTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19269,30 +19270,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, in c4, in c5, in c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19318,30 +19319,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19366,30 +19367,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19413,30 +19414,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19459,30 +19460,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5, in c6, in c7);
 					if(flag4) array4[i] = c4;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVVrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19508,30 +19509,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVVRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19556,30 +19557,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVVRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19603,30 +19604,30 @@ namespace Entygine.Ecs
 					if(flag4) array4[i] = c4;
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVVr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVVVr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19652,30 +19653,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVVR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, ref C6? c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVVVR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19700,30 +19701,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWVVVV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4? c4, ref C5? c5, ref C6? c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWVVVV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(anyTypes, id4);
+			AddType(anyWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19749,30 +19750,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWrrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWrrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19797,30 +19798,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWRrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWRrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19844,30 +19845,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWRRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWRRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19890,30 +19891,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5, in c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWRRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, in C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWRRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withReadTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19935,30 +19936,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, in c5, in c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWVrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -19983,30 +19984,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWVRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20030,30 +20031,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWVRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20076,30 +20077,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, in c6, in c7);
 					if(flag5) array5[i] = c5;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVVr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, ref C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWVVr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20124,30 +20125,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVVR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, ref C6? c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWVVR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20171,30 +20172,30 @@ namespace Entygine.Ecs
 					if(flag5) array5[i] = c5;
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWVVV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5? c5, ref C6? c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWVVV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(anyTypes, id5);
+			AddType(anyWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20219,30 +20220,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWrr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, in C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWrr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20266,30 +20267,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWRr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, in C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWRr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20312,30 +20313,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, in c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWRR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, in C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWRR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withReadTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20357,30 +20358,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, in c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWVr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6? c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWVr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20404,30 +20405,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWVR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6? c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWVR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20450,30 +20451,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6, in c7);
 					if(flag6) array6[i] = c6;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWVV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6? c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWVV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(anyTypes, id6);
+			AddType(anyWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20497,30 +20498,30 @@ namespace Entygine.Ecs
 					if(flag6) array6[i] = c6;
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWWr<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6 c6, in C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWWr<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20543,30 +20544,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6, in c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWWR<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6 c6, in C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWWR<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withReadTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20588,30 +20589,30 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6, in c7);
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWWV<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6 c6, ref C7? c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWWV<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(anyTypes, id7);
+			AddType(anyWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20634,30 +20635,30 @@ namespace Entygine.Ecs
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6, ref c7);
 					if(flag7) array7[i] = c7;
 				}
-			});
+			}));
 			return this;
 		}
 		public delegate void WWWWWWWW<C0, C1, C2, C3, C4, C5, C6, C7>(ref C0 c0, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5, ref C6 c6, ref C7 c7) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent;
 		public IIteratorPhase2 Iterate<C0, C1, C2, C3, C4, C5, C6, C7>(WWWWWWWW<C0, C1, C2, C3, C4, C5, C6, C7> iterator) where C0 : struct, IComponent where C1 : struct, IComponent where C2 : struct, IComponent where C3 : struct, IComponent where C4 : struct, IComponent where C5 : struct, IComponent where C6 : struct, IComponent where C7 : struct, IComponent
 		{
 			TypeId id0 = TypeManager.GetIdFromType(typeof(C0));
-			AddType(withTypes, id0);
+			AddType(withWriteTypes, id0);
 			TypeId id1 = TypeManager.GetIdFromType(typeof(C1));
-			AddType(withTypes, id1);
+			AddType(withWriteTypes, id1);
 			TypeId id2 = TypeManager.GetIdFromType(typeof(C2));
-			AddType(withTypes, id2);
+			AddType(withWriteTypes, id2);
 			TypeId id3 = TypeManager.GetIdFromType(typeof(C3));
-			AddType(withTypes, id3);
+			AddType(withWriteTypes, id3);
 			TypeId id4 = TypeManager.GetIdFromType(typeof(C4));
-			AddType(withTypes, id4);
+			AddType(withWriteTypes, id4);
 			TypeId id5 = TypeManager.GetIdFromType(typeof(C5));
-			AddType(withTypes, id5);
+			AddType(withWriteTypes, id5);
 			TypeId id6 = TypeManager.GetIdFromType(typeof(C6));
-			AddType(withTypes, id6);
+			AddType(withWriteTypes, id6);
 			TypeId id7 = TypeManager.GetIdFromType(typeof(C7));
-			AddType(withTypes, id7);
+			AddType(withWriteTypes, id7);
 			BakeSettings();
-			iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => 
+			Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => 
 			{
 				chunk.TryGetComponents(id0, out ComponentArray array0);
 				chunk.TryGetComponents(id1, out ComponentArray array1);
@@ -20679,7 +20680,7 @@ namespace Entygine.Ecs
 					ref C7 c7 = ref array7.GetRef<C7>(i);
 					iterator(ref c0, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6, ref c7);
 				}
-			});
+			}));
 			return this;
 		}
     }

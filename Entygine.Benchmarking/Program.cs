@@ -207,7 +207,7 @@ namespace Entygine.Benchmarking
         {
             world = EntityWorld.CreateWorld();
             world.EntityManager.CreateEntities(new EntityArchetype(C_Position.Identifier), 10000);
-            QuerySettings settings = new QuerySettings().With(C_Position.Identifier);
+            QuerySettings settings = new QuerySettings().RWith(C_Position.Identifier);
             iterator = new EntityIterator();
             iterator.SetWorld(world);
             query = new EntityQueryScope(settings, world, (ref EntityQueryContext context) =>
@@ -230,7 +230,7 @@ namespace Entygine.Benchmarking
             iterator.Iterate((ref C_Position position) =>
             {
                 position.value = Vec3f.Zero;
-            }).SetVersion(0).Synchronous();
+            }).SetVersion(0).RunSync();
         }
     }
 
@@ -248,16 +248,16 @@ namespace Entygine.Benchmarking
             for (int i = 0; i < 100; i++)
             {
                 int index = i;
-                lastWork = new WorkAsyncHandle(() => Wait(index), lastWork);
-                lastWork.Async();
+                lastWork = new WorkAsyncHandle(() => WriteLine(index));
+                lastWork.Start();
             }
 
-            lastWork.FinishWork();
+            //lastWork.FinishWork();
             Console.WriteLine("Finished.");
             Console.Read();
         }
 
-        private static void Wait(int i)
+        private static void WriteLine(int i)
         {
             Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: {i}");
         }

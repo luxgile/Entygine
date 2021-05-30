@@ -2,7 +2,7 @@
 
 namespace Entygine
 {
-    public partial struct WorldTimeComponent : ISingletonComponent
+    public partial struct C_WorldTime : ISingletonComponent
     {
         public double value;
     }

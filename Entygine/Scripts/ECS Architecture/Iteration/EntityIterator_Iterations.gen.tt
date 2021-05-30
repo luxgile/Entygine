@@ -8,6 +8,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Runtime.CompilerServices" #>
 using System.Runtime.CompilerServices;
+using Entygine.Async;
 
 namespace Entygine.Ecs
 {
@@ -46,6 +47,20 @@ namespace Entygine.Ecs
             return "";
         }
 
+        string GetList(string s)
+        {
+            if (s == states[0])
+                return "anyReadTypes";
+            if (s == states[1])
+                return "withReadTypes";
+            if (s == states[2])
+                return "anyWriteTypes";
+            if (s == states[3])
+                return "withWriteTypes";
+
+            throw new System.Exception("Invalid value");
+        }
+
         void WriteMethod(string parameters)
         {
             var comps = GetComponentCount(parameters.Length);
@@ -55,10 +70,10 @@ namespace Entygine.Ecs
             comps.ToList().ForEach(x =>
             {
                 WriteLine($"\t\t\tTypeId id{x[1]} = TypeManager.GetIdFromType(typeof({x}));");
-                WriteLine($"\t\t\tAddType({(GetSuffix(parameters[(int)char.GetNumericValue(x[1])].ToString()).Contains('?') ? "anyTypes" : "withTypes")}, id{x[1]});");
+                WriteLine($"\t\t\tAddType({(GetList(parameters[(int)char.GetNumericValue(x[1])].ToString()))}, id{x[1]});");
             });
             WriteLine("\t\t\tBakeSettings();");
-            WriteLine("\t\t\titeration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) => ");
+            WriteLine("\t\t\tHandle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) => ");
             WriteLine("\t\t\t{");
             comps.ToList().ForEach(x =>
             {
@@ -85,7 +100,7 @@ namespace Entygine.Ecs
                     WriteLine($"\t\t\t\t\tif(flag{x[1]}) array{x[1]}[i] = c{x[1]};");
             });
             WriteLine("\t\t\t\t}");
-            WriteLine("\t\t\t});");
+            WriteLine("\t\t\t}));");
             WriteLine("\t\t\treturn this;");
             WriteLine("\t\t}");
         }

@@ -15,4 +15,15 @@ namespace Entygine.DevTools
                 gizmosData.Clear();
         }
     }
+
+    [SystemGroup(typeof(MainPhases.LatePhaseId))]
+    public class S_DispatchGizmos : BaseSystem
+    {
+        protected override void OnPerformFrame(float dt)
+        {
+            base.OnPerformFrame(dt);
+
+            DevGizmos.Dispatch();
+        }
+    }
 }

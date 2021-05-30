@@ -8,11 +8,11 @@ using System.Numerics;
 
 namespace Entygine_Editor
 {
-    public class ClientWindow : WindowDrawer
+    public sealed class ClientWindow : WindowDrawer
     {
         public override string Title => "Client";
 
-        private QuerySettings settings = new QuerySettings().Any(C_Camera.Identifier);
+        private QuerySettings settings = new QuerySettings().RAny(C_Camera.Identifier);
         private EntityIterator iterator = new();
 
         private bool keepAspect = true;
@@ -65,7 +65,7 @@ namespace Entygine_Editor
                     Vector2 floatingSize = (ImGui.GetContentRegionAvail() - currSize) / 2f;
                     ImGui.SetCursorPos(ImGui.GetCursorPos() + floatingSize);
                     ImGui.Image((IntPtr)camera.cameraData.FinalFramebuffer.ColorBuffer, currSize, new Vector2(0, 0), new Vector2(1, -1));
-                }).SetVersion(0).Synchronous();
+                }).SetVersion(0).RunSync();
             }
 
             ImGui.SetNextWindowPos(new Vector2(10, 100));

@@ -15,7 +15,7 @@ namespace Entygine.UI
 
             canvasData.ClearCanvas();
 
-            Iterator.With(C_UICanvas.Identifier).Iterate((chunk) =>
+            Iterator.RWith(C_UICanvas.Identifier).Iterate((chunk) =>
             {
                 chunk.TryGetComponents(C_UICanvas.Identifier, out ComponentArray array);
                 for (int i = 0; i < chunk.Count; i++)

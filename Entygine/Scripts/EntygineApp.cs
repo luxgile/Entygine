@@ -52,6 +52,7 @@ namespace Entygine
 
             loadedEngine = true;
 
+            ThreadUtils.SetMainThread();
             TypeManager.InitializeComponentsIdentifiers();
 
             Ogl.enableErrorCheck = true;
@@ -98,7 +99,7 @@ namespace Entygine
 
             void InitScene(EntityWorld world)
             {
-                world.EntityManager.CreateSingleton<WorldTimeComponent>(WorldTimeComponent.Identifier);
+                world.EntityManager.CreateSingleton<C_WorldTime>(C_WorldTime.Identifier);
 
                 Mesh meshResource = MeshPrimitives.CreateCube(1);
                 Shader shaderResource = Shader.CreateShaderWithPath(AssetBrowser.Utilities.LocalToAbsolutePath(@"Shaders\standard.vert"),
@@ -109,7 +110,8 @@ namespace Entygine
                 SC_RenderMesh renderMesh = new SC_RenderMesh(meshResource, materialResource);
 
                 EntityArchetype meshArchetype = new EntityArchetype(SC_RenderMesh.Identifier, C_Transform.Identifier, C_Position.Identifier);
-                EntityArchetype boxArchetype = new EntityArchetype(SC_RenderMesh.Identifier, C_Transform.Identifier, C_Position.Identifier, C_BoxTag.Identifier);
+                //EntityArchetype boxArchetype = new EntityArchetype(SC_RenderMesh.Identifier, C_Transform.Identifier, C_Position.Identifier, C_BoxTag.Identifier);
+                EntityArchetype boxArchetype = new EntityArchetype(C_Transform.Identifier, C_Position.Identifier, C_BoxTag.Identifier);
 
                 Entity planeEntity = world.EntityManager.CreateEntity(meshArchetype);
                 world.EntityManager.SetComponent(planeEntity, C_Position.Identifier, new C_Position() { value = new Vec3f(0, 0, 0) });
@@ -123,7 +125,7 @@ namespace Entygine
                 Material planeMaterial2 = new Material(shaderResource, texture);
                 world.EntityManager.SetSharedComponent(planeEntity2, SC_RenderMesh.Identifier, new SC_RenderMesh(planeMesh2, planeMaterial2));
 
-                uint countSqrd = 15;
+                uint countSqrd = 10;
                 Entity[] entities = world.EntityManager.CreateEntities(boxArchetype, countSqrd * countSqrd);
                 for (uint x = 0; x < countSqrd; x++)
                 {
@@ -131,7 +133,7 @@ namespace Entygine
                     {
                         uint index = x * countSqrd + z;
                         world.EntityManager.SetComponent(entities[index], C_Position.Identifier, new C_Position() { value = new Vec3f(x + x, 2, z + z) });
-                        world.EntityManager.SetSharedComponent(entities[index], SC_RenderMesh.Identifier, renderMesh);
+                        //world.EntityManager.SetSharedComponent(entities[index], SC_RenderMesh.Identifier, renderMesh);
                     }
                 }
 

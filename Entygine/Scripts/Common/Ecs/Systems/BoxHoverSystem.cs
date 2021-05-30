@@ -10,7 +10,7 @@ namespace Entygine.Ecs.Systems
     {
         protected override void OnFrame(float dt)
         {
-            Iterator.With(C_BoxTag.Identifier).Iterate((ref C_Position position) =>
+            Iterator.RWith(C_BoxTag.Identifier).Iterate((ref C_Position position) =>
             {
                 position.value.y += (MathUtils.Sin((float)EntygineApp.EngineTime)) * 0.01f;
             });

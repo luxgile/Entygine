@@ -8,7 +8,7 @@ namespace Entygine.Ecs
 	{
 		protected override void OnFrame(float dt)
 		{
-			Iterator.Iterate((ref C_Transform transform, ref C_Position? position, ref C_Rotation? rotation, ref C_UniformScale? scale) =>
+			Iterator.NeedsAny(true).Iterate((ref C_Transform transform, ref C_Position? position, ref C_Rotation? rotation, ref C_UniformScale? scale) =>
 			{
 				Matrix4 transformValue = Matrix4.Identity;
 

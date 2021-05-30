@@ -1,7 +1,5 @@
 ﻿using Entygine.Async;
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Entygine.Ecs
 {
@@ -9,8 +7,11 @@ namespace Entygine.Ecs
     internal partial class EntygineGeneratedIterators { }
     public interface IIteratorPhase1
     {
-        IIteratorPhase1 With(params TypeId[] types);
-        IIteratorPhase1 Any(params TypeId[] types);
+        IIteratorPhase1 NeedsAny(bool state);
+        IIteratorPhase1 RWith(params TypeId[] types);
+        IIteratorPhase1 WWith(params TypeId[] types);
+        IIteratorPhase1 RAny(params TypeId[] types);
+        IIteratorPhase1 WAny(params TypeId[] types);
         IIteratorPhase1 None(params TypeId[] types);
     }
 
@@ -22,28 +23,29 @@ namespace Entygine.Ecs
     }
     public interface IIteratorPhase3
     {
-        void Synchronous();
-        //TODO: Needs to be added once dependency handling is added to the ECS world
-        //WorkAsyncHandle Asynchronous(WorkAsyncHandle dependency);
+        void RunSync();
+        WorkAsyncHandle RunAsync();
     }
 
     public delegate void IteratorAction();
 
     public partial class EntityIterator : IIteratorPhase1, IIteratorPhase2, IIteratorPhase3
     {
-        private List<TypeId> anyTypes = new();
-        private List<TypeId> withTypes = new();
+        private List<TypeId> anyReadTypes = new();
+        private List<TypeId> anyWriteTypes = new();
+        private List<TypeId> withReadTypes = new();
+        private List<TypeId> withWriteTypes = new();
         private List<TypeId> noneTypes = new();
 
         private EntityWorld world;
-        private QuerySettings settings;
-        private IteratorAction iteration;
+        public QuerySettings Settings { get; private set; }
+        public WorkAsyncHandle Handle { get; private set; }
 
         public uint Version { get; private set; }
 
         public EntityIterator()
         {
-            settings = new();
+            Settings = new();
         }
 
         public IIteratorPhase2 SetWorld(EntityWorld world) { this.world = world; return this; }
@@ -59,49 +61,89 @@ namespace Entygine.Ecs
             Version = version;
             return this;
         }
+        IIteratorPhase1 IIteratorPhase1.NeedsAny(bool state) => NeedsAny(state);
+        public EntityIterator NeedsAny(bool state)
+        {
+            Settings.NeedsAny(state);
+            return this;
+        }
 
-        IIteratorPhase1 IIteratorPhase1.Any(params TypeId[] types) => Any(types);
-        public IIteratorPhase1 Any(params TypeId[] types)
+        IIteratorPhase1 IIteratorPhase1.RAny(params TypeId[] types) => RAny(types);
+        public EntityIterator RAny(params TypeId[] types)
         {
             foreach (var type in types)
-                AddType(anyTypes, type);
+                AddType(anyReadTypes, type);
+
+            return this;
+        }
+
+        IIteratorPhase1 IIteratorPhase1.WAny(params TypeId[] types) => WAny(types);
+        public EntityIterator WAny(params TypeId[] types)
+        {
+            foreach (var type in types)
+                AddType(anyWriteTypes, type);
 
             return this;
         }
 
         IIteratorPhase1 IIteratorPhase1.None(params TypeId[] types) => None(types);
-        public IIteratorPhase1 None(params TypeId[] types)
+        public EntityIterator None(params TypeId[] types)
         {
             foreach (var type in types)
                 AddType(noneTypes, type);
             return this;
         }
 
-        IIteratorPhase1 IIteratorPhase1.With(params TypeId[] types) => With(types);
-        public EntityIterator With(params TypeId[] types)
+        IIteratorPhase1 IIteratorPhase1.RWith(params TypeId[] types) => RWith(types);
+        public EntityIterator RWith(params TypeId[] types)
         {
             foreach (var type in types)
-                AddType(withTypes, type);
+                AddType(withReadTypes, type);
+            return this;
+        }
+        IIteratorPhase1 IIteratorPhase1.WWith(params TypeId[] types) => WWith(types);
+        public EntityIterator WWith(params TypeId[] types)
+        {
+            foreach (var type in types)
+                AddType(withWriteTypes, type);
             return this;
         }
 
         private void BakeSettings()
         {
-            settings.With(withTypes.ToArray());
-            settings.Any(anyTypes.ToArray());
-            settings.None(noneTypes.ToArray());
+            Settings.RWith(withReadTypes.ToArray());
+            Settings.WWith(withWriteTypes.ToArray());
+            Settings.RAny(anyReadTypes.ToArray());
+            Settings.WAny(anyWriteTypes.ToArray());
+            Settings.None(noneTypes.ToArray());
         }
 
-        public void Synchronous()
+        public void RunSync()
         {
-            iteration();
+            Handle.RunSync();
+        }
+
+        public WorkAsyncHandle RunAsync()
+        {
+            Handle.Start();
+            return Handle;
         }
 
         public delegate void ChunkIterationDelegate(EntityChunk chunk);
-        public unsafe IIteratorPhase2 Iterate(ChunkIterationDelegate iterator)
+        public IIteratorPhase2 Iterate(ChunkIterationDelegate iterator)
         {
             BakeSettings();
-            iteration = IteratorUtils.ForEachChunk(world, settings, Version, (chunk) =>
+            Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) =>
+            {
+                iterator(chunk);
+            })());
+            return this;
+        }
+
+        public IIteratorPhase2 AIterate(ChunkIterationDelegate iterator)
+        {
+            BakeSettings();
+            Handle = IteratorUtils.ForEachChunkAsync(world, Settings, Version, (chunk) =>
             {
                 iterator(chunk);
             });

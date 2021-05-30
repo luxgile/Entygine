@@ -8,7 +8,7 @@ namespace Entygine
     {
         protected override void OnPerformFrame(float dt)
         {
-            ref WorldTimeComponent time = ref GetSingleton<WorldTimeComponent>(WorldTimeComponent.Identifier);
+            ref C_WorldTime time = ref GetSingleton<C_WorldTime>(C_WorldTime.Identifier);
             time.value += dt;
         }
     }

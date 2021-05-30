@@ -6,12 +6,14 @@ namespace Entygine.Ecs.Systems
     [BeforeSystem(typeof(QueueRenderTransformsSystem))]
     public class UpdateRenderMeshesSystem : QuerySystem
     {
+        protected override bool RunAsync => false;
+
         protected override void OnFrame(float dt)
         {
             if (!RenderPipelineCore.TryGetContext(out Rendering.GeometryRenderData geometryData))
                 return;
             
-            Iterator.With(SC_RenderMesh.Identifier).Iterate((chunk) =>
+            Iterator.RWith(SC_RenderMesh.Identifier).Iterate((chunk) =>
             {
                 chunk.TryGetSharedComponent(SC_RenderMesh.Identifier, out SC_RenderMesh renderMesh);
 
