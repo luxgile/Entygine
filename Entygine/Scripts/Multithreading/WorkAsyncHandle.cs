@@ -7,9 +7,12 @@ namespace Entygine.Async
 {
     public class WorkAsyncHandle
     {
-        private readonly Task task;
-        private readonly WorkAsyncHandle[] dependencies;
+        public string Name { get; set; }
+        private Task task;
+        private List<WorkAsyncHandle> dependencies = new();
+        private bool started;
 
+        public WorkAsyncHandle() { }
         public WorkAsyncHandle(Action action)
         {
             task = new Task(action);
@@ -17,7 +20,31 @@ namespace Entygine.Async
         public WorkAsyncHandle(Action action, params WorkAsyncHandle[] dependencies)
         {
             task = new Task(action);
-            this.dependencies = dependencies;
+            this.dependencies = new (dependencies);
+        }
+
+        public void SetDependencies(params WorkAsyncHandle[] dependencies)
+        {
+            if (IsRunning)
+                throw new Exception("Async Work is already running and can't be modified.");
+
+            this.dependencies = new(dependencies);
+        }
+
+        public void AddDependencies(params WorkAsyncHandle[] dependencies)
+        {
+            if (IsRunning)
+                throw new Exception("Async Work is already running and can't be modified.");
+
+            this.dependencies.AddRange(dependencies);
+        }
+
+        public void SetAction(Action action)
+        {
+            if (IsRunning)
+                throw new Exception("Async Work is already running and can't be modified.");
+
+            task = new Task(action);
         }
 
         public void RunSync()
@@ -30,9 +57,14 @@ namespace Entygine.Async
 
         public void Start()
         {
-            if (dependencies != null && dependencies.Length > 0)
+            started = true;
+            if (dependencies != null && dependencies.Count > 0)
             {
-                dependencies.WhenAllFinish(this);
+                Task.WhenAll(dependencies.Select(x => x.Task)).ContinueWith((x) =>
+                {
+                    task.Start();
+                });
+
                 return;
             }
 
@@ -48,7 +80,7 @@ namespace Entygine.Async
 
         public Task Task => task;
         public TaskStatus CurrentStatus => task.Status;
-        public bool IsFinished => CurrentStatus is TaskStatus.RanToCompletion or TaskStatus.Faulted;
+        public bool IsFinished => CurrentStatus is TaskStatus.RanToCompletion or TaskStatus.Faulted || started;
         public bool IsRunning => CurrentStatus is TaskStatus.Running or TaskStatus.WaitingToRun;
     }
 
@@ -58,14 +90,6 @@ namespace Entygine.Async
         {
             foreach (WorkAsyncHandle handle in dependencies)
                 handle.FinishWork();
-        }
-
-        public static void WhenAllFinish(this IEnumerable<WorkAsyncHandle> dependencies, WorkAsyncHandle handle)
-        {
-            Task.WhenAll(dependencies.Select(x => x.Task)).ContinueWith((x) =>
-            {
-                handle.Task.Start();
-            });
         }
     }
 }

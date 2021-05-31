@@ -13,7 +13,7 @@ namespace Entygine.Ecs.Systems
             if (!RenderPipelineCore.TryGetContext(out Rendering.GeometryRenderData geometryData))
                 return;
             
-            Iterator.RWith(SC_RenderMesh.Identifier).Iterate((chunk) =>
+            Iterator.SetName("Update Meshes").RWith(SC_RenderMesh.Identifier).Iterate((chunk) =>
             {
                 chunk.TryGetSharedComponent(SC_RenderMesh.Identifier, out SC_RenderMesh renderMesh);
 

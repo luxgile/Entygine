@@ -14,7 +14,7 @@ namespace Entygine.Ecs.Systems
         protected override bool CheckChanges => false;
         protected override void OnFrame(float dt)
         {
-            Iterator.RWith(C_Camera.Identifier, C_Transform.Identifier).Iterate((chunk) =>
+            Iterator.SetName("Camera Draw").RWith(C_Camera.Identifier, C_Transform.Identifier).Iterate((chunk) =>
             {
                 int entityCount = chunk.Count;
                 CameraData[] cameraDatas = new CameraData[entityCount];

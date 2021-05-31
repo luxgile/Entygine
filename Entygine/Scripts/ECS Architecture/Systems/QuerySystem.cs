@@ -21,14 +21,18 @@ namespace Entygine.Ecs
         {
             base.OnPerformFrame(dt);
 
+            Iterator.SetVersion(CheckChanges ? LastVersionWorked : 0);
+
+            //TODO: Move dependency gathering before so the user itself runs the iteration and it's more intuitive.
             OnFrame(dt);
 
-            Iterator.SetVersion(CheckChanges ? LastVersionWorked : 0);
-            WorkAsyncHandle workHandle = World.DependencyManager.InsertDependencies(Iterator.Settings.Descriptor, Iterator.Handle, RunAsync);
+            //WorkAsyncHandle workHandle = World.DependencyManager.InsertDependencies(Iterator.Settings.Descriptor, Iterator.Handle, RunAsync);
+            World.DependencyManager.InsertDependencies(Iterator.Settings.Descriptor, Iterator.Handle);
+
             if (RunAsync)
-                workHandle.Start();
+                Iterator.RunAsync();
             else
-                workHandle.RunSync();
+                Iterator.RunSync();
         }
 
         protected abstract void OnFrame(float dt);

@@ -21,7 +21,7 @@ namespace Entygine.Ecs
         /// <param name="desc">What's going to be queried.</param>
         /// <param name="handle">Handle with the work that's going to be done.</param>
         /// <returns>Handle with dependencies inserted and ready to be started.</returns>
-        public WorkAsyncHandle InsertDependencies(QueryDesc desc, WorkAsyncHandle handle, bool async)
+        public void InsertDependencies(QueryDesc desc, WorkAsyncHandle handle)
         {
             List<WorkAsyncHandle> tasksToWait = new();
             IEnumerable<TypeId> types = desc.writeWith.Concat(desc.writeAny);
@@ -59,13 +59,15 @@ namespace Entygine.Ecs
                     tree.Add(readId, new DependencyNode() { read = { handle } });
             }
 
-            return new WorkAsyncHandle(() =>
-            {
-                if (async)
-                    handle.Start();
-                else
-                    handle.RunSync();
-            }, tasksToWait.ToArray());
+            handle.AddDependencies(tasksToWait.ToArray());
+            //return handle;
+            //return new WorkAsyncHandle(() =>
+            //{
+            //    if (async)
+            //        handle.Start();
+            //    else
+            //        handle.RunSync();
+            //}, tasksToWait.ToArray());
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Entygine.Ecs
 {
+    [Obsolete("Use TypeId instead.")]
     public class TypeCache : IEquatable<TypeCache>
     {
         private static Dictionary<Type, TypeCache> collection = new Dictionary<Type, TypeCache>();

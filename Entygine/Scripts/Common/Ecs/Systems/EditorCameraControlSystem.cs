@@ -55,7 +55,7 @@ namespace Entygine.Ecs.Systems
             if (keyboard.IsKeyDown(Keys.Q))
                 posDelta -= Vector3.UnitY;
 
-            Iterator.Iterate((ref C_EditorCamera editorCamera, ref C_Transform transform) =>
+            Iterator.SetName("Editor Camera Control").Iterate((ref C_EditorCamera editorCamera, ref C_Transform transform) =>
             {
                 editorCamera.speed += speedDelta * dt;
                 editorCamera.speed = MathHelper.Clamp(editorCamera.speed, 0, 100);

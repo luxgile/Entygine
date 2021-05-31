@@ -39,7 +39,7 @@ namespace Entygine.Ecs
 
         private EntityWorld world;
         public QuerySettings Settings { get; private set; }
-        public WorkAsyncHandle Handle { get; private set; }
+        public WorkAsyncHandle Handle { get; private set; } = new WorkAsyncHandle();
 
         public uint Version { get; private set; }
 
@@ -118,6 +118,12 @@ namespace Entygine.Ecs
             Settings.None(noneTypes.ToArray());
         }
 
+        public EntityIterator SetName(string name)
+        {
+            Handle.Name = name;
+            return this;
+        }
+
         public void RunSync()
         {
             Handle.RunSync();
@@ -136,7 +142,7 @@ namespace Entygine.Ecs
             Handle = new WorkAsyncHandle(() => IteratorUtils.ForEachChunk(world, Settings, Version, (chunk) =>
             {
                 iterator(chunk);
-            })());
+            }));
             return this;
         }
 
